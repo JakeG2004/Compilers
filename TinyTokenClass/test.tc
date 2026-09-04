@@ -23,5 +23,3 @@ if z = 0 then
 else
     y := 0
 end
-
-1 / 2;

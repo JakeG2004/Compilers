@@ -1,0 +1,457 @@
+Enter expression or exit
+== TOKEN ==
+Class: 277
+Line Number: 1
+String: "x"
+Value: 0
+
+== TOKEN ==
+Class: 265
+Line Number: 1
+String: ":="
+Value: 0
+
+== TOKEN ==
+Class: 276
+Line Number: 1
+String: "10"
+Value: 10
+
+== TOKEN ==
+Class: 258
+Line Number: 1
+String: ";"
+Value: 10
+
+== TOKEN ==
+Class: 277
+Line Number: 2
+String: "y"
+Value: 10
+
+== TOKEN ==
+Class: 265
+Line Number: 2
+String: ":="
+Value: 10
+
+== TOKEN ==
+Class: 276
+Line Number: 2
+String: "20"
+Value: 20
+
+== TOKEN ==
+Class: 258
+Line Number: 2
+String: ";"
+Value: 20
+
+== TOKEN ==
+Class: 266
+Line Number: 3
+String: "read"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 3
+String: "z"
+Value: 20
+
+== TOKEN ==
+Class: 258
+Line Number: 3
+String: ";"
+Value: 20
+
+== TOKEN ==
+Class: 259
+Line Number: 5
+String: "if"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 5
+String: "x"
+Value: 20
+
+== TOKEN ==
+Class: 268
+Line Number: 5
+String: "<"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 5
+String: "y"
+Value: 20
+
+== TOKEN ==
+Class: 260
+Line Number: 5
+String: "then"
+Value: 20
+
+== TOKEN ==
+Class: 267
+Line Number: 6
+String: "write"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 6
+String: "x"
+Value: 20
+
+== TOKEN ==
+Class: 270
+Line Number: 6
+String: "+"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 6
+String: "y"
+Value: 20
+
+== TOKEN ==
+Class: 261
+Line Number: 7
+String: "else"
+Value: 20
+
+== TOKEN ==
+Class: 267
+Line Number: 8
+String: "write"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 8
+String: "x"
+Value: 20
+
+== TOKEN ==
+Class: 271
+Line Number: 8
+String: "-"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 8
+String: "y"
+Value: 20
+
+== TOKEN ==
+Class: 262
+Line Number: 9
+String: "end"
+Value: 20
+
+== TOKEN ==
+Class: 258
+Line Number: 9
+String: ";"
+Value: 20
+
+== TOKEN ==
+Class: 263
+Line Number: 11
+String: "repeat"
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 12
+String: "z"
+Value: 20
+
+== TOKEN ==
+Class: 265
+Line Number: 12
+String: ":="
+Value: 20
+
+== TOKEN ==
+Class: 277
+Line Number: 12
+String: "z"
+Value: 20
+
+== TOKEN ==
+Class: 271
+Line Number: 12
+String: "-"
+Value: 20
+
+== TOKEN ==
+Class: 276
+Line Number: 12
+String: "1"
+Value: 1
+
+== TOKEN ==
+Class: 264
+Line Number: 13
+String: "until"
+Value: 1
+
+== TOKEN ==
+Class: 277
+Line Number: 13
+String: "z"
+Value: 1
+
+== TOKEN ==
+Class: 269
+Line Number: 13
+String: "="
+Value: 1
+
+== TOKEN ==
+Class: 276
+Line Number: 13
+String: "0"
+Value: 0
+
+== TOKEN ==
+Class: 258
+Line Number: 13
+String: ";"
+Value: 0
+
+== TOKEN ==
+Class: 267
+Line Number: 15
+String: "write"
+Value: 0
+
+== TOKEN ==
+Class: 274
+Line Number: 15
+String: "("
+Value: 0
+
+== TOKEN ==
+Class: 277
+Line Number: 15
+String: "x"
+Value: 0
+
+== TOKEN ==
+Class: 270
+Line Number: 15
+String: "+"
+Value: 0
+
+== TOKEN ==
+Class: 277
+Line Number: 15
+String: "y"
+Value: 0
+
+== TOKEN ==
+Class: 275
+Line Number: 15
+String: ")"
+Value: 0
+
+== TOKEN ==
+Class: 272
+Line Number: 15
+String: "*"
+Value: 0
+
+== TOKEN ==
+Class: 276
+Line Number: 15
+String: "2"
+Value: 2
+
+== TOKEN ==
+Class: 273
+Line Number: 15
+String: "/"
+Value: 2
+
+== TOKEN ==
+Class: 274
+Line Number: 15
+String: "("
+Value: 2
+
+== TOKEN ==
+Class: 276
+Line Number: 15
+String: "5"
+Value: 5
+
+== TOKEN ==
+Class: 271
+Line Number: 15
+String: "-"
+Value: 5
+
+== TOKEN ==
+Class: 276
+Line Number: 15
+String: "1"
+Value: 1
+
+== TOKEN ==
+Class: 275
+Line Number: 15
+String: ")"
+Value: 1
+
+== TOKEN ==
+Class: 258
+Line Number: 15
+String: ";"
+Value: 1
+
+== TOKEN ==
+Class: 259
+Line Number: 17
+String: "if"
+Value: 1
+
+== TOKEN ==
+Class: 277
+Line Number: 17
+String: "z"
+Value: 1
+
+== TOKEN ==
+Class: 269
+Line Number: 17
+String: "="
+Value: 1
+
+== TOKEN ==
+Class: 276
+Line Number: 17
+String: "0"
+Value: 0
+
+== TOKEN ==
+Class: 260
+Line Number: 17
+String: "then"
+Value: 0
+
+== TOKEN ==
+Class: 259
+Line Number: 18
+String: "if"
+Value: 0
+
+== TOKEN ==
+Class: 277
+Line Number: 18
+String: "x"
+Value: 0
+
+== TOKEN ==
+Class: 269
+Line Number: 18
+String: "="
+Value: 0
+
+== TOKEN ==
+Class: 276
+Line Number: 18
+String: "10"
+Value: 10
+
+== TOKEN ==
+Class: 260
+Line Number: 18
+String: "then"
+Value: 10
+
+== TOKEN ==
+Class: 277
+Line Number: 19
+String: "y"
+Value: 10
+
+== TOKEN ==
+Class: 265
+Line Number: 19
+String: ":="
+Value: 10
+
+== TOKEN ==
+Class: 276
+Line Number: 19
+String: "100"
+Value: 100
+
+== TOKEN ==
+Class: 261
+Line Number: 20
+String: "else"
+Value: 100
+
+== TOKEN ==
+Class: 277
+Line Number: 21
+String: "y"
+Value: 100
+
+== TOKEN ==
+Class: 265
+Line Number: 21
+String: ":="
+Value: 100
+
+== TOKEN ==
+Class: 276
+Line Number: 21
+String: "200"
+Value: 200
+
+== TOKEN ==
+Class: 262
+Line Number: 22
+String: "end"
+Value: 200
+
+== TOKEN ==
+Class: 261
+Line Number: 23
+String: "else"
+Value: 200
+
+== TOKEN ==
+Class: 277
+Line Number: 24
+String: "y"
+Value: 200
+
+== TOKEN ==
+Class: 265
+Line Number: 24
+String: ":="
+Value: 200
+
+== TOKEN ==
+Class: 276
+Line Number: 24
+String: "0"
+Value: 0
+
+== TOKEN ==
+Class: 262
+Line Number: 25
+String: "end"
+Value: 0
+

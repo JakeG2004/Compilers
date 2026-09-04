@@ -2,11 +2,11 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
 int yylex(void);
-void yyerror(char*);
+void yyerror(const char*);
 
 extern int yylineno;
-extern char* yytext;
 %}
 
 /* These are the valid tokens in the language */
@@ -62,14 +62,14 @@ exp:
     ;
 
 simple-exp:
-    simple-exp PLUS term 
+    simple-exp PLUS term
     | simple-exp MINUS term
     | term
     ;
 
 term:
     term MULTIPLY factor
-    | term DIVIDE factor { if($3 == 0) yyerror("Divide by zero"); YYABORT; }
+    | term DIVIDE factor { if($3 == 0) {yyerror("Divide by zero"); YYABORT;} }
     | factor
     ;
 
@@ -82,7 +82,7 @@ factor:
 %%
 
 // This prints errors as they are generated for example in DIVIDE
-void yyerror(char* s)
+void yyerror(const char* s)
 {
     fprintf(stderr, "Error on line %i: %s\n", yylineno, s);
 }

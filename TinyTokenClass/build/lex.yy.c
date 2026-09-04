@@ -1,5 +1,6 @@
+#line 1 "build/lex.yy.c"
 
-#line 2 "lex.yy.c"
+#line 3 "build/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -497,12 +498,18 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexer.l"
-#line 2 "lexer.l"
+#line 1 "Lexer/lexer.l"
+#line 2 "Lexer/lexer.l"
 #include "parser.tab.h"
+#include "tokenizer.h"
+
 #include <stdlib.h>
-#line 504 "lex.yy.c"
-#line 505 "lex.yy.c"
+
+int AddToken(int tokenClass);
+
+#define TOKEN(t) { return AddToken(t); }
+#line 511 "build/lex.yy.c"
+#line 512 "build/lex.yy.c"
 
 #define INITIAL 0
 
@@ -719,9 +726,9 @@ YY_DECL
 		}
 
 	{
-#line 9 "lexer.l"
+#line 15 "Lexer/lexer.l"
 
-#line 724 "lex.yy.c"
+#line 731 "build/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -790,116 +797,116 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "lexer.l"
-{ return IF; }
+#line 16 "Lexer/lexer.l"
+TOKEN(IF)
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "lexer.l"
-{ return THEN; }
+#line 17 "Lexer/lexer.l"
+TOKEN(THEN)
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "lexer.l"
-{ return ELSE; }
+#line 18 "Lexer/lexer.l"
+TOKEN(ELSE)
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 13 "lexer.l"
-{ return END; }
+#line 19 "Lexer/lexer.l"
+TOKEN(END)
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "lexer.l"
-{ return REPEAT; }
+#line 20 "Lexer/lexer.l"
+TOKEN(REPEAT)
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 15 "lexer.l"
-{ return UNTIL; }
+#line 21 "Lexer/lexer.l"
+TOKEN(UNTIL)
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 16 "lexer.l"
-{ return READ; }
+#line 22 "Lexer/lexer.l"
+TOKEN(READ)
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 17 "lexer.l"
-{ return WRITE; }
+#line 23 "Lexer/lexer.l"
+TOKEN(WRITE)
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "lexer.l"
-{ return SEMICOLON; }
+#line 25 "Lexer/lexer.l"
+TOKEN(SEMICOLON)
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "lexer.l"
-{ return LESS_THAN; }
+#line 26 "Lexer/lexer.l"
+TOKEN(LESS_THAN)
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "lexer.l"
-{ return EQUAL; }
+#line 27 "Lexer/lexer.l"
+TOKEN(EQUAL)
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 22 "lexer.l"
-{ return ASSIGN; }
+#line 28 "Lexer/lexer.l"
+TOKEN(ASSIGN)
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 23 "lexer.l"
-{ return PLUS; }
+#line 29 "Lexer/lexer.l"
+TOKEN(PLUS)
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 24 "lexer.l"
-{ return MINUS; }
+#line 30 "Lexer/lexer.l"
+TOKEN(MINUS)
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 25 "lexer.l"
-{ return MULTIPLY; }
+#line 31 "Lexer/lexer.l"
+TOKEN(MULTIPLY)
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 26 "lexer.l"
-{ return DIVIDE; }
+#line 32 "Lexer/lexer.l"
+TOKEN(DIVIDE)
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 27 "lexer.l"
-{ return LPAREN; }
+#line 33 "Lexer/lexer.l"
+TOKEN(LPAREN)
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 28 "lexer.l"
-{ return RPAREN; }
+#line 34 "Lexer/lexer.l"
+TOKEN(RPAREN)
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 30 "lexer.l"
-{ yylval = atoi(yytext); return NUM; }
+#line 36 "Lexer/lexer.l"
+{ yylval = atoi(yytext); TOKEN(NUM); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 31 "lexer.l"
-{ return ID; }
+#line 37 "Lexer/lexer.l"
+TOKEN(ID)
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 33 "lexer.l"
+#line 39 "Lexer/lexer.l"
 ;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 34 "lexer.l"
+#line 40 "Lexer/lexer.l"
 ECHO;
 	YY_BREAK
-#line 902 "lex.yy.c"
+#line 909 "build/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1916,5 +1923,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 34 "lexer.l"
+#line 40 "Lexer/lexer.l"
 
+
+int AddToken(int tokenClass)
+{
+    Tokenizer::AddToken(tokenClass, yylineno, yytext, yylval);
+    return tokenClass;
+}

@@ -67,17 +67,17 @@
 
 
 /* First part of user prologue.  */
-#line 2 "parser.y"
+#line 2 "Parser/parser.y"
 
 #include <stdio.h>
 #include <stdlib.h>
+
 int yylex(void);
-void yyerror(char*);
+void yyerror(const char*);
 
 extern int yylineno;
-extern char* yytext;
 
-#line 81 "parser.tab.c"
+#line 81 "build/parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1120,25 +1120,25 @@ yyreduce:
   switch (yyn)
     {
   case 23: /* term: term DIVIDE factor  */
-#line 72 "parser.y"
-                         { if(yyvsp[0] == 0) yyerror("Divide by zero"); YYABORT; }
-#line 1126 "parser.tab.c"
+#line 72 "Parser/parser.y"
+                         { if(yyvsp[0] == 0) {yyerror("Divide by zero"); YYABORT;} }
+#line 1126 "build/parser.tab.c"
     break;
 
   case 26: /* factor: NUM  */
-#line 78 "parser.y"
+#line 78 "Parser/parser.y"
           { yyval = yyvsp[0]; }
-#line 1132 "parser.tab.c"
+#line 1132 "build/parser.tab.c"
     break;
 
   case 27: /* factor: ID  */
-#line 79 "parser.y"
+#line 79 "Parser/parser.y"
          { yyval = yyvsp[0]; }
-#line 1138 "parser.tab.c"
+#line 1138 "build/parser.tab.c"
     break;
 
 
-#line 1142 "parser.tab.c"
+#line 1142 "build/parser.tab.c"
 
       default: break;
     }
@@ -1331,11 +1331,11 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 82 "parser.y"
+#line 82 "Parser/parser.y"
 
 
 // This prints errors as they are generated for example in DIVIDE
-void yyerror(char* s)
+void yyerror(const char* s)
 {
     fprintf(stderr, "Error on line %i: %s\n", yylineno, s);
 }
