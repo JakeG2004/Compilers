@@ -4,9 +4,10 @@
 
 #include <stdlib.h>
 
+#define TOKEN(t) { return AddToken(t); }
+
 int AddToken(int tokenClass);
 
-#define TOKEN(t) { return AddToken(t); }
 %}
 
 %option noyywrap

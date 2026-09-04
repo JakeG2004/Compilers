@@ -7,7 +7,7 @@ test:
 	rm out.txt
 	cat test.tc | ./a.out > out.txt
 
-a.out: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o
+a.out: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o
 	$(CXX) $^ -o $@
 
 # Generate parser files in build/
@@ -32,6 +32,14 @@ build/tokenizer.o: Helpers/tokenizer.cpp Helpers/tokenizer.h Helpers/tokenclass.
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/tokenclass.o: Helpers/tokenclass.cpp Helpers/tokenclass.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/error.o: Helpers/error.cpp Helpers/error.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/errorhandler.o: Helpers/errorhandler.cpp Helpers/errorhandler.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

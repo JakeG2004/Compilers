@@ -1,7 +1,8 @@
-/* Define c headers. Need to iniclude yylex and yyerror or it throws a fit! */
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "errorhandler.h"
 
 int yylex(void);
 void yyerror(const char*);
@@ -9,10 +10,8 @@ void yyerror(const char*);
 extern int yylineno;
 %}
 
-/* These are the valid tokens in the language */
 %token SEMICOLON IF THEN ELSE END REPEAT UNTIL ASSIGN READ WRITE LESS_THAN EQUAL PLUS MINUS MULTIPLY DIVIDE LPAREN RPAREN NUM ID
 
-/* Define these tokens as left associative */
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
 
@@ -81,16 +80,16 @@ factor:
 
 %%
 
-// This prints errors as they are generated for example in DIVIDE
 void yyerror(const char* s)
 {
-    fprintf(stderr, "Error on line %i: %s\n", yylineno, s);
+    ErrorHandler::AddError(Error::ErrorType::PARSER, s, yylineno);
 }
 
-// Main guy
 int main()
 {
     printf("Enter expression or exit\n");
     yyparse();
+
+    ErrorHandler::PrintErrors();
     return 0;
 }

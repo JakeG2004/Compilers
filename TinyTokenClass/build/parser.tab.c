@@ -67,17 +67,19 @@
 
 
 /* First part of user prologue.  */
-#line 2 "Parser/parser.y"
+#line 1 "Parser/parser.y"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "errorhandler.h"
 
 int yylex(void);
 void yyerror(const char*);
 
 extern int yylineno;
 
-#line 81 "build/parser.tab.c"
+#line 83 "build/parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -528,9 +530,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    21,    21,    25,    26,    30,    31,    32,    33,    34,
-      38,    39,    43,    47,    51,    55,    59,    60,    61,    65,
-      66,    67,    71,    72,    73,    77,    78,    79
+       0,    20,    20,    24,    25,    29,    30,    31,    32,    33,
+      37,    38,    42,    46,    50,    54,    58,    59,    60,    64,
+      65,    66,    70,    71,    72,    76,    77,    78
 };
 #endif
 
@@ -1120,25 +1122,25 @@ yyreduce:
   switch (yyn)
     {
   case 23: /* term: term DIVIDE factor  */
-#line 72 "Parser/parser.y"
+#line 71 "Parser/parser.y"
                          { if(yyvsp[0] == 0) {yyerror("Divide by zero"); YYABORT;} }
-#line 1126 "build/parser.tab.c"
+#line 1128 "build/parser.tab.c"
     break;
 
   case 26: /* factor: NUM  */
-#line 78 "Parser/parser.y"
+#line 77 "Parser/parser.y"
           { yyval = yyvsp[0]; }
-#line 1132 "build/parser.tab.c"
+#line 1134 "build/parser.tab.c"
     break;
 
   case 27: /* factor: ID  */
-#line 79 "Parser/parser.y"
+#line 78 "Parser/parser.y"
          { yyval = yyvsp[0]; }
-#line 1138 "build/parser.tab.c"
+#line 1140 "build/parser.tab.c"
     break;
 
 
-#line 1142 "build/parser.tab.c"
+#line 1144 "build/parser.tab.c"
 
       default: break;
     }
@@ -1331,19 +1333,19 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 82 "Parser/parser.y"
+#line 81 "Parser/parser.y"
 
 
-// This prints errors as they are generated for example in DIVIDE
 void yyerror(const char* s)
 {
-    fprintf(stderr, "Error on line %i: %s\n", yylineno, s);
+    ErrorHandler::AddError(Error::ErrorType::PARSER, s, yylineno);
 }
 
-// Main guy
 int main()
 {
     printf("Enter expression or exit\n");
     yyparse();
+
+    ErrorHandler::PrintErrors();
     return 0;
 }
