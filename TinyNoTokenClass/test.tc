@@ -1,0 +1,27 @@
+x := 10;
+y := 20;
+read z;
+
+if x < y then
+    write x + y
+else
+    write x - y
+end;
+
+repeat
+    z := z - 1
+until z = 0;
+
+write (x + y) * 2 / (5 - 1);
+
+if z = 0 then
+    if x = 10 then
+        y := 100
+    else
+        y := 200
+    end
+else
+    y := 0
+end
+
+1 / 2;

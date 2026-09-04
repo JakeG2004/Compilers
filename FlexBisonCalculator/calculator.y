@@ -1,3 +1,4 @@
+/* Define c headers. Need to iniclude yylex and yyerror or it throws a fit! */
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,14 +6,15 @@ int yylex(void);
 void yyerror(char*);
 %}
 
+/* These are the valid tokens in the language */
 %token INTEGER PLUS MINUS MULTIPLY DIVIDE LPAREN RPAREN EOL ERROR
 
+/* Define these tokens as left associative */
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
 %left UMINUS
 
 %%
-
 input:
     | input line
     ;
@@ -40,11 +42,13 @@ exp:
     ;
 %%
 
+// This prints errors as they are generated for example in DIVIDE
 void yyerror(char* s)
 {
     fprintf(stderr, "Error: %s\n", s);
 }
 
+// Main guy
 int main()
 {
     printf("Enter expression or exit\n");
