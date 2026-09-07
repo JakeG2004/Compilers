@@ -1,0 +1,46 @@
+CXX = g++
+CXXFLAGS = -I. -Ibuild
+
+all: c-
+build: c-
+
+c-: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o
+	$(CXX) $^ -o $@
+
+# Generate parser files in build/
+build/parser.tab.c build/parser.tab.h: parser.y
+	mkdir -p build
+	bison -d parser.y -o build/parser.tab.c
+
+# Generate lexer files in build/
+build/lex.yy.c: lexer.l build/parser.tab.h
+	mkdir -p build
+	flex -o build/lex.yy.c lexer.l
+
+# Compile all object files into the build/ directory
+build/parser.tab.o: build/parser.tab.c
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/lex.yy.o: build/lex.yy.c
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/tokenizer.o: tokenizer.cpp tokenizer.h tokenclass.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/tokenclass.o: tokenclass.cpp tokenclass.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/error.o: error.cpp error.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/errorhandler.o: errorhandler.cpp errorhandler.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -rf build c-
+
+.PHONY: all build clean
