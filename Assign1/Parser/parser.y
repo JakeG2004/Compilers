@@ -24,7 +24,7 @@ tokenlist:
     ;
 
 token:
-      ID
+    ID
     | NUMCONST
     | CHARCONST
     | STRINGCONST

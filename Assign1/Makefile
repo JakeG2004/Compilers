@@ -51,12 +51,24 @@ test-one: c-
 
 package:
 	rm -rf $(PACKAGEDIR)
-	@mkdir -p $(PACKAGEDIR)
+	mkdir -p $(PACKAGEDIR)
 	cp Helpers/* $(PACKAGEDIR)
 	cp Parser/parser.y $(PACKAGEDIR)
 	cp Lexer/lexer.l $(PACKAGEDIR)
-	cp package_makefile $(PACKAGEDIR)/Makefile
-	tar -cf submission.tar -C package .
+	cp package_makefile $(PACKAGEDIR)/makefile
+	tar -cf submission.tar -C $(PACKAGEDIR) .
+	@temp_dir=$$(mktemp -d); \
+	trap 'rm -rf "$$temp_dir"' EXIT; \
+	mkdir -p "$$temp_dir/verify"; \
+	tar -xf submission.tar -C "$$temp_dir/verify"; \
+	echo "--- Verification Report ---"; \
+	if diff -rq $(PACKAGEDIR) "$$temp_dir/verify"; then \
+		echo "SUCCESS: All files match between $(PACKAGEDIR) and the tarball."; \
+	else \
+		echo "FAILURE: Mismatches found!"; \
+		exit 1; \
+	fi
+
 
 c-: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o
 	$(CXX) $^ -o $@
@@ -100,4 +112,4 @@ clean: pclean
 pclean:
 	rm -rf package submission.tar
 
-.PHONY: all build test test-one clean
+.PHONY: all build test test-one clean pclean
