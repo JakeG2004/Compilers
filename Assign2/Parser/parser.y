@@ -148,10 +148,10 @@ matchedStmt:
     ;
 
 unmatchedStmt:
-    IF simpleExp THEN selectStmt                {$$ = new TreeNode($2, $4, $1);}
-    | IF matchedStmt ELSE unmatchedStmt         {$$ = new TreeNode($2, $4, $1);}
-    | WHILE simpleExp DO unmatchedStmt          {$$ = new TreeNode($2, $4, $1);}
-    | FOR ID ASSIGN iterRange DO unmatchedStmt  {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
+    IF simpleExp THEN selectStmt                            {$$ = new TreeNode($2, $4, $1);}
+    | IF simpleExp THEN matchedStmt ELSE unmatchedStmt      {$$ = new TreeNode($2, $4, $1);}
+    | WHILE simpleExp DO unmatchedStmt                      {$$ = new TreeNode($2, $4, $1);}
+    | FOR ID ASSIGN iterRange DO unmatchedStmt              {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
     ;
 
 iterRange:
@@ -300,7 +300,7 @@ void yyerror(const char* s)
 int main(int argc, char* argv[])
 {
     if(argc > 2 || (argc == 1 && isatty(fileno(stdin)))) {
-        printf("Invalid Usage! ./c- <filename> or cat <filename> | ./c-\n");
+        printf("Invalid Usage! Correct usage is\n./c- <filename>\nor cat <filename> | ./c-\nor ./c- < <filename>\n");
         return 2;
     }
 
