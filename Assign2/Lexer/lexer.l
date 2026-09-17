@@ -23,6 +23,13 @@ string              "\""([^"\\\n]|\\.)*"\""
 comment             "//"[^\n]*
 
 %%
+"then"              TOKEN(THEN)
+"do"                TOKEN(DO)
+"to"                TOKEN(TO)
+"by"                TOKEN(BY)
+"or"                TOKEN(OR)
+"and"               TOKEN(AND)
+"not"               TOKEN(NOT)
 "int"               TOKEN(INT)
 "bool"              TOKEN(BOOL)
 "char"              TOKEN(CHAR)
@@ -121,6 +128,6 @@ int AddToken(int tokenClass)
             break;
     };
 
-    Tokenizer::AddToken(tokenClass, yylineno, yytext, c, nVal);
+    yylval.tokenData = new TokenClass(tokenClass, yylineno, yytext, c, nVal);
     return tokenClass;
 }

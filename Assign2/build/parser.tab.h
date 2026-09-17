@@ -47,9 +47,10 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 1 "Parser/parser.y"
 
-#include "syntaxtree.h"
+#include "treenode.h"
+#include "tokenclass.h"
 
-#line 53 "build/parser.tab.h"
+#line 54 "build/parser.tab.h"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -121,12 +122,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "Parser/parser.y"
+#line 26 "Parser/parser.y"
 
     int NUMBER;
-    TreeNodePtr node;
+    TreeNode* node;
+    TokenClass* tokenData;
 
-#line 130 "build/parser.tab.h"
+#line 132 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

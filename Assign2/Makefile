@@ -70,7 +70,7 @@ package:
 	fi
 
 
-c-: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o build/syntaxtree.o
+c-: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o
 	$(CXX) $^ -o $@
 
 # Generate parser files in build/
@@ -106,7 +106,7 @@ build/errorhandler.o: Helpers/errorhandler.cpp Helpers/errorhandler.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-build/syntaxtree.o: Helpers/syntaxtree.cpp Helpers/syntaxtree.h
+build/treenode.o: Helpers/treenode.cpp Helpers/treenode.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
