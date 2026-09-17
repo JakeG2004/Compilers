@@ -70,7 +70,7 @@ package:
 	fi
 
 
-c-: build/parser.tab.o build/lex.yy.o build/tokenizer.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o
+c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o
 	$(CXX) $^ -o $@
 
 # Generate parser files in build/
@@ -88,10 +88,6 @@ build/parser.tab.o: build/parser.tab.c
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/lex.yy.o: build/lex.yy.c
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-build/tokenizer.o: Helpers/tokenizer.cpp Helpers/tokenizer.h Helpers/tokenclass.h
-	mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/tokenclass.o: Helpers/tokenclass.cpp Helpers/tokenclass.h
@@ -117,3 +113,4 @@ pclean:
 	rm -rf package submission.tar
 
 .PHONY: all build test test-one clean pclean
+

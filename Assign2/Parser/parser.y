@@ -9,7 +9,6 @@
 #include <unistd.h>
 
 #include "errorhandler.h"
-#include "tokenizer.h"
 #include "treenode.h"
 
 #define LEAF(t) (new TreeNode(t))

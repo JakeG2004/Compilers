@@ -1,6 +1,5 @@
 %{
 #include "parser.tab.h"
-#include "tokenizer.h"
 #include "errorhandler.h"
 
 #include <stdlib.h>
