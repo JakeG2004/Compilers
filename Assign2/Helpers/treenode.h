@@ -20,7 +20,7 @@ class TreeNode
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
         TreeNode(TreeNode* leftChild, TokenClass* tokenData);
         TreeNode(TokenClass* tokenData);
-        void Print();
+        void Print(int depth = 0);
 };
 
 #endif

@@ -21,19 +21,26 @@ TreeNode::TreeNode(TokenClass* tokenData)
     : TreeNode(nullptr, nullptr, nullptr, tokenData)
 {}
 
-void TreeNode::Print()
+void TreeNode::Print(int depth)
 {
-    std::cout << "== TOKEN ==" << std::endl;
+    int nextDepth = depth;
 
-    if(tokenData != nullptr)
+    if(tokenData != nullptr) {
+        for(int i = 0; i < depth; i++) std::cout << "  ";
+        std::cout << "== TOKEN ==" << std::endl;
+
+        for(int i = 0; i < depth; i++) std::cout << "  ";
         std::cout << tokenData->tokenStr << std::endl;
 
+        nextDepth++;
+    }
+
     if(leftChild != nullptr)
-        leftChild->Print();
+        leftChild->Print(nextDepth);
 
     if(middleChild != nullptr)
-        middleChild->Print();
+        middleChild->Print(nextDepth);
 
     if(rightChild != nullptr)
-        rightChild->Print();
+        rightChild->Print(nextDepth);
 }
