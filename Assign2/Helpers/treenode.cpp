@@ -9,14 +9,17 @@ TreeNode::TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightCh
     this->tokenData = tokenData;
 }
 
-TreeNode::TreeNode(TokenClass* tokenData)
-{
-    this->leftChild = nullptr;
-    this->middleChild = nullptr;
-    this->rightChild = nullptr;
+TreeNode::TreeNode(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+    : TreeNode(leftChild, middleChild, nullptr, tokenData)
+{}
 
-    this->tokenData = tokenData;
-}
+TreeNode::TreeNode(TreeNode* leftChild, TokenClass* tokenData)
+    : TreeNode(leftChild, nullptr, nullptr, tokenData)
+{}
+
+TreeNode::TreeNode(TokenClass* tokenData) 
+    : TreeNode(nullptr, nullptr, nullptr, tokenData)
+{}
 
 void TreeNode::Print()
 {

@@ -9,13 +9,6 @@ class TreeNode
 {
     public:
         TokenClass* tokenData;
-        std::string name;
-
-        enum ChildType {
-            LEFT,
-            MIDDLE,
-            RIGHT,
-        };
 
     private:
         TreeNode* leftChild;
@@ -24,6 +17,8 @@ class TreeNode
 
     public:
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
+        TreeNode(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
+        TreeNode(TreeNode* leftChild, TokenClass* tokenData);
         TreeNode(TokenClass* tokenData);
         void Print();
 };

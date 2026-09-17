@@ -37,7 +37,7 @@ program:
     ;
 
 declList:
-    declList decl   {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    declList decl   {$$ = new TreeNode($1, $2, nullptr);}
     | decl          {$$ = $1;}
     ;
 
@@ -47,27 +47,27 @@ decl:
     ;
 
 varDecl:
-    typeSpec varDeclList SEMICOLON  {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    typeSpec varDeclList SEMICOLON  {$$ = new TreeNode($1, $2, nullptr);}
     ;
 
 scopedVarDecl:
-    STATIC typeSpec varDeclList SEMICOLON   {$$ = new TreeNode($2, $3, nullptr, $1);}
-    | typeSpec varDeclList SEMICOLON        {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    STATIC typeSpec varDeclList SEMICOLON   {$$ = new TreeNode($2, $3, $1);}
+    | typeSpec varDeclList SEMICOLON        {$$ = new TreeNode($1, $2, nullptr);}
     ;
 
 varDeclList:
-    varDeclList COMMA varDeclInit   {$$ = new TreeNode($1, $3, nullptr, $2);}
+    varDeclList COMMA varDeclInit   {$$ = new TreeNode($1, $3, $2);}
     | varDeclInit                   {$$ = $1;}
     ;
 
 varDeclInit:
     varDeclId                   {$$ = $1;}
-    | varDeclId COLON simpleExp {$$ = new TreeNode($1, $3, nullptr, $2);}
+    | varDeclId COLON simpleExp {$$ = new TreeNode($1, $3, $2);}
     ;
 
 varDeclId:
     ID                              {$$ = new TreeNode($1);}
-    | ID LBRACKET NUMCONST RBRACKET {$$ = new TreeNode(LEAF($3), nullptr, nullptr, $1);} 
+    | ID LBRACKET NUMCONST RBRACKET {$$ = new TreeNode(LEAF($3), $1);} 
     ;
 
 typeSpec:
@@ -78,7 +78,7 @@ typeSpec:
 
 funDecl:
     typeSpec ID LPAREN parms RPAREN stmt    {$$ = new TreeNode($1, $4, $6, $2);}
-    | ID LPAREN parms RPAREN stmt           {$$ = new TreeNode($3, $5, nullptr, $1);}
+    | ID LPAREN parms RPAREN stmt           {$$ = new TreeNode($3, $5, $1);}
     ;
 
 parms:
@@ -87,16 +87,16 @@ parms:
     ;
 
 parmList:
-    parmList SEMICOLON parmTypeList {$$ = new TreeNode($1, $3, nullptr, $2);}
+    parmList SEMICOLON parmTypeList {$$ = new TreeNode($1, $3, $2);}
     | parmTypeList                  {$$ = $1;}
     ;
 
 parmTypeList:
-    typeSpec parmIdList {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    typeSpec parmIdList {$$ = new TreeNode($1, $2, nullptr);}
     ;
 
 parmIdList:
-    parmIdList COMMA parmId {$$ = new TreeNode($1, $3, nullptr, $2);}
+    parmIdList COMMA parmId {$$ = new TreeNode($1, $3, $2);}
     | parmId                {$$ = $1;}
     ;
 
@@ -117,21 +117,21 @@ otherStmts:
     ;
 
 expStmt:
-    exp SEMICOLON   {$$ = new TreeNode($1, nullptr, nullptr, nullptr);}
+    exp SEMICOLON   {$$ = new TreeNode($1, nullptr);}
     | SEMICOLON     {$$ = nullptr;}
     ;
 
 compoundStmt:
-    LBRACE localDecls stmtList RBRACE   {$$ = new TreeNode($2, $3, nullptr, nullptr);}
+    LBRACE localDecls stmtList RBRACE   {$$ = new TreeNode($2, $3, nullptr);}
     ;
 
 localDecls:
-    localDecls scopedVarDecl    {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    localDecls scopedVarDecl    {$$ = new TreeNode($1, $2, nullptr);}
     |                           {$$ = nullptr;}
     ;
 
 stmtList:
-    stmtList stmt   {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    stmtList stmt   {$$ = new TreeNode($1, $2, nullptr);}
     |               {$$ = nullptr;}
     ;
 
@@ -142,57 +142,57 @@ selectStmt:
 
 matchedStmt:
     IF simpleExp THEN matchedStmt ELSE matchedStmt  {$$ = new TreeNode($2, $4, $6, $1);}
-    | WHILE simpleExp DO matchedStmt                {$$ = new TreeNode($2, $4, nullptr, $1);}
+    | WHILE simpleExp DO matchedStmt                {$$ = new TreeNode($2, $4, $1);}
     | FOR ID ASSIGN iterRange DO matchedStmt        {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
     | otherStmts                                    {$$ = $1;}
     ;
 
 unmatchedStmt:
-    IF simpleExp THEN selectStmt                {$$ = new TreeNode($2, $4, nullptr, $1);}
-    | IF matchedStmt ELSE unmatchedStmt         {$$ = new TreeNode($2, $4, nullptr, $1);}
-    | WHILE simpleExp DO unmatchedStmt          {$$ = new TreeNode($2, $4, nullptr, $1);}
+    IF simpleExp THEN selectStmt                {$$ = new TreeNode($2, $4, $1);}
+    | IF matchedStmt ELSE unmatchedStmt         {$$ = new TreeNode($2, $4, $1);}
+    | WHILE simpleExp DO unmatchedStmt          {$$ = new TreeNode($2, $4, $1);}
     | FOR ID ASSIGN iterRange DO unmatchedStmt  {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
     ;
 
 iterRange:
     simpleExp                               {$$ = $1;}
-    | simpleExp TO simpleExp                {$$ = new TreeNode($1, $3, nullptr, $2);}
+    | simpleExp TO simpleExp                {$$ = new TreeNode($1, $3, $2);}
     | simpleExp TO simpleExp BY simpleExp   {$$ = new TreeNode($1, $3, $5, $2);}
     ;
 
 returnStmt:
     RETURN SEMICOLON        {$$ = new TreeNode($1);}
-    | RETURN exp SEMICOLON  {$$ = new TreeNode($2, nullptr, nullptr, $1);}
+    | RETURN exp SEMICOLON  {$$ = new TreeNode($2, $1);}
     ;
 
 breakStmt:
     BREAK SEMICOLON         {$$ = new TreeNode($1);}
-    | BREAK exp SEMICOLON   {$$ = new TreeNode($2, nullptr, nullptr, $1);}
+    | BREAK exp SEMICOLON   {$$ = new TreeNode($2, $1);}
     ;
 
 exp:
-    mutable ASSIGN exp      {$$ = new TreeNode($1, $3, nullptr, $2);}
-    | mutable ADDASS exp    {$$ = new TreeNode($1, $3, nullptr, $2);}
-    | mutable SUBASS exp    {$$ = new TreeNode($1, $3, nullptr, $2);}
-    | mutable MULASS exp    {$$ = new TreeNode($1, $3, nullptr, $2);}
-    | mutable DIVASS exp    {$$ = new TreeNode($1, $3, nullptr, $2);}
-    | mutable INC           {$$ = new TreeNode($1, nullptr, nullptr, $2);}
-    | mutable DEC           {$$ = new TreeNode($1, nullptr, nullptr, $2);}
+    mutable ASSIGN exp      {$$ = new TreeNode($1, $3, $2);}
+    | mutable ADDASS exp    {$$ = new TreeNode($1, $3, $2);}
+    | mutable SUBASS exp    {$$ = new TreeNode($1, $3, $2);}
+    | mutable MULASS exp    {$$ = new TreeNode($1, $3, $2);}
+    | mutable DIVASS exp    {$$ = new TreeNode($1, $3, $2);}
+    | mutable INC           {$$ = new TreeNode($1, $2);}
+    | mutable DEC           {$$ = new TreeNode($1, $2);}
     | simpleExp             {$$ = $1;}
     ;
 
 simpleExp:
-    simpleExp OR andExp {$$ = new TreeNode($1, $3, nullptr, $2);}
+    simpleExp OR andExp {$$ = new TreeNode($1, $3, $2);}
     | andExp            {$$ = $1;}
     ;
 
 andExp:
-    andExp AND unaryRelExp  {$$ = new TreeNode($1, $3, nullptr, $2);}
+    andExp AND unaryRelExp  {$$ = new TreeNode($1, $3, $2);}
     | unaryRelExp           {$$ = $1;}
     ;
 
 unaryRelExp:
-    NOT unaryRelExp {$$ = new TreeNode($2, nullptr, nullptr, $1);}
+    NOT unaryRelExp {$$ = new TreeNode($2, $1);}
     | relExp        {$$ = $1;}
     ;
 
@@ -242,7 +242,7 @@ mulop:
     ;
 
 unaryExp:
-    unaryop unaryExp    {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    unaryop unaryExp    {$$ = new TreeNode($1, $2, nullptr);}
     | factor            {$$ = $1;}
     ;
 
@@ -259,7 +259,7 @@ factor:
 
 mutable:
     ID                          {$$ = new TreeNode($1);}
-    | ID LBRACKET exp RBRACKET  {$$ = new TreeNode($3, nullptr, nullptr, $1);}
+    | ID LBRACKET exp RBRACKET  {$$ = new TreeNode($3, $1);}
     ;
 
 immutable:
@@ -269,7 +269,7 @@ immutable:
     ;
 
 call:
-    ID LPAREN args RPAREN   {$$ = new TreeNode($3, nullptr, nullptr, $1);}
+    ID LPAREN args RPAREN   {$$ = new TreeNode($3, $1);}
     ;
 
 args:
@@ -278,7 +278,7 @@ args:
     ;
 
 argList:
-    argList COMMA exp   {$$ = new TreeNode($1, $3, nullptr, $2);}
+    argList COMMA exp   {$$ = new TreeNode($1, $3, $2);}
     | exp               {$$ = $1;}
     ;
 
