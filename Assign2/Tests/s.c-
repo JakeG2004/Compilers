@@ -1,0 +1,21 @@
+int a;
+
+bool dogs(int x, y)
+{
+    char a;
+    {
+        bool a;
+
+        a = true;
+     }
+     a = 'z';
+     return false;
+}
+
+int cats()
+{
+    a = dogs(a, 'z');
+    a = 666;
+        
+    return a;
+}   

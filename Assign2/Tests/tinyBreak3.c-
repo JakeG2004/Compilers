@@ -1,0 +1,6 @@
+// C-F26
+main()
+{
+  int x;
+  if false then while true do for x = 1 to 10 do if x>1 then break; else break;
+}

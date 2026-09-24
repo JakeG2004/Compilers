@@ -1,0 +1,15 @@
+char a;
+
+int dogs(int x, y) {
+     int a;
+     {
+        bool a;
+
+        a = false;
+     }
+     a = 666;
+}
+
+int cats() {
+    a = 'x';
+}

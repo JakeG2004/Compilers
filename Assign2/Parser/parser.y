@@ -11,15 +11,13 @@
 #include "errorhandler.h"
 #include "treenode.h"
 
-#define LEAF(t) (new TreeNode(t))
-
 int yylex(void);
 void yyerror(const char*);
 
 extern FILE* yyin;
 extern int yydebug;
 
-TreeNode* root = nullptr;
+TreeNode* ASTRoot = nullptr;
 %}
 
 %union {
@@ -33,11 +31,11 @@ TreeNode* root = nullptr;
 
 %%
 program:
-    declList    {root = $1;}
+    declList    {ASTRoot = $1;}
     ;
 
 declList:
-    declList decl   {$$ = new TreeNode($1, $2, nullptr);}
+    declList decl   {$$ = $1; $$->SetSibling($2);}
     | decl          {$$ = $1;}
     ;
 
@@ -47,38 +45,38 @@ decl:
     ;
 
 varDecl:
-    typeSpec varDeclList SEMICOLON  {$$ = new TreeNode($1, $2, nullptr);}
+    typeSpec varDeclList SEMICOLON  {$$ = new TreeNode($1, $2, nullptr, $3);}
     ;
 
 scopedVarDecl:
-    STATIC typeSpec varDeclList SEMICOLON   {$$ = new TreeNode($2, $3, $1);}
-    | typeSpec varDeclList SEMICOLON        {$$ = new TreeNode($1, $2, nullptr);}
+    STATIC typeSpec varDeclList SEMICOLON   {$$ = new TreeNode($2, $3, nullptr, $1);}
+    | typeSpec varDeclList SEMICOLON        {$$ = new TreeNode($1, $2, nullptr, nullptr);}
     ;
 
 varDeclList:
-    varDeclList COMMA varDeclInit   {$$ = new TreeNode($1, $3, $2);}
+    varDeclList COMMA varDeclInit   {$$ = $1; $$->SetSibling($3);}
     | varDeclInit                   {$$ = $1;}
     ;
 
 varDeclInit:
     varDeclId                   {$$ = $1;}
-    | varDeclId COLON simpleExp {$$ = new TreeNode($1, $3, $2);}
+    | varDeclId COLON simpleExp {$$ = TreeNode::CreateVarDecl($1, $3, nullptr, $2);}
     ;
 
 varDeclId:
-    ID                              {$$ = new TreeNode($1);}
-    | ID LBRACKET NUMCONST RBRACKET {$$ = new TreeNode(LEAF($3), $1);} 
+    ID                              {$$ = TreeNode::CreateIdNode($1);}
+    | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateIdNode($1);} 
     ;
 
 typeSpec:
-    INT     {$$ = new TreeNode($1);} 
-    | BOOL  {$$ = new TreeNode($1);}
-    | CHAR  {$$ = new TreeNode($1);}
+    INT     {$$ = TreeNode::CreateIdNode($1);} 
+    | BOOL  {$$ = TreeNode::CreateIdNode($1);}
+    | CHAR  {$$ = TreeNode::CreateIdNode($1);}
     ;
 
 funDecl:
-    typeSpec ID LPAREN parms RPAREN stmt    {$$ = new TreeNode($1, $4, $6, $2);}
-    | ID LPAREN parms RPAREN stmt           {$$ = new TreeNode($3, $5, $1);}
+    typeSpec ID LPAREN parms RPAREN stmt    {$$ = TreeNode::CreateFuncDecl($1, $4, $6, $2);}
+    | ID LPAREN parms RPAREN stmt           {$$ = TreeNode::CreateFuncDecl(nullptr, $3, $5, $1);}
     ;
 
 parms:
@@ -87,22 +85,22 @@ parms:
     ;
 
 parmList:
-    parmList SEMICOLON parmTypeList {$$ = new TreeNode($1, $3, $2);}
+    parmList SEMICOLON parmTypeList {$$ = $1; $$->SetSibling($3);}
     | parmTypeList                  {$$ = $1;}
     ;
 
 parmTypeList:
-    typeSpec parmIdList {$$ = new TreeNode($1, $2, nullptr);}
+    typeSpec parmIdList {$$ = new TreeNode($1, $2, nullptr, nullptr);}
     ;
 
 parmIdList:
-    parmIdList COMMA parmId {$$ = new TreeNode($1, $3, $2);}
+    parmIdList COMMA parmId {$$ = $1; $$->SetSibling($3);}
     | parmId                {$$ = $1;}
     ;
 
 parmId:
-    ID                  {$$ = new TreeNode($1);}
-    | ID LPAREN RPAREN  {$$ = new TreeNode($1);}
+    ID                  {$$ = TreeNode::CreateIdNode($1);}
+    | ID LPAREN RPAREN  {$$ = TreeNode::CreateIdNode($1);}
     ;
 
 stmt:
@@ -117,21 +115,21 @@ otherStmts:
     ;
 
 expStmt:
-    exp SEMICOLON   {$$ = new TreeNode($1, nullptr);}
+    exp SEMICOLON   {$$ = $1;}
     | SEMICOLON     {$$ = nullptr;}
     ;
 
 compoundStmt:
-    LBRACE localDecls stmtList RBRACE   {$$ = new TreeNode($2, $3, nullptr);}
+    LBRACE localDecls stmtList RBRACE   {$$ = TreeNode::CreateCompoundStmt($2, $3);}
     ;
 
 localDecls:
-    localDecls scopedVarDecl    {$$ = new TreeNode($1, $2, nullptr);}
+    localDecls scopedVarDecl    {$$ = $1; $$->SetSibling($2);}
     |                           {$$ = nullptr;}
     ;
 
 stmtList:
-    stmtList stmt   {$$ = new TreeNode($1, $2, nullptr);}
+    stmtList stmt   {$$ = $1; $$->SetSibling($2);}
     |               {$$ = nullptr;}
     ;
 
@@ -141,115 +139,115 @@ selectStmt:
     ;
 
 matchedStmt:
-    IF simpleExp THEN matchedStmt ELSE matchedStmt  {$$ = new TreeNode($2, $4, $6, $1);}
-    | WHILE simpleExp DO matchedStmt                {$$ = new TreeNode($2, $4, $1);}
-    | FOR ID ASSIGN iterRange DO matchedStmt        {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
+    IF simpleExp THEN matchedStmt ELSE matchedStmt  {$$ = TreeNode::CreateIfStmt($2, $4, $6, $1);}
+    | WHILE simpleExp DO matchedStmt                {$$ = TreeNode::CreateWhileStmt($2, $4, $1);}
+    | FOR ID ASSIGN iterRange DO matchedStmt        {$$ = TreeNode::CreateForStmt($2, $4, $6, $1);}
     | otherStmts                                    {$$ = $1;}
     ;
 
 unmatchedStmt:
-    IF simpleExp THEN selectStmt                            {$$ = new TreeNode($2, $4, $1);}
-    | IF simpleExp THEN matchedStmt ELSE unmatchedStmt      {$$ = new TreeNode($2, $4, $1);}
-    | WHILE simpleExp DO unmatchedStmt                      {$$ = new TreeNode($2, $4, $1);}
-    | FOR ID ASSIGN iterRange DO unmatchedStmt              {$$ = new TreeNode(LEAF($2), $4, $6, $1);}
+    IF simpleExp THEN selectStmt                            {$$ = TreeNode::CreateIfStmt($2, $4, nullptr, $1);}
+    | IF simpleExp THEN matchedStmt ELSE unmatchedStmt      {$$ = TreeNode::CreateIfStmt($2, $4, $6, $1);}
+    | WHILE simpleExp DO unmatchedStmt                      {$$ = TreeNode::CreateWhileStmt($2, $4, $1);}
+    | FOR ID ASSIGN iterRange DO unmatchedStmt              {$$ = TreeNode::CreateForStmt($2, $4, $6, $1);}
     ;
 
 iterRange:
     simpleExp                               {$$ = $1;}
-    | simpleExp TO simpleExp                {$$ = new TreeNode($1, $3, $2);}
-    | simpleExp TO simpleExp BY simpleExp   {$$ = new TreeNode($1, $3, $5, $2);}
+    | simpleExp TO simpleExp                {$$ = TreeNode::CreateRangeStmt($1, $3, nullptr, $2);}
+    | simpleExp TO simpleExp BY simpleExp   {$$ = TreeNode::CreateRangeStmt($1, $3, $5, $2);}
     ;
 
 returnStmt:
-    RETURN SEMICOLON        {$$ = new TreeNode($1);}
-    | RETURN exp SEMICOLON  {$$ = new TreeNode($2, $1);}
+    RETURN SEMICOLON        {$$ = TreeNode::CreateReturnStmt(nullptr, $1);}
+    | RETURN exp SEMICOLON  {$$ = TreeNode::CreateReturnStmt($2, $1);}
     ;
 
 breakStmt:
-    BREAK SEMICOLON         {$$ = new TreeNode($1);}
-    | BREAK exp SEMICOLON   {$$ = new TreeNode($2, $1);}
+    BREAK SEMICOLON         {$$ = TreeNode::CreateBreakStmt(nullptr, $1);}
+    | BREAK exp SEMICOLON   {$$ = TreeNode::CreateBreakStmt($2, $1);}
     ;
 
 exp:
-    mutable ASSIGN exp      {$$ = new TreeNode($1, $3, $2);}
-    | mutable ADDASS exp    {$$ = new TreeNode($1, $3, $2);}
-    | mutable SUBASS exp    {$$ = new TreeNode($1, $3, $2);}
-    | mutable MULASS exp    {$$ = new TreeNode($1, $3, $2);}
-    | mutable DIVASS exp    {$$ = new TreeNode($1, $3, $2);}
-    | mutable INC           {$$ = new TreeNode($1, $2);}
-    | mutable DEC           {$$ = new TreeNode($1, $2);}
+    mutable ASSIGN exp      {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    | mutable ADDASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    | mutable SUBASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    | mutable MULASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    | mutable DIVASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    | mutable INC           {$$ = TreeNode::CreateOpExp($1, nullptr, $2);}
+    | mutable DEC           {$$ = TreeNode::CreateOpExp($1, nullptr, $2);}
     | simpleExp             {$$ = $1;}
     ;
 
 simpleExp:
-    simpleExp OR andExp {$$ = new TreeNode($1, $3, $2);}
+    simpleExp OR andExp {$$ = TreeNode::CreateOpExp($1, $3, $2);}
     | andExp            {$$ = $1;}
     ;
 
 andExp:
-    andExp AND unaryRelExp  {$$ = new TreeNode($1, $3, $2);}
+    andExp AND unaryRelExp  {$$ = TreeNode::CreateOpExp($1, $3, $2);}
     | unaryRelExp           {$$ = $1;}
     ;
 
 unaryRelExp:
-    NOT unaryRelExp {$$ = new TreeNode($2, $1);}
+    NOT unaryRelExp {$$ = TreeNode::CreateOpExp($2, nullptr, $1);}
     | relExp        {$$ = $1;}
     ;
 
 relExp:
-    minmaxExp relop minmaxExp   {$$ = new TreeNode($1, $2, $3, nullptr);}
+    minmaxExp relop minmaxExp   {$$ = TreeNode::CreateOpExp($1, $3, $2);}
     | minmaxExp                 {$$ = $1;}
     ;
 
 relop:
-    LEQ     {$$ = new TreeNode($1);}
-    | LT    {$$ = new TreeNode($1);}
-    | GT    {$$ = new TreeNode($1);}
-    | GEQ   {$$ = new TreeNode($1);}
-    | EQ    {$$ = new TreeNode($1);}
-    | NEQ   {$$ = new TreeNode($1);}
+    LEQ     {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | LT    {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | GT    {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | GEQ   {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | EQ    {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | NEQ   {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
     ;
 
 minmaxExp:
-    minmaxExp minmaxop sumExp   {$$ = new TreeNode($1, $2, $3, nullptr);}
+    minmaxExp minmaxop sumExp   {$$ = TreeNode::CreateOpExp($1, $3, $2);}
     | sumExp                    {$$ = $1;}
     ;
 
 minmaxop:
-    MIN     {$$ = new TreeNode($1);}
-    | MAX   {$$ = new TreeNode($1);}
+    MIN     {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | MAX   {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
     ;
 
 sumExp:
-    sumExp sumop mulExp {$$ = new TreeNode($1, $2, $3, nullptr);}
+    sumExp sumop mulExp {$$ = TreeNode::CreateOpExp($1, $3, $2);}
     | mulExp            {$$ = $1;}
     ;
 
 sumop:
-    PLUS    {$$ = new TreeNode($1);}
-    | MINUS {$$ = new TreeNode($1);}
+    PLUS    {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | MINUS {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
     ;
 
 mulExp:
-    mulExp mulop unaryExp   {$$ = new TreeNode($1, $2, $3, nullptr);}
+    mulExp mulop unaryExp   {$$ = TreeNode::CreateOpExp($1, $3, $2));}
     | unaryExp              {$$ = $1;}
     ;
 
 mulop:
-    STAR        {$$ = new TreeNode($1);}
-    | DIVIDE    {$$ = new TreeNode($1);}
-    | MOD       {$$ = new TreeNode($1);}
+    STAR        {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | DIVIDE    {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | MOD       {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
     ;
 
 unaryExp:
-    unaryop unaryExp    {$$ = new TreeNode($1, $2, nullptr);}
+    unaryop unaryExp    {$$ = TreeNode::CreateOpExp($2, nullptr, $1);}
     | factor            {$$ = $1;}
     ;
 
 unaryop:
-    MINUS       {$$ = new TreeNode($1);}
-    | STAR      {$$ = new TreeNode($1);}
-    | QUESTION  {$$ = new TreeNode($1);}
+    MINUS       {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | STAR      {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    | QUESTION  {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
     ;
 
 factor:
@@ -258,8 +256,8 @@ factor:
     ;
 
 mutable:
-    ID                          {$$ = new TreeNode($1);}
-    | ID LBRACKET exp RBRACKET  {$$ = new TreeNode($3, $1);}
+    ID                          {$$ = TreeNode::CreateIdNode($1);}
+    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdNode($1);}
     ;
 
 immutable:
@@ -269,7 +267,7 @@ immutable:
     ;
 
 call:
-    ID LPAREN args RPAREN   {$$ = new TreeNode($3, $1);}
+    ID LPAREN args RPAREN   {$$ = TreeNode::CreateCallExp($3, $1);}
     ;
 
 args:
@@ -278,16 +276,16 @@ args:
     ;
 
 argList:
-    argList COMMA exp   {$$ = new TreeNode($1, $3, $2);}
+    argList COMMA exp   {$$ = $1; $$->SetSibling($3);}
     | exp               {$$ = $1;}
     ;
 
 constant:
-    NUMCONST        {$$ = new TreeNode($1);}
-    | CHARCONST     {$$ = new TreeNode($1);}
-    | STRINGCONST   {$$ = new TreeNode($1);}
-    | TRUE          {$$ = new TreeNode($1);}
-    | FALSE         {$$ = new TreeNode($1);}
+    NUMCONST        {$$ = TreeNode::CreateConstExp($1);}
+    | CHARCONST     {$$ = TreeNode::CreateConstExp($1);}
+    | STRINGCONST   {$$ = TreeNode::CreateConstExp($1);}
+    | TRUE          {$$ = TreeNode::CreateConstExp($1);}
+    | FALSE         {$$ = TreeNode::CreateConstExp($1);}
     ;
 
 %%
@@ -316,6 +314,6 @@ int main(int argc, char* argv[])
 
     yyparse();
 
-    root->Print();
+    ASTRoot->Print();
     return 0;
 }

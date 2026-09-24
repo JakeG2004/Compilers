@@ -1,0 +1,16 @@
+int a;
+
+int dogs;
+
+bool dogs(int x, y)
+{
+     return false;
+}
+
+int cats()
+{
+    a = dogs(a, 'z');
+    a = 666;
+    z++;        
+    return a;
+}   
