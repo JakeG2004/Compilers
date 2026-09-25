@@ -32,19 +32,24 @@ void TreeNode::Print(int depth, int childNo, int siblingNo)
 {
     int nextDepth = depth;
 
+    // indentation
     for(int i = 0; i < depth; i++)
         std::cout << ".   ";
 
+    // child
     if(childNo != -1)
         std::cout << "Child: " << childNo << "  ";
 
+    // sibling
     if(siblingNo != 0)
         std::cout << "Sibling: " << siblingNo << " ";
 
+    // token data if available, compound otherwise
     if(tokenData != nullptr)
-        std::cout << tokenData->tokenStr << std::endl;
+        std::cout << tokenData->tokenClass << ": " << tokenData->tokenStr << " [line: " << tokenData->lineNum << "]" << std::endl;
     else
-        std::cout << "no" << std::endl;
+        std::cout << "Compound" << std::endl;
+
     nextDepth++;
 
     if(leftChild != nullptr) {
