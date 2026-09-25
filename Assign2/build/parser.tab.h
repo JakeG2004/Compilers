@@ -39,7 +39,7 @@
 # define YY_YY_BUILD_PARSER_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -122,13 +122,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 23 "Parser/parser.y"
+#line 27 "Parser/parser.y"
 
     int NUMBER;
+    TreeNode::VarType varType;
     TreeNode* node;
     TokenClass* tokenData;
 
-#line 132 "build/parser.tab.h"
+#line 133 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

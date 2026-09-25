@@ -3,6 +3,10 @@
 #include "tokenclass.h"
 }
 
+%define parse.lac full
+%define parse.error verbose
+%debug
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,12 +26,14 @@ TreeNode* ASTRoot = nullptr;
 
 %union {
     int NUMBER;
+    TreeNode::VarType varType;
     TreeNode* node;
     TokenClass* tokenData;
 };
 
 %token <tokenData> ID NUMCONST CHARCONST STRINGCONST SEMICOLON STATIC COMMA COLON LBRACKET RBRACKET LPAREN RPAREN LBRACE RBRACE ASSIGN ADDASS SUBASS MULASS DIVASS INC DEC LEQ LT GT GEQ EQ NEQ MIN MAX PLUS MINUS STAR DIVIDE MOD QUESTION INT BOOL CHAR IF THEN ELSE WHILE DO FOR RETURN TO BY BREAK OR AND NOT TRUE FALSE
-%type <node> program declList decl varDecl scopedVarDecl varDeclList varDeclInit varDeclId typeSpec funDecl parms parmList parmTypeList parmIdList parmId stmt otherStmts expStmt compoundStmt localDecls stmtList selectStmt matchedStmt unmatchedStmt iterRange returnStmt breakStmt exp simpleExp andExp unaryRelExp relExp relop minmaxExp minmaxop sumExp sumop mulExp mulop unaryExp unaryop factor mutable immutable call args argList constant
+%type <node> program declList decl varDecl scopedVarDecl varDeclList varDeclInit varDeclId funDecl parms parmList parmTypeList parmIdList parmId stmt otherStmts expStmt compoundStmt localDecls stmtList selectStmt matchedStmt unmatchedStmt iterRange returnStmt breakStmt exp simpleExp andExp unaryRelExp relExp relop minmaxExp minmaxop sumExp sumop mulExp mulop unaryExp unaryop factor mutable immutable call args argList constant
+%type <varType> typeSpec
 
 %%
 program:
@@ -35,7 +41,7 @@ program:
     ;
 
 declList:
-    declList decl   {$$ = $1; $$->SetSibling($2);}
+    declList decl   {$$ = TreeNode::NodeList($1, $2);}
     | decl          {$$ = $1;}
     ;
 
@@ -45,16 +51,16 @@ decl:
     ;
 
 varDecl:
-    typeSpec varDeclList SEMICOLON  {$$ = new TreeNode($1, $2, nullptr, $3);}
+    typeSpec varDeclList SEMICOLON  {$$ = TreeNode::PullUpTypeNode($2, $1);}
     ;
 
 scopedVarDecl:
-    STATIC typeSpec varDeclList SEMICOLON   {$$ = new TreeNode($2, $3, nullptr, $1);}
-    | typeSpec varDeclList SEMICOLON        {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); $$->isStatic = true;}
+    | typeSpec varDeclList SEMICOLON        {$$ = TreeNode::PullUpTypeNode($2, $1);}
     ;
 
 varDeclList:
-    varDeclList COMMA varDeclInit   {$$ = $1; $$->SetSibling($3);}
+    varDeclList COMMA varDeclInit   {$$ = TreeNode::NodeList($1, $3);}
     | varDeclInit                   {$$ = $1;}
     ;
 
@@ -64,19 +70,19 @@ varDeclInit:
     ;
 
 varDeclId:
-    ID                              {$$ = TreeNode::CreateIdNode($1);}
-    | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateIdNode($1);} 
+    ID                              {$$ = TreeNode::CreateIdExp($1);}
+    | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateIdExp($1);} 
     ;
 
 typeSpec:
-    INT     {$$ = TreeNode::CreateIdNode($1);} 
-    | BOOL  {$$ = TreeNode::CreateIdNode($1);}
-    | CHAR  {$$ = TreeNode::CreateIdNode($1);}
+    INT     {$$ = TreeNode::VarType::INTEGER;} 
+    | BOOL  {$$ = TreeNode::VarType::BOOLEAN;}
+    | CHAR  {$$ = TreeNode::VarType::CHARACTER;}
     ;
 
 funDecl:
     typeSpec ID LPAREN parms RPAREN stmt    {$$ = TreeNode::CreateFuncDecl($1, $4, $6, $2);}
-    | ID LPAREN parms RPAREN stmt           {$$ = TreeNode::CreateFuncDecl(nullptr, $3, $5, $1);}
+    | ID LPAREN parms RPAREN stmt           {$$ = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, $3, $5, $1);}
     ;
 
 parms:
@@ -85,22 +91,22 @@ parms:
     ;
 
 parmList:
-    parmList SEMICOLON parmTypeList {$$ = $1; $$->SetSibling($3);}
+    parmList SEMICOLON parmTypeList {$$ = TreeNode::NodeList($1, $3);}
     | parmTypeList                  {$$ = $1;}
     ;
 
 parmTypeList:
-    typeSpec parmIdList {$$ = new TreeNode($1, $2, nullptr, nullptr);}
+    typeSpec parmIdList {$$ = $2;}
     ;
 
 parmIdList:
-    parmIdList COMMA parmId {$$ = $1; $$->SetSibling($3);}
+    parmIdList COMMA parmId {$$ = TreeNode::NodeList($1, $3);}
     | parmId                {$$ = $1;}
     ;
 
 parmId:
-    ID                  {$$ = TreeNode::CreateIdNode($1);}
-    | ID LPAREN RPAREN  {$$ = TreeNode::CreateIdNode($1);}
+    ID                  {$$ = TreeNode::CreateIdExp($1);}
+    | ID LPAREN RPAREN  {$$ = TreeNode::CreateIdExp($1);}
     ;
 
 stmt:
@@ -124,12 +130,12 @@ compoundStmt:
     ;
 
 localDecls:
-    localDecls scopedVarDecl    {$$ = $1; $$->SetSibling($2);}
+    localDecls scopedVarDecl    {$$ = TreeNode::NodeList($1, $2);}
     |                           {$$ = nullptr;}
     ;
 
 stmtList:
-    stmtList stmt   {$$ = $1; $$->SetSibling($2);}
+    stmtList stmt   {$$ = TreeNode::NodeList($1, $2);}
     |               {$$ = nullptr;}
     ;
 
@@ -153,8 +159,7 @@ unmatchedStmt:
     ;
 
 iterRange:
-    simpleExp                               {$$ = $1;}
-    | simpleExp TO simpleExp                {$$ = TreeNode::CreateRangeStmt($1, $3, nullptr, $2);}
+    simpleExp TO simpleExp                {$$ = TreeNode::CreateRangeStmt($1, $3, nullptr, $2);}
     | simpleExp TO simpleExp BY simpleExp   {$$ = TreeNode::CreateRangeStmt($1, $3, $5, $2);}
     ;
 
@@ -195,7 +200,7 @@ unaryRelExp:
     ;
 
 relExp:
-    minmaxExp relop minmaxExp   {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    minmaxExp relop minmaxExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr);}
     | minmaxExp                 {$$ = $1;}
     ;
 
@@ -209,7 +214,7 @@ relop:
     ;
 
 minmaxExp:
-    minmaxExp minmaxop sumExp   {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    minmaxExp minmaxop sumExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr);}
     | sumExp                    {$$ = $1;}
     ;
 
@@ -219,7 +224,7 @@ minmaxop:
     ;
 
 sumExp:
-    sumExp sumop mulExp {$$ = TreeNode::CreateOpExp($1, $3, $2);}
+    sumExp sumop mulExp {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr);}
     | mulExp            {$$ = $1;}
     ;
 
@@ -229,7 +234,7 @@ sumop:
     ;
 
 mulExp:
-    mulExp mulop unaryExp   {$$ = TreeNode::CreateOpExp($1, $3, $2));}
+    mulExp mulop unaryExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr);}
     | unaryExp              {$$ = $1;}
     ;
 
@@ -240,7 +245,7 @@ mulop:
     ;
 
 unaryExp:
-    unaryop unaryExp    {$$ = TreeNode::CreateOpExp($2, nullptr, $1);}
+    unaryop unaryExp    {$$ = TreeNode::PullUpNode($1, $2, nullptr, nullptr);}
     | factor            {$$ = $1;}
     ;
 
@@ -256,8 +261,8 @@ factor:
     ;
 
 mutable:
-    ID                          {$$ = TreeNode::CreateIdNode($1);}
-    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdNode($1);}
+    ID                          {$$ = TreeNode::CreateIdExp($1);}
+    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdExp($1);}
     ;
 
 immutable:
@@ -276,7 +281,7 @@ args:
     ;
 
 argList:
-    argList COMMA exp   {$$ = $1; $$->SetSibling($3);}
+    argList COMMA exp   {$$ = TreeNode::NodeList($1, $3);}
     | exp               {$$ = $1;}
     ;
 
@@ -297,6 +302,8 @@ void yyerror(const char* s)
 
 int main(int argc, char* argv[])
 {
+    yydebug = 0;
+
     if(argc > 2 || (argc == 1 && isatty(fileno(stdin)))) {
         printf("Invalid Usage! Correct usage is\n./c- <filename>\nor cat <filename> | ./c-\nor ./c- < <filename>\n");
         return 2;
