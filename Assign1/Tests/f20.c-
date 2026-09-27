@@ -1,4 +1,4 @@
-// C-F20
+// C-S21
 bool gb;
 char gc;
 int gi;
@@ -8,7 +8,7 @@ int main()
 {
     bool b;
     char c;
-    int i, shuri, tchalla, __X23_;
+    int i, shuri, tchalla, X23;
     static bool sb:44>22;
     static char sc:'x';
     static int si:676;
@@ -16,11 +16,11 @@ int main()
     char ca[6]:"vibranium";
     int ia[6];
 
-    b = b & b | true & ! false;
-    for (wakanda in ia) { if (wakanda == 42) break; else i++; }
-    i = 3 * *ca + 56%i/3 - ?6 + ?ia--;
-    while (shuri>=10 & i<=2 & c=='z' & b!=true & ) shuri--;
+    // more nonsense
+    b = b and b or true and not false;
+    for wakanda = ia to 666 by 42 do { if wakanda == 42 then break; else i++; }
+    i = 3 * *ca + 56%i/3 - ?6 + ?ia-- :<: X23 :>: si;
+    while shuri>=10 and i<=2 and c=='z' or ba[3]!=true  do shuri--;
+
     return 1284;
 }
-
-    

@@ -24,20 +24,21 @@ Line 6 Token: INT
 Line 6 Token: ID Value: x
 Line 6 Token: ,
 Line 6 Token: ID Value: x
-WARNING(6): character is 3 characters long and not a single character: '', x''.  The first char will be used.
-Line 6 Token: CHARCONST Value: ','  Input: ', x'
 ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
+Line 6 Token: ,
+Line 6 Token: ID Value: x
+ERROR(6): Empty character ''.  Characters ignored.
 Line 6 Token: ;
 Line 7 Token: ID Value: foreach
 Line 7 Token: ID Value: x
-Line 7 Token: IN
+Line 7 Token: ID Value: in
 Line 7 Token: ID Value: y
-Line 7 Token: ID Value: do
+Line 7 Token: DO
 Line 7 Token: NUMCONST Value: 3  Input: 3
 ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
 Line 7 Token: NUMCONST Value: 14159265  Input: 14159265
 Line 7 Token: ;
-Line 8 Token: ID Value: do
+Line 8 Token: DO
 Line 8 Token: ID Value: until
 Line 8 Token: ID Value: x
 Line 8 Token: <
@@ -50,11 +51,11 @@ Line 9 Token: ID Value: x
 ERROR(9): Invalid or misplaced input character: '~'. Character Ignored.
 Line 9 Token: =
 Line 9 Token: ID Value: y
-Line 9 Token: ID Value: then
+Line 9 Token: THEN
 Line 9 Token: NUMCONST Value: 666  Input: 666
 Line 9 Token: ID Value: elseif
 Line 9 Token: BOOLCONST Value: 1  Input: true
-Line 9 Token: ID Value: then
+Line 9 Token: THEN
 Line 9 Token: NUMCONST Value: 667  Input: 667
 Line 9 Token: ELSE
 Line 9 Token: NUMCONST Value: 668  Input: 668
@@ -68,7 +69,7 @@ ERROR(10): Invalid or misplaced input character: '.'. Character Ignored.
 Line 10 Token: NUMCONST Value: 10  Input: 10
 Line 10 Token: :
 Line 10 Token: NUMCONST Value: 20  Input: 20
-Line 10 Token: ID Value: do
+Line 10 Token: DO
 Line 10 Token: NUMCONST Value: 669  Input: 669
 Line 10 Token: ;
 Line 11 Token: ID Value: loop

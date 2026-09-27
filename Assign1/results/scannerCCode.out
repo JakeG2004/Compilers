@@ -60,10 +60,10 @@ Line 9 Token: ID Value: file
 Line 9 Token: ID Value: copying
 ERROR(9): Invalid or misplaced input character: '.'. Character Ignored.
 Line 9 Token: IF
-Line 9 Token: ID Value: not
+Line 9 Token: NOT
 Line 9 Token: ,
 Line 9 Token: ID Value: write
-Line 9 Token: ID Value: to
+Line 9 Token: TO
 Line 9 Token: ID Value: the
 Line 9 Token: ID Value: free
 Line 10 Token: ID Value: software
@@ -99,7 +99,7 @@ Line 13 Token: ID Value: h
 Line 13 Token: >
 ERROR(14): Invalid or misplaced input character: '#'. Character Ignored.
 Line 14 Token: ID Value: include
-Line 14 Token: STRINGCONST Value: "system.h"  Input: "system.h"
+Line 14 Token: STRINGCONST Value: "system.h" Len: 8  Input: "system.h"
 ERROR(16): Invalid or misplaced input character: '#'. Character Ignored.
 Line 16 Token: ID Value: include
 Line 16 Token: <
@@ -132,22 +132,22 @@ Line 19 Token: ID Value: h
 Line 19 Token: >
 ERROR(21): Invalid or misplaced input character: '#'. Character Ignored.
 Line 21 Token: ID Value: include
-Line 21 Token: STRINGCONST Value: "closure.h"  Input: "closure.h"
+Line 21 Token: STRINGCONST Value: "closure.h" Len: 9  Input: "closure.h"
 ERROR(22): Invalid or misplaced input character: '#'. Character Ignored.
 Line 22 Token: ID Value: include
-Line 22 Token: STRINGCONST Value: "derives.h"  Input: "derives.h"
+Line 22 Token: STRINGCONST Value: "derives.h" Len: 9  Input: "derives.h"
 ERROR(23): Invalid or misplaced input character: '#'. Character Ignored.
 Line 23 Token: ID Value: include
-Line 23 Token: STRINGCONST Value: "getargs.h"  Input: "getargs.h"
+Line 23 Token: STRINGCONST Value: "getargs.h" Len: 9  Input: "getargs.h"
 ERROR(24): Invalid or misplaced input character: '#'. Character Ignored.
 Line 24 Token: ID Value: include
-Line 24 Token: STRINGCONST Value: "gram.h"  Input: "gram.h"
+Line 24 Token: STRINGCONST Value: "gram.h" Len: 6  Input: "gram.h"
 ERROR(25): Invalid or misplaced input character: '#'. Character Ignored.
 Line 25 Token: ID Value: include
-Line 25 Token: STRINGCONST Value: "reader.h"  Input: "reader.h"
+Line 25 Token: STRINGCONST Value: "reader.h" Len: 8  Input: "reader.h"
 ERROR(26): Invalid or misplaced input character: '#'. Character Ignored.
 Line 26 Token: ID Value: include
-Line 26 Token: STRINGCONST Value: "symtab.h"  Input: "symtab.h"
+Line 26 Token: STRINGCONST Value: "symtab.h" Len: 8  Input: "symtab.h"
 Line 28 Token: /
 Line 28 Token: *
 Line 28 Token: ID Value: nitemset
@@ -161,11 +161,15 @@ Line 28 Token: ID Value: itemset
 ERROR(28): Invalid or misplaced input character: '.'. Character Ignored.
 Line 28 Token: *
 Line 28 Token: /
-Line 29 Token: ID Value: item_number
+Line 29 Token: ID Value: item
+ERROR(29): Invalid or misplaced input character: '_'. Character Ignored.
+Line 29 Token: ID Value: number
 Line 29 Token: *
 Line 29 Token: ID Value: itemset
 Line 29 Token: ;
-Line 30 Token: ID Value: size_t
+Line 30 Token: ID Value: size
+ERROR(30): Invalid or misplaced input character: '_'. Character Ignored.
+Line 30 Token: ID Value: t
 Line 30 Token: ID Value: nritemset
 Line 30 Token: ;
 Line 32 Token: STATIC
@@ -180,9 +184,13 @@ ERROR(34): Invalid or misplaced input character: '.'. Character Ignored.
 Line 34 Token: ID Value: see
 Line 34 Token: ID Value: comments
 Line 34 Token: ID Value: before
-Line 34 Token: ID Value: set_fderives
-Line 34 Token: ID Value: and
-Line 34 Token: ID Value: set_firsts
+Line 34 Token: ID Value: set
+ERROR(34): Invalid or misplaced input character: '_'. Character Ignored.
+Line 34 Token: ID Value: fderives
+Line 34 Token: AND
+Line 34 Token: ID Value: set
+ERROR(34): Invalid or misplaced input character: '_'. Character Ignored.
+Line 34 Token: ID Value: firsts
 ERROR(34): Invalid or misplaced input character: '.'. Character Ignored.
 Line 34 Token: *
 Line 34 Token: /
@@ -254,11 +262,11 @@ Line 42 Token: DEC
 Line 42 Token: DEC
 Line 42 Token: -
 ERROR(42): Invalid or misplaced input character: '.'. Character Ignored.
-Line 43 Token: |
+ERROR(43): Invalid or misplaced input character: '|'. Character Ignored.
 Line 43 Token: ID Value: debugging
 Line 43 Token: ID Value: code
 ERROR(43): Invalid or misplaced input character: '.'. Character Ignored.
-Line 43 Token: |
+ERROR(43): Invalid or misplaced input character: '|'. Character Ignored.
 ERROR(44): Invalid or misplaced input character: '`'. Character Ignored.
 Line 44 Token: DEC
 Line 44 Token: DEC
@@ -273,22 +281,30 @@ Line 44 Token: *
 Line 44 Token: /
 Line 46 Token: STATIC
 Line 46 Token: ID Value: void
-Line 47 Token: ID Value: print_closure
+Line 47 Token: ID Value: print
+ERROR(47): Invalid or misplaced input character: '_'. Character Ignored.
+Line 47 Token: ID Value: closure
 Line 47 Token: (
 Line 47 Token: CHAR
 Line 47 Token: ID Value: const
 Line 47 Token: *
 Line 47 Token: ID Value: title
 Line 47 Token: ,
-Line 47 Token: ID Value: item_number
+Line 47 Token: ID Value: item
+ERROR(47): Invalid or misplaced input character: '_'. Character Ignored.
+Line 47 Token: ID Value: number
 Line 47 Token: *
 Line 47 Token: ID Value: array
 Line 47 Token: ,
-Line 47 Token: ID Value: size_t
+Line 47 Token: ID Value: size
+ERROR(47): Invalid or misplaced input character: '_'. Character Ignored.
+Line 47 Token: ID Value: t
 Line 47 Token: ID Value: size
 Line 47 Token: )
 Line 48 Token: {
-Line 49 Token: ID Value: size_t
+Line 49 Token: ID Value: size
+ERROR(49): Invalid or misplaced input character: '_'. Character Ignored.
+Line 49 Token: ID Value: t
 Line 49 Token: ID Value: i
 Line 49 Token: ;
 Line 50 Token: ID Value: fprintf
@@ -296,7 +312,7 @@ Line 50 Token: (
 Line 50 Token: ID Value: stderr
 Line 50 Token: ,
 Line 50 Token: STRINGCONST Value: "closure: %s
-"  Input: "closure: %s\n"
+" Len: 12  Input: "closure: %s\n"
 Line 50 Token: ,
 Line 50 Token: ID Value: title
 Line 50 Token: )
@@ -315,7 +331,9 @@ Line 51 Token: INC
 Line 51 Token: ID Value: i
 Line 51 Token: )
 Line 52 Token: {
-Line 53 Token: ID Value: item_number
+Line 53 Token: ID Value: item
+ERROR(53): Invalid or misplaced input character: '_'. Character Ignored.
+Line 53 Token: ID Value: number
 Line 53 Token: *
 Line 53 Token: ID Value: rp
 Line 53 Token: ;
@@ -323,7 +341,7 @@ Line 54 Token: ID Value: fprintf
 Line 54 Token: (
 Line 54 Token: ID Value: stderr
 Line 54 Token: ,
-Line 54 Token: STRINGCONST Value: "  %2d: ."  Input: "  %2d: ."
+Line 54 Token: STRINGCONST Value: "  %2d: ." Len: 8  Input: "  %2d: ."
 Line 54 Token: ,
 Line 54 Token: ID Value: array
 Line 54 Token: [
@@ -335,7 +353,7 @@ Line 55 Token: FOR
 Line 55 Token: (
 Line 55 Token: ID Value: rp
 Line 55 Token: =
-Line 55 Token: &
+ERROR(55): Invalid or misplaced input character: '&'. Character Ignored.
 Line 55 Token: ID Value: ritem
 Line 55 Token: [
 Line 55 Token: ID Value: array
@@ -356,7 +374,7 @@ Line 56 Token: ID Value: fprintf
 Line 56 Token: (
 Line 56 Token: ID Value: stderr
 Line 56 Token: ,
-Line 56 Token: STRINGCONST Value: " %s"  Input: " %s"
+Line 56 Token: STRINGCONST Value: " %s" Len: 3  Input: " %s"
 Line 56 Token: ,
 Line 56 Token: ID Value: symbols
 Line 56 Token: [
@@ -373,7 +391,7 @@ Line 57 Token: (
 Line 57 Token: ID Value: stderr
 Line 57 Token: ,
 Line 57 Token: STRINGCONST Value: "  (rule %d)
-"  Input: "  (rule %d)\n"
+" Len: 12  Input: "  (rule %d)\n"
 Line 57 Token: ,
 Line 57 Token: -
 Line 57 Token: *
@@ -387,7 +405,7 @@ Line 59 Token: ID Value: fputs
 Line 59 Token: (
 Line 59 Token: STRINGCONST Value: "
 
-"  Input: "\n\n"
+" Len: 2  Input: "\n\n"
 Line 59 Token: ,
 Line 59 Token: ID Value: stderr
 Line 59 Token: )
@@ -395,12 +413,16 @@ Line 59 Token: ;
 Line 60 Token: }
 Line 63 Token: STATIC
 Line 63 Token: ID Value: void
-Line 64 Token: ID Value: print_firsts
+Line 64 Token: ID Value: print
+ERROR(64): Invalid or misplaced input character: '_'. Character Ignored.
+Line 64 Token: ID Value: firsts
 Line 64 Token: (
 Line 64 Token: ID Value: void
 Line 64 Token: )
 Line 65 Token: {
-Line 66 Token: ID Value: symbol_number
+Line 66 Token: ID Value: symbol
+ERROR(66): Invalid or misplaced input character: '_'. Character Ignored.
+Line 66 Token: ID Value: number
 Line 66 Token: ID Value: i
 Line 66 Token: ,
 Line 66 Token: ID Value: j
@@ -410,7 +432,7 @@ Line 68 Token: (
 Line 68 Token: ID Value: stderr
 Line 68 Token: ,
 Line 68 Token: STRINGCONST Value: "firsts
-"  Input: "firsts\n"
+" Len: 7  Input: "firsts\n"
 Line 68 Token: )
 Line 68 Token: ;
 Line 69 Token: FOR
@@ -427,15 +449,17 @@ Line 69 Token: ID Value: i
 Line 69 Token: INC
 Line 69 Token: )
 Line 70 Token: {
-Line 71 Token: ID Value: bitset_iterator
+Line 71 Token: ID Value: bitset
+ERROR(71): Invalid or misplaced input character: '_'. Character Ignored.
+Line 71 Token: ID Value: iterator
 Line 71 Token: ID Value: iter
 Line 71 Token: ;
 Line 72 Token: ID Value: fprintf
 Line 72 Token: (
 Line 72 Token: ID Value: stderr
 Line 72 Token: ,
-Line 72 Token: STRINGCONST Value: "t%s firsts
-"  Input: "\t%s firsts\n"
+Line 72 Token: STRINGCONST Value: "	%s firsts
+" Len: 11  Input: "\t%s firsts\n"
 Line 72 Token: ,
 Line 72 Token: ID Value: symbols
 Line 72 Token: [
@@ -446,7 +470,11 @@ Line 72 Token: >
 Line 72 Token: ID Value: tag
 Line 72 Token: )
 Line 72 Token: ;
-Line 73 Token: ID Value: bitset_for_each
+Line 73 Token: ID Value: bitset
+ERROR(73): Invalid or misplaced input character: '_'. Character Ignored.
+Line 73 Token: FOR
+ERROR(73): Invalid or misplaced input character: '_'. Character Ignored.
+Line 73 Token: ID Value: each
 Line 73 Token: (
 Line 73 Token: ID Value: iter
 Line 73 Token: ,
@@ -464,8 +492,8 @@ Line 75 Token: ID Value: fprintf
 Line 75 Token: (
 Line 75 Token: ID Value: stderr
 Line 75 Token: ,
-Line 75 Token: STRINGCONST Value: "tt%s
-"  Input: "\t\t%s\n"
+Line 75 Token: STRINGCONST Value: "		%s
+" Len: 5  Input: "\t\t%s\n"
 Line 75 Token: ,
 Line 76 Token: ID Value: symbols
 Line 76 Token: [
@@ -486,13 +514,15 @@ Line 79 Token: ID Value: stderr
 Line 79 Token: ,
 Line 79 Token: STRINGCONST Value: "
 
-"  Input: "\n\n"
+" Len: 2  Input: "\n\n"
 Line 79 Token: )
 Line 79 Token: ;
 Line 80 Token: }
 Line 83 Token: STATIC
 Line 83 Token: ID Value: void
-Line 84 Token: ID Value: print_fderives
+Line 84 Token: ID Value: print
+ERROR(84): Invalid or misplaced input character: '_'. Character Ignored.
+Line 84 Token: ID Value: fderives
 Line 84 Token: (
 Line 84 Token: ID Value: void
 Line 84 Token: )
@@ -500,7 +530,9 @@ Line 85 Token: {
 Line 86 Token: INT
 Line 86 Token: ID Value: i
 Line 86 Token: ;
-Line 87 Token: ID Value: rule_number
+Line 87 Token: ID Value: rule
+ERROR(87): Invalid or misplaced input character: '_'. Character Ignored.
+Line 87 Token: ID Value: number
 Line 87 Token: ID Value: r
 Line 87 Token: ;
 Line 89 Token: ID Value: fprintf
@@ -508,7 +540,7 @@ Line 89 Token: (
 Line 89 Token: ID Value: stderr
 Line 89 Token: ,
 Line 89 Token: STRINGCONST Value: "fderives
-"  Input: "fderives\n"
+" Len: 9  Input: "fderives\n"
 Line 89 Token: )
 Line 89 Token: ;
 Line 90 Token: FOR
@@ -525,15 +557,17 @@ Line 90 Token: ID Value: i
 Line 90 Token: INC
 Line 90 Token: )
 Line 91 Token: {
-Line 92 Token: ID Value: bitset_iterator
+Line 92 Token: ID Value: bitset
+ERROR(92): Invalid or misplaced input character: '_'. Character Ignored.
+Line 92 Token: ID Value: iterator
 Line 92 Token: ID Value: iter
 Line 92 Token: ;
 Line 93 Token: ID Value: fprintf
 Line 93 Token: (
 Line 93 Token: ID Value: stderr
 Line 93 Token: ,
-Line 93 Token: STRINGCONST Value: "t%s derives
-"  Input: "\t%s derives\n"
+Line 93 Token: STRINGCONST Value: "	%s derives
+" Len: 12  Input: "\t%s derives\n"
 Line 93 Token: ,
 Line 93 Token: ID Value: symbols
 Line 93 Token: [
@@ -544,7 +578,11 @@ Line 93 Token: >
 Line 93 Token: ID Value: tag
 Line 93 Token: )
 Line 93 Token: ;
-Line 94 Token: ID Value: bitset_for_each
+Line 94 Token: ID Value: bitset
+ERROR(94): Invalid or misplaced input character: '_'. Character Ignored.
+Line 94 Token: FOR
+ERROR(94): Invalid or misplaced input character: '_'. Character Ignored.
+Line 94 Token: ID Value: each
 Line 94 Token: (
 Line 94 Token: ID Value: iter
 Line 94 Token: ,
@@ -562,14 +600,18 @@ Line 96 Token: ID Value: fprintf
 Line 96 Token: (
 Line 96 Token: ID Value: stderr
 Line 96 Token: ,
-Line 96 Token: STRINGCONST Value: "tt%3d "  Input: "\t\t%3d "
+Line 96 Token: STRINGCONST Value: "		%3d " Len: 6  Input: "\t\t%3d "
 Line 96 Token: ,
 Line 96 Token: ID Value: r
 Line 96 Token: )
 Line 96 Token: ;
-Line 97 Token: ID Value: rule_rhs_print
+Line 97 Token: ID Value: rule
+ERROR(97): Invalid or misplaced input character: '_'. Character Ignored.
+Line 97 Token: ID Value: rhs
+ERROR(97): Invalid or misplaced input character: '_'. Character Ignored.
+Line 97 Token: ID Value: print
 Line 97 Token: (
-Line 97 Token: &
+ERROR(97): Invalid or misplaced input character: '&'. Character Ignored.
 Line 97 Token: ID Value: rules
 Line 97 Token: [
 Line 97 Token: ID Value: r
@@ -586,7 +628,7 @@ Line 100 Token: ID Value: stderr
 Line 100 Token: ,
 Line 100 Token: STRINGCONST Value: "
 
-"  Input: "\n\n"
+" Len: 2  Input: "\n\n"
 Line 100 Token: )
 Line 100 Token: ;
 Line 101 Token: }
@@ -626,10 +668,10 @@ Line 103 Token: DEC
 Line 103 Token: DEC
 Line 103 Token: DEC
 ERROR(103): Invalid or misplaced input character: '.'. Character Ignored.
-Line 104 Token: |
+ERROR(104): Invalid or misplaced input character: '|'. Character Ignored.
 Line 104 Token: ID Value: set
 Line 104 Token: ID Value: firsts
-Line 104 Token: ID Value: to
+Line 104 Token: TO
 Line 104 Token: ID Value: be
 Line 104 Token: ID Value: an
 Line 104 Token: ID Value: nvars
@@ -639,8 +681,8 @@ Line 104 Token: ID Value: nvars
 Line 104 Token: ID Value: bitsets
 Line 104 Token: ID Value: indicating
 Line 104 Token: ID Value: which
-Line 104 Token: |
-Line 105 Token: |
+ERROR(104): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(105): Invalid or misplaced input character: '|'. Character Ignored.
 Line 105 Token: ID Value: items
 Line 105 Token: ID Value: can
 Line 105 Token: ID Value: represent
@@ -650,17 +692,17 @@ Line 105 Token: ID Value: of
 Line 105 Token: ID Value: the
 Line 105 Token: ID Value: input
 Line 105 Token: ID Value: corresponding
-Line 105 Token: ID Value: to
-Line 105 Token: |
-Line 106 Token: |
+Line 105 Token: TO
+ERROR(105): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(106): Invalid or misplaced input character: '|'. Character Ignored.
 Line 106 Token: ID Value: which
 Line 106 Token: ID Value: other
 Line 106 Token: ID Value: items
 ERROR(106): Invalid or misplaced input character: '.'. Character Ignored.
-Line 106 Token: |
-Line 107 Token: |
-Line 107 Token: |
-Line 108 Token: |
+ERROR(106): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(107): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(107): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(108): Invalid or misplaced input character: '|'. Character Ignored.
 Line 108 Token: FOR
 Line 108 Token: ID Value: example
 Line 108 Token: ,
@@ -674,8 +716,8 @@ Line 108 Token: ID Value: into
 Line 108 Token: ID Value: the
 Line 108 Token: ID Value: sequence
 Line 108 Token: ID Value: of
-Line 108 Token: |
-Line 109 Token: |
+ERROR(108): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(109): Invalid or misplaced input character: '|'. Character Ignored.
 Line 109 Token: ID Value: symbols
 Line 109 Token: NUMCONST Value: 8  Input: 8
 Line 109 Token: NUMCONST Value: 3  Input: 3
@@ -692,8 +734,8 @@ Line 109 Token: ID Value: of
 Line 109 Token: ID Value: the
 Line 109 Token: ID Value: data
 Line 109 Token: FOR
-Line 109 Token: |
-Line 110 Token: |
+ERROR(109): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(110): Invalid or misplaced input character: '|'. Character Ignored.
 Line 110 Token: ID Value: symbol
 Line 110 Token: NUMCONST Value: 5  Input: 5
 Line 110 Token: ,
@@ -705,7 +747,7 @@ Line 110 Token: NUMCONST Value: 8  Input: 8
 Line 110 Token: -
 Line 110 Token: ID Value: ntokens
 Line 110 Token: ]
-Line 110 Token: IN
+Line 110 Token: ID Value: in
 Line 110 Token: ID Value: first
 Line 110 Token: [
 Line 110 Token: NUMCONST Value: 5  Input: 5
@@ -715,8 +757,8 @@ Line 110 Token: ]
 Line 110 Token: (
 Line 110 Token: =
 Line 110 Token: ID Value: first
-Line 110 Token: |
-Line 111 Token: |
+ERROR(110): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(111): Invalid or misplaced input character: '|'. Character Ignored.
 Line 111 Token: (
 Line 111 Token: NUMCONST Value: 5  Input: 5
 Line 111 Token: )
@@ -724,7 +766,7 @@ Line 111 Token: )
 Line 111 Token: ID Value: is
 Line 111 Token: ID Value: set
 ERROR(111): Invalid or misplaced input character: '.'. Character Ignored.
-Line 111 Token: |
+ERROR(111): Invalid or misplaced input character: '|'. Character Ignored.
 ERROR(112): Invalid or misplaced input character: '`'. Character Ignored.
 Line 112 Token: DEC
 Line 112 Token: DEC
@@ -763,25 +805,33 @@ Line 112 Token: *
 Line 112 Token: /
 Line 114 Token: STATIC
 Line 114 Token: ID Value: void
-Line 115 Token: ID Value: set_firsts
+Line 115 Token: ID Value: set
+ERROR(115): Invalid or misplaced input character: '_'. Character Ignored.
+Line 115 Token: ID Value: firsts
 Line 115 Token: (
 Line 115 Token: ID Value: void
 Line 115 Token: )
 Line 116 Token: {
-Line 117 Token: ID Value: symbol_number
+Line 117 Token: ID Value: symbol
+ERROR(117): Invalid or misplaced input character: '_'. Character Ignored.
+Line 117 Token: ID Value: number
 Line 117 Token: ID Value: i
 Line 117 Token: ,
 Line 117 Token: ID Value: j
 Line 117 Token: ;
 Line 119 Token: ID Value: firsts
 Line 119 Token: =
-Line 119 Token: ID Value: bitsetv_create
+Line 119 Token: ID Value: bitsetv
+ERROR(119): Invalid or misplaced input character: '_'. Character Ignored.
+Line 119 Token: ID Value: create
 Line 119 Token: (
 Line 119 Token: ID Value: nvars
 Line 119 Token: ,
 Line 119 Token: ID Value: nvars
 Line 119 Token: ,
-Line 119 Token: ID Value: bitset_fixed
+Line 119 Token: ID Value: bitset
+ERROR(119): Invalid or misplaced input character: '_'. Character Ignored.
+Line 119 Token: ID Value: fixed
 Line 119 Token: )
 Line 119 Token: ;
 Line 121 Token: FOR
@@ -817,7 +867,9 @@ Line 122 Token: INC
 Line 122 Token: ID Value: j
 Line 122 Token: )
 Line 123 Token: {
-Line 124 Token: ID Value: item_number
+Line 124 Token: ID Value: item
+ERROR(124): Invalid or misplaced input character: '_'. Character Ignored.
+Line 124 Token: ID Value: number
 Line 124 Token: ID Value: sym
 Line 124 Token: =
 Line 124 Token: ID Value: derives
@@ -843,7 +895,9 @@ Line 125 Token: (
 Line 125 Token: ID Value: sym
 Line 125 Token: )
 Line 125 Token: )
-Line 126 Token: ID Value: bitset_set
+Line 126 Token: ID Value: bitset
+ERROR(126): Invalid or misplaced input character: '_'. Character Ignored.
+Line 126 Token: ID Value: set
 Line 126 Token: (
 Line 126 Token: ID Value: firsts
 Line 126 Token: (
@@ -858,46 +912,74 @@ Line 126 Token: ;
 Line 127 Token: }
 Line 129 Token: IF
 Line 129 Token: (
-Line 129 Token: ID Value: trace_flag
-Line 129 Token: &
-Line 129 Token: ID Value: trace_sets
+Line 129 Token: ID Value: trace
+ERROR(129): Invalid or misplaced input character: '_'. Character Ignored.
+Line 129 Token: ID Value: flag
+ERROR(129): Invalid or misplaced input character: '&'. Character Ignored.
+Line 129 Token: ID Value: trace
+ERROR(129): Invalid or misplaced input character: '_'. Character Ignored.
+Line 129 Token: ID Value: sets
 Line 129 Token: )
-Line 130 Token: ID Value: bitsetv_matrix_dump
+Line 130 Token: ID Value: bitsetv
+ERROR(130): Invalid or misplaced input character: '_'. Character Ignored.
+Line 130 Token: ID Value: matrix
+ERROR(130): Invalid or misplaced input character: '_'. Character Ignored.
+Line 130 Token: ID Value: dump
 Line 130 Token: (
 Line 130 Token: ID Value: stderr
 Line 130 Token: ,
-Line 130 Token: STRINGCONST Value: "rtc: firsts input"  Input: "rtc: firsts input"
+Line 130 Token: STRINGCONST Value: "rtc: firsts input" Len: 17  Input: "rtc: firsts input"
 Line 130 Token: ,
 Line 130 Token: ID Value: firsts
 Line 130 Token: )
 Line 130 Token: ;
-Line 131 Token: ID Value: bitsetv_reflexive_transitive_closure
+Line 131 Token: ID Value: bitsetv
+ERROR(131): Invalid or misplaced input character: '_'. Character Ignored.
+Line 131 Token: ID Value: reflexive
+ERROR(131): Invalid or misplaced input character: '_'. Character Ignored.
+Line 131 Token: ID Value: transitive
+ERROR(131): Invalid or misplaced input character: '_'. Character Ignored.
+Line 131 Token: ID Value: closure
 Line 131 Token: (
 Line 131 Token: ID Value: firsts
 Line 131 Token: )
 Line 131 Token: ;
 Line 132 Token: IF
 Line 132 Token: (
-Line 132 Token: ID Value: trace_flag
-Line 132 Token: &
-Line 132 Token: ID Value: trace_sets
+Line 132 Token: ID Value: trace
+ERROR(132): Invalid or misplaced input character: '_'. Character Ignored.
+Line 132 Token: ID Value: flag
+ERROR(132): Invalid or misplaced input character: '&'. Character Ignored.
+Line 132 Token: ID Value: trace
+ERROR(132): Invalid or misplaced input character: '_'. Character Ignored.
+Line 132 Token: ID Value: sets
 Line 132 Token: )
-Line 133 Token: ID Value: bitsetv_matrix_dump
+Line 133 Token: ID Value: bitsetv
+ERROR(133): Invalid or misplaced input character: '_'. Character Ignored.
+Line 133 Token: ID Value: matrix
+ERROR(133): Invalid or misplaced input character: '_'. Character Ignored.
+Line 133 Token: ID Value: dump
 Line 133 Token: (
 Line 133 Token: ID Value: stderr
 Line 133 Token: ,
-Line 133 Token: STRINGCONST Value: "rtc: firsts output"  Input: "rtc: firsts output"
+Line 133 Token: STRINGCONST Value: "rtc: firsts output" Len: 18  Input: "rtc: firsts output"
 Line 133 Token: ,
 Line 133 Token: ID Value: firsts
 Line 133 Token: )
 Line 133 Token: ;
 Line 135 Token: IF
 Line 135 Token: (
-Line 135 Token: ID Value: trace_flag
-Line 135 Token: &
-Line 135 Token: ID Value: trace_sets
+Line 135 Token: ID Value: trace
+ERROR(135): Invalid or misplaced input character: '_'. Character Ignored.
+Line 135 Token: ID Value: flag
+ERROR(135): Invalid or misplaced input character: '&'. Character Ignored.
+Line 135 Token: ID Value: trace
+ERROR(135): Invalid or misplaced input character: '_'. Character Ignored.
+Line 135 Token: ID Value: sets
 Line 135 Token: )
-Line 136 Token: ID Value: print_firsts
+Line 136 Token: ID Value: print
+ERROR(136): Invalid or misplaced input character: '_'. Character Ignored.
+Line 136 Token: ID Value: firsts
 Line 136 Token: (
 Line 136 Token: )
 Line 136 Token: ;
@@ -939,21 +1021,21 @@ Line 139 Token: DEC
 Line 139 Token: DEC
 Line 139 Token: -
 ERROR(139): Invalid or misplaced input character: '.'. Character Ignored.
-Line 140 Token: |
+ERROR(140): Invalid or misplaced input character: '|'. Character Ignored.
 Line 140 Token: ID Value: set
 Line 140 Token: ID Value: fderives
-Line 140 Token: ID Value: to
+Line 140 Token: TO
 Line 140 Token: ID Value: an
 Line 140 Token: ID Value: nvars
-Line 140 Token: ID Value: by
+Line 140 Token: BY
 Line 140 Token: ID Value: nrules
 Line 140 Token: ID Value: matrix
 Line 140 Token: ID Value: of
 Line 140 Token: ID Value: bits
 Line 140 Token: ID Value: indicating
 Line 140 Token: ID Value: which
-Line 140 Token: |
-Line 141 Token: |
+ERROR(140): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(141): Invalid or misplaced input character: '|'. Character Ignored.
 Line 141 Token: ID Value: rules
 Line 141 Token: ID Value: can
 Line 141 Token: ID Value: help
@@ -965,14 +1047,14 @@ Line 141 Token: ID Value: the
 Line 141 Token: ID Value: data
 Line 141 Token: FOR
 Line 141 Token: ID Value: each
-Line 141 Token: |
-Line 142 Token: |
+ERROR(141): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(142): Invalid or misplaced input character: '|'. Character Ignored.
 Line 142 Token: ID Value: nonterminal
 ERROR(142): Invalid or misplaced input character: '.'. Character Ignored.
-Line 142 Token: |
-Line 143 Token: |
-Line 143 Token: |
-Line 144 Token: |
+ERROR(142): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(143): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(143): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(144): Invalid or misplaced input character: '|'. Character Ignored.
 Line 144 Token: FOR
 Line 144 Token: ID Value: example
 Line 144 Token: ,
@@ -987,13 +1069,13 @@ Line 144 Token: ID Value: the
 Line 144 Token: ID Value: sequence
 Line 144 Token: ID Value: of
 Line 144 Token: ID Value: symbols
-Line 144 Token: |
-Line 145 Token: |
+ERROR(144): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(145): Invalid or misplaced input character: '|'. Character Ignored.
 Line 145 Token: NUMCONST Value: 8  Input: 8
 Line 145 Token: NUMCONST Value: 3  Input: 3
 Line 145 Token: NUMCONST Value: 20  Input: 20
 Line 145 Token: ,
-Line 145 Token: ID Value: and
+Line 145 Token: AND
 Line 145 Token: ID Value: one
 Line 145 Token: ID Value: of
 Line 145 Token: ID Value: the
@@ -1006,9 +1088,9 @@ Line 145 Token: ID Value: is
 Line 145 Token: ID Value: rule
 Line 145 Token: NUMCONST Value: 4  Input: 4
 Line 145 Token: ,
-Line 145 Token: ID Value: then
-Line 145 Token: |
-Line 146 Token: |
+Line 145 Token: THEN
+ERROR(145): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(146): Invalid or misplaced input character: '|'. Character Ignored.
 Line 146 Token: ID Value: the
 Line 146 Token: [
 Line 146 Token: NUMCONST Value: 5  Input: 5
@@ -1018,12 +1100,12 @@ Line 146 Token: ,
 Line 146 Token: NUMCONST Value: 4  Input: 4
 Line 146 Token: ]
 Line 146 Token: ID Value: bit
-Line 146 Token: IN
+Line 146 Token: ID Value: in
 Line 146 Token: ID Value: fderives
 Line 146 Token: ID Value: is
 Line 146 Token: ID Value: set
 ERROR(146): Invalid or misplaced input character: '.'. Character Ignored.
-Line 146 Token: |
+ERROR(146): Invalid or misplaced input character: '|'. Character Ignored.
 ERROR(147): Invalid or misplaced input character: '`'. Character Ignored.
 Line 147 Token: DEC
 Line 147 Token: DEC
@@ -1063,31 +1145,43 @@ Line 147 Token: *
 Line 147 Token: /
 Line 149 Token: STATIC
 Line 149 Token: ID Value: void
-Line 150 Token: ID Value: set_fderives
+Line 150 Token: ID Value: set
+ERROR(150): Invalid or misplaced input character: '_'. Character Ignored.
+Line 150 Token: ID Value: fderives
 Line 150 Token: (
 Line 150 Token: ID Value: void
 Line 150 Token: )
 Line 151 Token: {
-Line 152 Token: ID Value: symbol_number
+Line 152 Token: ID Value: symbol
+ERROR(152): Invalid or misplaced input character: '_'. Character Ignored.
+Line 152 Token: ID Value: number
 Line 152 Token: ID Value: i
 Line 152 Token: ,
 Line 152 Token: ID Value: j
 Line 152 Token: ;
-Line 153 Token: ID Value: rule_number
+Line 153 Token: ID Value: rule
+ERROR(153): Invalid or misplaced input character: '_'. Character Ignored.
+Line 153 Token: ID Value: number
 Line 153 Token: ID Value: k
 Line 153 Token: ;
 Line 155 Token: ID Value: fderives
 Line 155 Token: =
-Line 155 Token: ID Value: bitsetv_create
+Line 155 Token: ID Value: bitsetv
+ERROR(155): Invalid or misplaced input character: '_'. Character Ignored.
+Line 155 Token: ID Value: create
 Line 155 Token: (
 Line 155 Token: ID Value: nvars
 Line 155 Token: ,
 Line 155 Token: ID Value: nrules
 Line 155 Token: ,
-Line 155 Token: ID Value: bitset_fixed
+Line 155 Token: ID Value: bitset
+ERROR(155): Invalid or misplaced input character: '_'. Character Ignored.
+Line 155 Token: ID Value: fixed
 Line 155 Token: )
 Line 155 Token: ;
-Line 157 Token: ID Value: set_firsts
+Line 157 Token: ID Value: set
+ERROR(157): Invalid or misplaced input character: '_'. Character Ignored.
+Line 157 Token: ID Value: firsts
 Line 157 Token: (
 Line 157 Token: )
 Line 157 Token: ;
@@ -1119,7 +1213,9 @@ Line 160 Token: ID Value: j
 Line 160 Token: )
 Line 161 Token: IF
 Line 161 Token: (
-Line 161 Token: ID Value: bitset_test
+Line 161 Token: ID Value: bitset
+ERROR(161): Invalid or misplaced input character: '_'. Character Ignored.
+Line 161 Token: ID Value: test
 Line 161 Token: (
 Line 161 Token: ID Value: firsts
 Line 161 Token: (
@@ -1150,7 +1246,9 @@ Line 162 Token: ;
 Line 162 Token: INC
 Line 162 Token: ID Value: k
 Line 162 Token: )
-Line 163 Token: ID Value: bitset_set
+Line 163 Token: ID Value: bitset
+ERROR(163): Invalid or misplaced input character: '_'. Character Ignored.
+Line 163 Token: ID Value: set
 Line 163 Token: (
 Line 163 Token: ID Value: fderives
 Line 163 Token: (
@@ -1173,15 +1271,23 @@ Line 163 Token: )
 Line 163 Token: ;
 Line 165 Token: IF
 Line 165 Token: (
-Line 165 Token: ID Value: trace_flag
-Line 165 Token: &
-Line 165 Token: ID Value: trace_sets
+Line 165 Token: ID Value: trace
+ERROR(165): Invalid or misplaced input character: '_'. Character Ignored.
+Line 165 Token: ID Value: flag
+ERROR(165): Invalid or misplaced input character: '&'. Character Ignored.
+Line 165 Token: ID Value: trace
+ERROR(165): Invalid or misplaced input character: '_'. Character Ignored.
+Line 165 Token: ID Value: sets
 Line 165 Token: )
-Line 166 Token: ID Value: print_fderives
+Line 166 Token: ID Value: print
+ERROR(166): Invalid or misplaced input character: '_'. Character Ignored.
+Line 166 Token: ID Value: fderives
 Line 166 Token: (
 Line 166 Token: )
 Line 166 Token: ;
-Line 168 Token: ID Value: bitsetv_free
+Line 168 Token: ID Value: bitsetv
+ERROR(168): Invalid or misplaced input character: '_'. Character Ignored.
+Line 168 Token: ID Value: free
 Line 168 Token: (
 Line 168 Token: ID Value: firsts
 Line 168 Token: )

@@ -8,7 +8,7 @@ Line 1 Token: {
 Line 2 Token: CHAR
 Line 2 Token: ID Value: a
 Line 2 Token: =
-Line 2 Token: CHARCONST Value: 't'  Input: '\t'
+Line 2 Token: CHARCONST Value: '	'  Input: '\t'
 Line 2 Token: ;
 Line 3 Token: CHAR
 Line 3 Token: ID Value: t
@@ -28,9 +28,7 @@ Line 5 Token: ;
 Line 6 Token: CHAR
 Line 6 Token: ID Value: f
 Line 6 Token: =
-ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
-ERROR(6): Invalid or misplaced input character: '\'. Character Ignored.
-ERROR(6): Invalid or misplaced input character: '''. Character Ignored.
+Line 6 Token: CHARCONST Value: '''  Input: '\'
 Line 6 Token: ;
 Line 7 Token: CHAR
 Line 7 Token: ID Value: d
@@ -65,12 +63,12 @@ Line 11 Token: ;
 Line 12 Token: ID Value: string
 Line 12 Token: ID Value: c
 Line 12 Token: =
-Line 12 Token: STRINGCONST Value: "abadddt
-cc"  Input: "abaddd\t\ncc"
+Line 12 Token: STRINGCONST Value: "abaddd	
+cc" Len: 10  Input: "abaddd\t\ncc"
 Line 12 Token: ;
 Line 13 Token: ID Value: string
 Line 13 Token: ID Value: d
 Line 13 Token: =
-Line 13 Token: STRINGCONST Value: "bddeecc	dbdd"  Input: "bddeecc	dbdd"
+Line 13 Token: STRINGCONST Value: "bddeecc	dbdd" Len: 12  Input: "bddeecc	dbdd"
 Line 13 Token: ;
 Line 14 Token: }

@@ -96,12 +96,33 @@ int main(int argc, char* argv[])
             perror(argv[1]);
             return 1;
         }
-
         yyin = file;
+    } else {
+        yyin = stdin;
     }
 
+    FILE* temp = tmpfile();
+    if (!temp) {
+        perror("tmpfile");
+        if (argc == 2) fclose(yyin);
+        return 1;
+    }
 
+    char buffer[1024];
+    size_t bytes;
+    while ((bytes = fread(buffer, 1, sizeof(buffer), yyin)) > 0) {
+        fwrite(buffer, 1, bytes, stdout);
+        fwrite(buffer, 1, bytes, temp);
+    }
 
-    yyparse();
+    if (argc == 2) {
+        fclose(yyin);
+    }
+
+    rewind(temp);
+    yyin = temp;
+
+    fclose(temp);
+
     return 0;
 }

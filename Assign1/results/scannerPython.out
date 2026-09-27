@@ -1,0 +1,64 @@
+ERROR(1): Invalid or misplaced input character: '#'. Character Ignored.
+ERROR(1): Invalid or misplaced input character: '!'. Character Ignored.
+Line 1 Token: /
+Line 1 Token: ID Value: usr
+Line 1 Token: /
+Line 1 Token: ID Value: local
+Line 1 Token: /
+Line 1 Token: ID Value: bin
+Line 1 Token: /
+Line 1 Token: ID Value: python3
+Line 2 Token: ID Value: import
+Line 2 Token: ID Value: sys
+Line 4 Token: ID Value: mem
+Line 4 Token: =
+Line 4 Token: {
+Line 4 Token: }
+Line 5 Token: ID Value: def
+Line 5 Token: ID Value: main
+Line 5 Token: (
+Line 5 Token: )
+Line 5 Token: :
+Line 6 Token: WHILE
+Line 6 Token: NUMCONST Value: 1  Input: 1
+Line 6 Token: :
+Line 7 Token: ID Value: n
+Line 7 Token: =
+Line 7 Token: ID Value: sys
+ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
+Line 7 Token: ID Value: stdin
+ERROR(7): Invalid or misplaced input character: '.'. Character Ignored.
+Line 7 Token: ID Value: readline
+Line 7 Token: (
+Line 7 Token: )
+Line 8 Token: IF
+Line 8 Token: ID Value: n
+Line 8 Token: EQ
+Line 8 Token: STRINGCONST Value: "exit" Len: 4  Input: "exit"
+Line 8 Token: :
+Line 8 Token: BREAK
+Line 8 Token: ;
+Line 9 Token: IF
+Line 9 Token: ID Value: n
+Line 9 Token: ID Value: in
+Line 9 Token: ID Value: mem
+Line 9 Token: :
+Line 10 Token: ID Value: print
+Line 10 Token: (
+Line 10 Token: STRINGCONST Value: "seen it!" Len: 8  Input: "seen it!"
+Line 10 Token: )
+Line 11 Token: ELSE
+Line 11 Token: :
+Line 12 Token: ID Value: mem
+Line 12 Token: [
+Line 12 Token: ID Value: n
+Line 12 Token: ]
+Line 12 Token: =
+Line 12 Token: NUMCONST Value: 1  Input: 1
+Line 13 Token: ID Value: print
+Line 13 Token: (
+Line 13 Token: STRINGCONST Value: "haven't seen it." Len: 16  Input: "haven't seen it."
+Line 13 Token: )
+Line 15 Token: ID Value: main
+Line 15 Token: (
+Line 15 Token: )

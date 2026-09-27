@@ -4,7 +4,7 @@ Line 2 Token: [
 Line 2 Token: NUMCONST Value: 10  Input: 10
 Line 2 Token: ]
 Line 2 Token: :
-Line 2 Token: STRINGCONST Value: "corgis"  Input: "corgis"
+Line 2 Token: STRINGCONST Value: "corgis" Len: 6  Input: "corgis"
 Line 2 Token: ;
 Line 3 Token: CHAR
 Line 3 Token: ID Value: yurt
@@ -70,22 +70,22 @@ Line 11 Token: ;
 Line 12 Token: IF
 Line 12 Token: (
 Line 12 Token: ID Value: dog
-Line 12 Token: &
+ERROR(12): Invalid or misplaced input character: '&'. Character Ignored.
 Line 12 Token: ID Value: elk
-Line 12 Token: |
+ERROR(12): Invalid or misplaced input character: '|'. Character Ignored.
 Line 12 Token: ID Value: bat
 Line 12 Token: >
 Line 12 Token: ID Value: cat
 Line 12 Token: [
 Line 12 Token: NUMCONST Value: 3  Input: 3
 Line 12 Token: ]
-Line 12 Token: |
-Line 12 Token: !
+ERROR(12): Invalid or misplaced input character: '|'. Character Ignored.
+ERROR(12): Invalid or misplaced input character: '!'. Character Ignored.
 Line 12 Token: ID Value: dog
 Line 12 Token: )
 Line 12 Token: ID Value: dog
 Line 12 Token: =
-Line 12 Token: !
+ERROR(12): Invalid or misplaced input character: '!'. Character Ignored.
 Line 12 Token: ID Value: dog
 Line 12 Token: ;
 Line 13 Token: ELSE
@@ -148,7 +148,7 @@ Line 23 Token: }
 Line 25 Token: FOR
 Line 25 Token: (
 Line 25 Token: ID Value: c
-Line 25 Token: IN
+Line 25 Token: ID Value: in
 Line 25 Token: ID Value: zev
 Line 25 Token: )
 Line 25 Token: ID Value: outputc
@@ -160,11 +160,11 @@ Line 26 Token: IF
 Line 26 Token: (
 Line 26 Token: ID Value: zev
 Line 26 Token: >
-Line 26 Token: STRINGCONST Value: "dog"  Input: "dog"
+Line 26 Token: STRINGCONST Value: "dog" Len: 3  Input: "dog"
 Line 26 Token: )
 Line 26 Token: ID Value: outputs
 Line 26 Token: (
-Line 26 Token: STRINGCONST Value: "bark"  Input: "bark"
+Line 26 Token: STRINGCONST Value: "bark" Len: 4  Input: "bark"
 Line 26 Token: )
 Line 26 Token: ;
 Line 27 Token: ID Value: yurt

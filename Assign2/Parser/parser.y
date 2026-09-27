@@ -147,7 +147,7 @@ selectStmt:
 matchedStmt:
     IF simpleExp THEN matchedStmt ELSE matchedStmt  {$$ = TreeNode::CreateIfStmt($2, $4, $6, $1);}
     | WHILE simpleExp DO matchedStmt                {$$ = TreeNode::CreateWhileStmt($2, $4, $1);}
-    | FOR ID ASSIGN iterRange DO matchedStmt        {$$ = TreeNode::CreateForStmt($2, $4, $6, $1);}
+    | FOR ID ASSIGN iterRange DO matchedStmt        {$$ = TreeNode::CreateForStmt($4, $6, $2, $1);}
     | otherStmts                                    {$$ = $1;}
     ;
 
@@ -155,7 +155,7 @@ unmatchedStmt:
     IF simpleExp THEN selectStmt                            {$$ = TreeNode::CreateIfStmt($2, $4, nullptr, $1);}
     | IF simpleExp THEN matchedStmt ELSE unmatchedStmt      {$$ = TreeNode::CreateIfStmt($2, $4, $6, $1);}
     | WHILE simpleExp DO unmatchedStmt                      {$$ = TreeNode::CreateWhileStmt($2, $4, $1);}
-    | FOR ID ASSIGN iterRange DO unmatchedStmt              {$$ = TreeNode::CreateForStmt($2, $4, $6, $1);}
+    | FOR ID ASSIGN iterRange DO unmatchedStmt              {$$ = TreeNode::CreateForStmt($4, $6, $2, $1);}
     ;
 
 iterRange:

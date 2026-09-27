@@ -21,11 +21,6 @@ test: c-
 		expected="$(OUTDIR)/$$name.out"; \
 		actual="$(RESULTSDIR)/$$name.out"; \
 		total=$$((total+1)); \
-		if [ ! -f "$$expected" ]; then \
-			echo "SKIP  $$name  (no $$expected)"; \
-			skip=$$((skip+1)); \
-			continue; \
-		fi; \
 		./c- < "$$f" > "$$actual" 2>&1; \
 		if diff -q "$$actual" "$$expected" > /dev/null 2>&1; then \
 			echo "PASS  $$name"; \
@@ -54,6 +49,26 @@ package:
 	mkdir -p $(PACKAGEDIR)
 	cp Helpers/* $(PACKAGEDIR)
 	cp Parser/parser.y $(PACKAGEDIR)
+	cp Lexer/lexer.l $(PACKAGEDIR)
+	cp package_makefile $(PACKAGEDIR)/makefile
+	tar -cf submission.tar -C $(PACKAGEDIR) .
+	@temp_dir=$$(mktemp -d); \
+	trap 'rm -rf "$$temp_dir"' EXIT; \
+	mkdir -p "$$temp_dir/verify"; \
+	tar -xf submission.tar -C "$$temp_dir/verify"; \
+	echo "--- Verification Report ---"; \
+	if diff -rq $(PACKAGEDIR) "$$temp_dir/verify"; then \
+		echo "SUCCESS: All files match between $(PACKAGEDIR) and the tarball."; \
+	else \
+		echo "FAILURE: Mismatches found!"; \
+		exit 1; \
+	fi
+
+get-tests:
+	rm -rf $(PACKAGEDIR)
+	mkdir -p $(PACKAGEDIR)
+	cp Helpers/* $(PACKAGEDIR)
+	cp Parser/parser_attack.y $(PACKAGEDIR)/parser.y
 	cp Lexer/lexer.l $(PACKAGEDIR)
 	cp package_makefile $(PACKAGEDIR)/makefile
 	tar -cf submission.tar -C $(PACKAGEDIR) .

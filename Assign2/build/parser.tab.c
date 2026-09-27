@@ -2095,7 +2095,7 @@ yyreduce:
 
   case 46: /* matchedStmt: FOR ID ASSIGN iterRange DO matchedStmt  */
 #line 150 "Parser/parser.y"
-                                                    {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-4].tokenData), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-5].tokenData));}
+                                                    {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData), (yyvsp[-5].tokenData));}
 #line 2100 "build/parser.tab.c"
     break;
 
@@ -2125,7 +2125,7 @@ yyreduce:
 
   case 51: /* unmatchedStmt: FOR ID ASSIGN iterRange DO unmatchedStmt  */
 #line 158 "Parser/parser.y"
-                                                            {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-4].tokenData), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-5].tokenData));}
+                                                            {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData), (yyvsp[-5].tokenData));}
 #line 2130 "build/parser.tab.c"
     break;
 

@@ -30,13 +30,13 @@ Line 8 Token: NUMCONST Value: 666  Input: 666
 Line 8 Token: )
 Line 8 Token: ID Value: printf
 Line 8 Token: (
-Line 8 Token: STRINGCONST Value: "hog\"  Input: "hog\\"
+Line 8 Token: STRINGCONST Value: "hog\" Len: 4  Input: "hog\\"
 Line 8 Token: )
 Line 8 Token: ;
 Line 9 Token: ID Value: printf
 Line 9 Token: (
 Line 9 Token: STRINGCONST Value: "
-"  Input: "\n"
+" Len: 1  Input: "\n"
 Line 9 Token: )
 Line 9 Token: ;
 Line 11 Token: RETURN
