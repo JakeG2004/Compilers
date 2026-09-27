@@ -306,9 +306,6 @@ TreeNode* TreeNode::CreateVarDecl(TokenClass* index, TokenClass* tokenData)
         nullptr
     );
 
-    if(index != nullptr)
-        newNode->indexOrSize = index->numVal;
-
     return newNode;
 }
 

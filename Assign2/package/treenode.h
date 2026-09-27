@@ -13,7 +13,6 @@ class TreeNode
             DECLNODE,
             STMTNODE,
             EXPNODE,
-            UNDEFNODE,
         };
 
         enum DeclType {
@@ -63,14 +62,14 @@ class TreeNode
         };
 
     public:
-        TokenClass* tokenData = nullptr;
+        TokenClass* tokenData;
 
-        NodeType nodeType = NodeType::UNDEFNODE;
-        VarType varType = VarType::UNDEFINED;
+        NodeType nodeType;
+        VarType varType;
 
-        bool isArray = false;
-        bool isStatic = false;
-        bool isUnary = false;
+        bool isArray;
+        bool isStatic;
+        bool isUnary;
 
         union {
             DeclType decl;
@@ -78,13 +77,11 @@ class TreeNode
             ExpType exp;
         } subType;
 
-        long long int indexOrSize = 0;
-
     protected:
-        TreeNode* leftChild = nullptr;
-        TreeNode* middleChild = nullptr;
-        TreeNode* rightChild = nullptr;
-        TreeNode* sibling = nullptr;
+        TreeNode* leftChild;
+        TreeNode* middleChild;
+        TreeNode* rightChild;
+        TreeNode* sibling;
 
     public:
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
