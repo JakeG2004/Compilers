@@ -51,12 +51,12 @@ decl:
     ;
 
 varDecl:
-    typeSpec varDeclList SEMICOLON  {$$ = TreeNode::PullUpTypeNode($2, $1);}
+    typeSpec varDeclList SEMICOLON  {$$ = TreeNode::PullUpTypeNode($2, $1); TreeNode::SetNodeListTypes($1, $2);}
     ;
 
 scopedVarDecl:
-    STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); $$->isStatic = true;}
-    | typeSpec varDeclList SEMICOLON        {$$ = TreeNode::PullUpTypeNode($2, $1);}
+    STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); $$->isStatic = true; TreeNode::SetNodeListTypes($2, $3);}
+    | typeSpec varDeclList SEMICOLON        {$$ = TreeNode::PullUpTypeNode($2, $1); TreeNode::SetNodeListTypes($1, $2);}
     ;
 
 varDeclList:
@@ -66,12 +66,12 @@ varDeclList:
 
 varDeclInit:
     varDeclId                   {$$ = $1;}
-    | varDeclId COLON simpleExp {$$ = TreeNode::CreateVarDecl($1, $3, nullptr, $2);}
+    | varDeclId COLON simpleExp {$$ = TreeNode::PullUpNode($1, $3, nullptr, nullptr);}
     ;
 
 varDeclId:
-    ID                              {$$ = TreeNode::CreateIdExp($1);}
-    | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateIdExp($1);} 
+    ID                              {$$ = TreeNode::CreateVarDecl(nullptr, $1);}
+    | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateVarDecl(nullptr, $1); $$->isArray = true;}
     ;
 
 typeSpec:
@@ -96,7 +96,7 @@ parmList:
     ;
 
 parmTypeList:
-    typeSpec parmIdList {$$ = $2;}
+    typeSpec parmIdList {$$ = $2; TreeNode::SetNodeListTypes($1, $2);}
     ;
 
 parmIdList:
@@ -105,8 +105,8 @@ parmIdList:
     ;
 
 parmId:
-    ID                  {$$ = TreeNode::CreateIdExp($1);}
-    | ID LPAREN RPAREN  {$$ = TreeNode::CreateIdExp($1);}
+    ID                  {$$ = TreeNode::CreateParmExp($1);}
+    | ID LBRACKET RBRACKET  {$$ = TreeNode::CreateParmExp($1); $$->isArray = true;}
     ;
 
 stmt:
@@ -126,7 +126,7 @@ expStmt:
     ;
 
 compoundStmt:
-    LBRACE localDecls stmtList RBRACE   {$$ = TreeNode::CreateCompoundStmt($2, $3);}
+    LBRACE localDecls stmtList RBRACE   {$$ = TreeNode::CreateCompoundStmt($2, $3, $1);}
     ;
 
 localDecls:
@@ -174,13 +174,13 @@ breakStmt:
     ;
 
 exp:
-    mutable ASSIGN exp      {$$ = TreeNode::CreateOpExp($1, $3, $2);}
-    | mutable ADDASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
-    | mutable SUBASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
-    | mutable MULASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
-    | mutable DIVASS exp    {$$ = TreeNode::CreateOpExp($1, $3, $2);}
-    | mutable INC           {$$ = TreeNode::CreateOpExp($1, nullptr, $2);}
-    | mutable DEC           {$$ = TreeNode::CreateOpExp($1, nullptr, $2);}
+    mutable ASSIGN exp      {$$ = TreeNode::CreateAssignExp($1, $3, $2);}
+    | mutable ADDASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2);}
+    | mutable SUBASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2);}
+    | mutable MULASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2);}
+    | mutable DIVASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2);}
+    | mutable INC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2);}
+    | mutable DEC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2);}
     | simpleExp             {$$ = $1;}
     ;
 
@@ -250,9 +250,9 @@ unaryExp:
     ;
 
 unaryop:
-    MINUS       {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
-    | STAR      {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
-    | QUESTION  {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1);}
+    MINUS       {$$ = TreeNode::CreateUnaryOpExp($1);}
+    | STAR      {$$ = TreeNode::CreateUnaryOpExp($1);}
+    | QUESTION  {$$ = TreeNode::CreateUnaryOpExp($1);}
     ;
 
 factor:
@@ -262,7 +262,7 @@ factor:
 
 mutable:
     ID                          {$$ = TreeNode::CreateIdExp($1);}
-    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdExp($1);}
+    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdxExp($3, $1, $2);}
     ;
 
 immutable:
@@ -286,11 +286,11 @@ argList:
     ;
 
 constant:
-    NUMCONST        {$$ = TreeNode::CreateConstExp($1);}
-    | CHARCONST     {$$ = TreeNode::CreateConstExp($1);}
-    | STRINGCONST   {$$ = TreeNode::CreateConstExp($1);}
-    | TRUE          {$$ = TreeNode::CreateConstExp($1);}
-    | FALSE         {$$ = TreeNode::CreateConstExp($1);}
+    NUMCONST        {$$ = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, $1);}
+    | CHARCONST     {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1);}
+    | STRINGCONST   {$$ = TreeNode::CreateConstExp(TreeNode::VarType::STRING, $1);}
+    | TRUE          {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
+    | FALSE         {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
     ;
 
 %%

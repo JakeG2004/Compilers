@@ -13,19 +13,22 @@ TreeNode::TreeNode(DeclType declType, VarType varType, TokenClass* tokenData, Tr
     : TreeNode(leftChild, middleChild, rightChild, tokenData)
 {
     this->subType.decl = declType;
-    this->expType = expType;
+    this->varType = varType;
+    this->nodeType = NodeType::DECLNODE;
 }
 
 TreeNode::TreeNode(StmtType stmtType, TokenClass* tokenData, TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild)
     : TreeNode(leftChild, middleChild, rightChild, tokenData)
 {
     this->subType.stmt = stmtType;
+    this->nodeType = NodeType::STMTNODE;
 }
 
 TreeNode::TreeNode(ExpType expType, TokenClass* tokenData, TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild)
     : TreeNode(leftChild, middleChild, rightChild, tokenData)
 {
     this->subType.exp = expType;
+    this->nodeType = NodeType::EXPNODE;
 }
 
 void TreeNode::Print(int depth, int childNo, int siblingNo)
@@ -42,13 +45,10 @@ void TreeNode::Print(int depth, int childNo, int siblingNo)
 
     // sibling
     if(siblingNo != 0)
-        std::cout << "Sibling: " << siblingNo << " ";
+        std::cout << "Sibling: " << siblingNo << "  ";
 
-    // token data if available, compound otherwise
-    if(tokenData != nullptr)
-        std::cout << tokenData->tokenClass << ": " << tokenData->tokenStr << " [line: " << tokenData->lineNum << "]" << std::endl;
-    else
-        std::cout << "Compound" << std::endl;
+    // print the data in the node
+    PrintSelf();
 
     nextDepth++;
 
@@ -67,6 +67,182 @@ void TreeNode::Print(int depth, int childNo, int siblingNo)
     if(sibling != nullptr) {
         sibling->Print(depth, -1, siblingNo + 1);
     }
+}
+
+void TreeNode::PrintSelf()
+{
+    switch(nodeType) {
+        case NodeType::DECLNODE:
+            PrintDecl();
+            break;
+
+        case NodeType::STMTNODE:
+            PrintStmt();
+            break;
+
+        case NodeType::EXPNODE:
+            PrintExp();
+            break;
+    }
+}
+
+void TreeNode::PrintDecl()
+{
+    switch(subType.decl) {
+        case DeclType::VARTYPE:
+            std::cout << "Var: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
+            break;
+
+        case DeclType::FUNCTYPE:
+            std::cout << "Func: " << tokenData->tokenStr << " returns type " << GetTypeString();
+            break;
+
+        case DeclType::EXPTYPE:
+            std::cout << "Exp: " << tokenData->tokenStr << " of type " << GetTypeString();
+            break;
+
+        default:
+            std::cout << "Unknown Decl: " << tokenData->tokenStr;
+            break;
+    }
+
+    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+}
+
+void TreeNode::PrintStmt()
+{
+    switch(subType.stmt) {
+        case StmtType::NULLTYPE:
+            std::cout << "Null";
+            break;
+
+        case StmtType::IFTYPE:
+            std::cout << "If";
+            break;
+
+        case StmtType::WHILETYPE:
+            std::cout << "While";
+            break;
+
+        case StmtType::FORTYPE:
+            std::cout << "For";
+            break;
+
+        case StmtType::COMPOUNDTYPE:
+            std::cout << "Compound";
+            break;
+
+        case StmtType::RETURNTYPE:
+            std::cout << "Return";
+            break;
+
+        case StmtType::BREAKTYPE:
+            std::cout << "Break";
+            break;
+
+        case StmtType::RANGETYPE:
+            std::cout << "Range";
+            break;
+
+        default:
+            std::cout << "Unknown Statment";
+            break;
+    }
+
+    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+}
+
+void TreeNode::PrintExp()
+{
+    switch(subType.exp) {
+        case ExpType::OPTYPE:
+            std::cout << "Op: " << GetUnaryOrRegOp();
+            break;
+
+        case ExpType::CONSTTYPE:
+            std::cout << "Const" << GetArrText() << " of type " << GetTypeString() << ": " << tokenData->stringVal;
+            break;
+
+        case ExpType::IDTYPE:
+            std::cout << "Id: " << tokenData->tokenStr;
+            break;
+
+        case ExpType::PARMTYPE:
+            std::cout << "Parm: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
+            break;
+
+        case ExpType::ASSIGNTYPE:
+            std::cout << "Assign: " << tokenData->tokenStr;
+            break;
+
+        case ExpType::INITTYPE:
+            std::cout << "Init: " << tokenData->tokenStr;
+            break;
+
+        case ExpType::CALLTYPE:
+            std::cout << "Call: " << tokenData->tokenStr;
+            break;
+
+        default:
+            std::cout << "Unknown Expression";
+            break;
+    }
+
+    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+}
+
+std::string TreeNode::GetTypeString()
+{
+    switch(varType) {
+        case VarType::VOID:
+            return "void";
+
+        case VarType::INTEGER:
+            return "int";
+
+        case VarType::BOOLEAN:
+            return "bool";
+
+        case VarType::STRING:
+        case VarType::CHARACTER:
+            return "char";
+
+        case VarType::CHARINT:
+            return "charint";
+
+        case VarType::EQUAL:
+            return "equal";
+
+        case VarType::UNDEFINED:
+            return "I DONT KNOW!!!";
+            break;
+
+        default:
+            return "undefined";
+    }
+}
+
+std::string TreeNode::GetArrText()
+{
+    if(isArray)
+        return " is array";
+    
+    return "";
+}
+
+std::string TreeNode::GetUnaryOrRegOp()
+{
+    if(tokenData->tokenStr == "-") {
+        if(isUnary) return "CHSIGN";
+        else return "-";
+    }
+
+    else if(tokenData->tokenStr == "*") {
+        if(isUnary) return "SIZEOF";
+        else return "*";
+    }
+
+    return tokenData->tokenName;
 }
 
 void TreeNode::SetSibling(TreeNode* newSibling) 
@@ -119,15 +295,15 @@ void TreeNode::SetTypeFromTypedef(TreeNode* typeDef)
     varType = typeDef->varType;
 }
 
-TreeNode* TreeNode::CreateVarDecl(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateVarDecl(TokenClass* index, TokenClass* tokenData)
 {
     return new TreeNode(
         DeclType::VARTYPE,
         VarType::VOID,
         tokenData,
-        leftChild,
-        middleChild,
-        rightChild
+        nullptr,
+        nullptr,
+        nullptr
     );
 }
 
@@ -154,11 +330,33 @@ TreeNode* TreeNode::CreateIdExp(TokenClass* tokenData)
     );
 }
 
-TreeNode* TreeNode::CreateCompoundStmt(TreeNode* leftChild, TreeNode* middleChild)
+TreeNode* TreeNode::CreateParmExp(TokenClass* tokenData)
+{
+    return new TreeNode(
+        ExpType::PARMTYPE,
+        tokenData,
+        nullptr,
+        nullptr,
+        nullptr
+    );
+}
+
+TreeNode* TreeNode::CreateInitExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+{
+    return new TreeNode(
+        ExpType::INITTYPE,
+        tokenData,
+        leftChild,
+        middleChild,
+        nullptr
+    );
+}
+
+TreeNode* TreeNode::CreateCompoundStmt(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
 {
     return new TreeNode(
         StmtType::COMPOUNDTYPE,
-        nullptr,
+        tokenData,
         leftChild,
         middleChild,
         nullptr
@@ -189,13 +387,16 @@ TreeNode* TreeNode::CreateWhileStmt(TreeNode* leftChild, TreeNode* middleChild, 
 
 TreeNode* TreeNode::CreateForStmt(TokenClass* id, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
 {
-    return new TreeNode(
+    TreeNode* forNode = new TreeNode(
         StmtType::FORTYPE,
         tokenData,
-        CreateIdExp(id),
+        CreateVarDecl(nullptr, id),
         middleChild,
         rightChild
     );
+
+    forNode->leftChild->varType = VarType::INTEGER;
+    return forNode;
 }
 
 TreeNode* TreeNode::CreateRangeStmt(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
@@ -242,6 +443,21 @@ TreeNode* TreeNode::CreateOpExp(TreeNode* leftChild, TreeNode* middleChild, Toke
     );
 }
 
+TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* tokenData)
+{
+    TreeNode* newNode = new TreeNode(
+        ExpType::OPTYPE,
+        tokenData,
+        nullptr,
+        nullptr,
+        nullptr
+    );
+
+    newNode->isUnary = true;
+
+    return newNode;
+}
+
 TreeNode* TreeNode::CreateCallExp(TreeNode* leftChild, TokenClass* tokenData)
 {
     return new TreeNode(
@@ -253,15 +469,45 @@ TreeNode* TreeNode::CreateCallExp(TreeNode* leftChild, TokenClass* tokenData)
     );
 }
 
-TreeNode* TreeNode::CreateConstExp(TokenClass* tokenData)
+TreeNode* TreeNode::CreateConstExp(VarType typeDef, TokenClass* tokenData)
 {
-    return new TreeNode(
+    TreeNode* newNode = new TreeNode(
         ExpType::CONSTTYPE,
         tokenData,
         nullptr,
         nullptr,
         nullptr
     );
+
+    newNode->varType = typeDef;
+
+    if(typeDef == VarType::STRING) {
+        newNode->isArray = true;
+    }
+
+    return newNode;
+}
+
+TreeNode* TreeNode::CreateAssignExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+{
+    return new TreeNode(
+        ExpType::ASSIGNTYPE,
+        tokenData,
+        leftChild,
+        middleChild,
+        nullptr
+    );
+}
+
+TreeNode* TreeNode::CreateIdxExp(TreeNode* exp, TokenClass* id, TokenClass* lbracket)
+{
+    TreeNode* bracketNode = CreateOpExp(
+        CreateIdExp(id),
+        exp,
+        lbracket
+    );
+
+    return bracketNode;
 }
 
 TreeNode* TreeNode::PullUpNode(TreeNode* rootNode, TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild)
@@ -298,4 +544,18 @@ TreeNode* TreeNode::PullUpTypeNode(TreeNode* rootNode, VarType typeDef)
     rootNode->varType = typeDef;
 
     return rootNode;
+}
+
+void TreeNode::SetNodeListTypes(VarType typeDef, TreeNode* node)
+{
+    if(node == nullptr)
+        return;
+
+    node->varType = typeDef;
+
+    TreeNode* p = node;
+    while(p != nullptr) {
+        p->varType = typeDef;
+        p = p->sibling;
+    }
 }

@@ -51,7 +51,7 @@ void TokenClass::GetTokenStringFromId()
         TOKENSTRING(NUMCONST)
         TOKENSTRING(CHARCONST)
         TOKENSTRING(STRINGCONST)
-        TOKENSTRING(EQ)
+        /*TOKENSTRING(EQ)
         TOKENSTRING(NEQ)
         TOKENSTRING(ADDASS)
         TOKENSTRING(SUBASS)
@@ -60,7 +60,15 @@ void TokenClass::GetTokenStringFromId()
         TOKENSTRING(LEQ)
         TOKENSTRING(GEQ)
         TOKENSTRING(DEC)
-        TOKENSTRING(INC)
+        TOKENSTRING(INC)*/
+
+        case MIN:
+            tokenName = ":<:";
+            break;
+
+        case MAX:
+            tokenName = ":>:";
+            break;
 
         default:
             for(int i =0; i < tokenStr.length(); i++) {

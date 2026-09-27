@@ -39,6 +39,7 @@ class TreeNode
             ASSIGNTYPE,
             INITTYPE,
             CALLTYPE,
+            PARMTYPE,
         };
 
         enum VarType{
@@ -46,6 +47,7 @@ class TreeNode
             INTEGER,
             BOOLEAN,
             CHARACTER,
+            STRING,
             CHARINT,
             EQUAL,
             UNDEFINED,
@@ -64,9 +66,9 @@ class TreeNode
         NodeType nodeType;
         VarType varType;
 
-        ExpType expType;
         bool isArray;
         bool isStatic;
+        bool isUnary;
 
         union {
             DeclType decl;
@@ -91,11 +93,21 @@ class TreeNode
         void SetTypeFromTypedef(TreeNode* typeDef);
         void Print(int depth = 0, int childNo = -1, int siblingNo = 0);
 
+    protected:
+        void PrintSelf();
+        void PrintDecl();
+        void PrintStmt();
+        void PrintExp();
+
+        std::string GetTypeString();
+        std::string GetArrText();
+        std::string GetUnaryOrRegOp();
+
     public:
-        static TreeNode* CreateVarDecl(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
+        static TreeNode* CreateVarDecl(TokenClass* index, TokenClass* tokenData);
         static TreeNode* CreateFuncDecl(VarType varType, TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
 
-        static TreeNode* CreateCompoundStmt(TreeNode* leftChild, TreeNode* middleChild);
+        static TreeNode* CreateCompoundStmt(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
         static TreeNode* CreateIfStmt(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
         static TreeNode* CreateWhileStmt(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
         static TreeNode* CreateForStmt(TokenClass* id, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
@@ -104,13 +116,19 @@ class TreeNode
         static TreeNode* CreateBreakStmt(TreeNode* leftChild, TokenClass* tokenData);
 
         static TreeNode* CreateOpExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
+        static TreeNode* CreateUnaryOpExp(TokenClass* tokenData);
         static TreeNode* CreateCallExp(TreeNode* leftChild, TokenClass* tokenData);
-        static TreeNode* CreateConstExp(TokenClass* tokenData);
+        static TreeNode* CreateConstExp(VarType typeDef, TokenClass* tokenData);
         static TreeNode* CreateIdExp(TokenClass* tokenData);
+        static TreeNode* CreateParmExp(TokenClass* tokenData);
+        static TreeNode* CreateInitExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
+        static TreeNode* CreateAssignExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData);
+        static TreeNode* CreateIdxExp(TreeNode* exp, TokenClass* id, TokenClass* lbracket);
 
         static TreeNode* PullUpNode(TreeNode* rootNode, TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild);
         static TreeNode* NodeList(TreeNode* rootNode, TreeNode* newSibling);
         static TreeNode* PullUpTypeNode(TreeNode* rootNode, VarType typeDef);
+        static void SetNodeListTypes(VarType typeDef, TreeNode* node);
 };
 
 #endif

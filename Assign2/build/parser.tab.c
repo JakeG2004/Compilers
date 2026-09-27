@@ -653,21 +653,21 @@ static const yytype_int16 yypact[] =
 {
        5,    43,  -135,  -135,  -135,    33,     5,  -135,  -135,    24,
     -135,    27,  -135,  -135,    42,    81,  -135,    51,    66,    54,
-      68,  -135,    72,    27,  -135,    79,    95,    84,    94,  -135,
+      68,  -135,    72,    27,  -135,    79,    95,    86,    94,  -135,
      152,    27,    98,    92,   106,  -135,    78,  -135,  -135,  -135,
       95,  -135,  -135,  -135,    95,  -135,  -135,    64,    73,  -135,
     -135,   147,    14,    44,  -135,   210,  -135,  -135,  -135,  -135,
-    -135,   110,    66,  -135,  -135,    95,    95,   117,    17,   157,
+    -135,   108,    66,  -135,  -135,    95,    95,   121,    17,   157,
     -135,  -135,  -135,  -135,  -135,  -135,  -135,  -135,  -135,   120,
-      64,   207,  -135,  -135,   152,    95,    95,   123,  -135,    95,
+      64,   207,  -135,  -135,   152,    95,    95,   117,  -135,    95,
       95,  -135,  -135,  -135,  -135,  -135,  -135,  -135,  -135,   210,
      210,  -135,  -135,   210,  -135,  -135,  -135,   210,  -135,  -135,
-    -135,    20,   -17,   -32,   114,  -135,   127,  -135,   131,  -135,
-      95,    95,    95,    95,    95,  -135,  -135,  -135,   129,  -135,
+    -135,    20,   -17,   -32,   124,  -135,   127,  -135,   130,  -135,
+      95,    95,    95,    95,    95,  -135,  -135,  -135,   126,  -135,
      132,   142,  -135,    73,  -135,   -15,    14,    44,  -135,    27,
     -135,    79,    89,   152,   152,    95,  -135,  -135,  -135,  -135,
     -135,  -135,  -135,  -135,  -135,    95,    79,   100,  -135,  -135,
-    -135,   125,  -135,  -135,   108,   -34,  -135,   104,  -135,   152,
+    -135,   110,  -135,  -135,   123,   -34,  -135,   104,  -135,   152,
      152,    95,  -135,  -135,  -135,  -135,  -135,    65,    95,    64
 };
 
@@ -702,7 +702,7 @@ static const yytype_int16 yypgoto[] =
     -135,  -135,  -135,   160,  -135,  -135,  -130,   144,  -135,     1,
     -135,   156,  -135,   149,  -135,   119,   -80,  -135,  -135,  -135,
     -135,  -135,    39,  -134,  -132,  -135,  -135,  -135,   -37,   -24,
-      99,   -38,  -135,  -135,    85,  -135,    83,  -135,    97,  -135,
+      99,   -38,  -135,  -135,    84,  -135,    87,  -135,    97,  -135,
      -50,  -135,  -135,   -26,  -135,  -135,  -135,  -135,  -135
 };
 
@@ -733,13 +733,13 @@ static const yytype_uint8 yytable[] =
       25,    86,    36,    37,    38,    39,    63,    61,    36,    37,
       38,    39,    40,    62,    64,   158,    84,   168,    40,    25,
       83,   172,   141,    25,   178,    89,    89,    22,   166,    57,
-     114,   165,    41,    42,   109,    90,    43,   119,    41,    42,
-      65,   145,    43,    66,   146,    67,    68,   132,   147,    69,
-     156,   153,    44,    45,    46,    57,   154,   177,    44,    45,
-      46,   155,    57,   170,   179,    36,    37,    38,    39,    63,
-      36,    37,    38,    39,   117,    40,    13,    64,   169,    35,
+     109,   165,    41,    42,   114,    90,    43,   119,    41,    42,
+      65,   132,    43,    66,   146,    67,    68,   147,   153,    69,
+     156,   145,    44,    45,    46,    57,   154,   177,    44,    45,
+      46,   155,    57,   169,   179,    36,    37,    38,    39,    63,
+      36,    37,    38,    39,   117,    40,    13,    64,   170,    35,
       40,    91,    92,    93,    94,    95,    96,    97,    98,    33,
-      82,   110,   160,   136,   135,    41,    42,     0,   133,    43,
+      82,   110,   160,   135,     0,    41,    42,   136,   133,    43,
       41,    42,     0,    65,    43,     0,    66,     0,    67,    68,
      137,     0,    69,     0,     0,    44,    45,    46,     0,     0,
       44,    45,    46,    36,    37,    38,    39,     0,     0,     0,
@@ -761,16 +761,16 @@ static const yytype_int16 yycheck[] =
       40,    10,   142,    89,    90,    38,    39,    40,    14,     3,
       53,    54,    55,    99,   100,     7,     4,   103,    34,    35,
       36,   107,     3,   120,   121,   122,   123,   124,     7,    11,
-       9,    13,     3,     4,     5,     6,     7,    13,     3,     4,
+       9,    13,     3,     4,     5,     6,     7,    11,     3,     4,
        5,     6,    13,     9,    15,    16,    14,     7,    13,     9,
       12,     7,   111,     9,    49,    51,    51,    11,   155,   145,
-       3,   145,    33,    34,    14,    52,    37,     7,    33,    34,
-      41,    17,    37,    44,     7,    46,    47,    14,     7,    50,
-     139,    12,    53,    54,    55,   171,    14,   171,    53,    54,
-      55,     9,   178,    45,   178,     3,     4,     5,     6,     7,
-       3,     4,     5,     6,     7,    13,     6,    15,    43,    25,
+      12,   145,    33,    34,     3,    52,    37,     7,    33,    34,
+      41,    14,    37,    44,     7,    46,    47,     7,    12,    50,
+     139,    17,    53,    54,    55,   171,    14,   171,    53,    54,
+      55,     9,   178,    43,   178,     3,     4,     5,     6,     7,
+       3,     4,     5,     6,     7,    13,     6,    15,    45,    25,
       13,    24,    25,    26,    27,    28,    29,    30,    31,    23,
-      31,    62,   143,   100,    99,    33,    34,    -1,    89,    37,
+      31,    62,   143,    99,    -1,    33,    34,   100,    89,    37,
       33,    34,    -1,    41,    37,    -1,    44,    -1,    46,    47,
      103,    -1,    50,    -1,    -1,    53,    54,    55,    -1,    -1,
       53,    54,    55,     3,     4,     5,     6,    -1,    -1,    -1,
@@ -791,11 +791,11 @@ static const yytype_int8 yystos[] =
       14,     7,     4,    67,     3,    63,     3,     4,     5,     6,
       13,    33,    34,    37,    53,    54,    55,    85,    86,    87,
       88,    90,    92,    94,    96,    97,    98,    99,   100,   101,
-     104,    13,     9,     7,    15,    41,    44,    46,    47,    50,
+     104,    11,     9,     7,    15,    41,    44,    46,    47,    50,
       72,    73,    74,    75,    78,    79,    80,    82,    83,    84,
       85,    99,    69,    12,    14,    11,    13,    84,    87,    51,
       52,    24,    25,    26,    27,    28,    29,    30,    31,    89,
-      91,    32,    33,    93,    34,    35,    36,    95,    96,    14,
+      91,    32,    33,    93,    34,    35,    36,    95,    96,    12,
       71,    76,    85,    85,     3,     7,    84,     7,    84,     7,
       17,    18,    19,    20,    21,    22,    23,    72,    84,    84,
      102,   103,    14,    86,    87,    90,    92,    94,    96,     8,
@@ -1861,19 +1861,19 @@ yyreduce:
 
   case 7: /* varDecl: typeSpec varDeclList SEMICOLON  */
 #line 54 "Parser/parser.y"
-                                    {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType));}
+                                    {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
 #line 1866 "build/parser.tab.c"
     break;
 
   case 8: /* scopedVarDecl: STATIC typeSpec varDeclList SEMICOLON  */
 #line 58 "Parser/parser.y"
-                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); (yyval.node)->isStatic = true;}
+                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); (yyval.node)->isStatic = true; TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
 #line 1872 "build/parser.tab.c"
     break;
 
   case 9: /* scopedVarDecl: typeSpec varDeclList SEMICOLON  */
 #line 59 "Parser/parser.y"
-                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType));}
+                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
 #line 1878 "build/parser.tab.c"
     break;
 
@@ -1897,19 +1897,19 @@ yyreduce:
 
   case 13: /* varDeclInit: varDeclId COLON simpleExp  */
 #line 69 "Parser/parser.y"
-                                {(yyval.node) = TreeNode::CreateVarDecl((yyvsp[-2].node), (yyvsp[0].node), nullptr, (yyvsp[-1].tokenData));}
+                                {(yyval.node) = TreeNode::PullUpNode((yyvsp[-2].node), (yyvsp[0].node), nullptr, nullptr);}
 #line 1902 "build/parser.tab.c"
     break;
 
   case 14: /* varDeclId: ID  */
 #line 73 "Parser/parser.y"
-                                    {(yyval.node) = TreeNode::CreateIdExp((yyvsp[0].tokenData));}
+                                    {(yyval.node) = TreeNode::CreateVarDecl(nullptr, (yyvsp[0].tokenData));}
 #line 1908 "build/parser.tab.c"
     break;
 
   case 15: /* varDeclId: ID LBRACKET NUMCONST RBRACKET  */
 #line 74 "Parser/parser.y"
-                                    {(yyval.node) = TreeNode::CreateIdExp((yyvsp[-3].tokenData));}
+                                    {(yyval.node) = TreeNode::CreateVarDecl(nullptr, (yyvsp[-3].tokenData)); (yyval.node)->isArray = true;}
 #line 1914 "build/parser.tab.c"
     break;
 
@@ -1969,7 +1969,7 @@ yyreduce:
 
   case 25: /* parmTypeList: typeSpec parmIdList  */
 #line 99 "Parser/parser.y"
-                        {(yyval.node) = (yyvsp[0].node);}
+                        {(yyval.node) = (yyvsp[0].node); TreeNode::SetNodeListTypes((yyvsp[-1].varType), (yyvsp[0].node));}
 #line 1974 "build/parser.tab.c"
     break;
 
@@ -1987,13 +1987,13 @@ yyreduce:
 
   case 28: /* parmId: ID  */
 #line 108 "Parser/parser.y"
-                        {(yyval.node) = TreeNode::CreateIdExp((yyvsp[0].tokenData));}
+                        {(yyval.node) = TreeNode::CreateParmExp((yyvsp[0].tokenData));}
 #line 1992 "build/parser.tab.c"
     break;
 
-  case 29: /* parmId: ID LPAREN RPAREN  */
+  case 29: /* parmId: ID LBRACKET RBRACKET  */
 #line 109 "Parser/parser.y"
-                        {(yyval.node) = TreeNode::CreateIdExp((yyvsp[-2].tokenData));}
+                            {(yyval.node) = TreeNode::CreateParmExp((yyvsp[-2].tokenData)); (yyval.node)->isArray = true;}
 #line 1998 "build/parser.tab.c"
     break;
 
@@ -2041,7 +2041,7 @@ yyreduce:
 
   case 37: /* compoundStmt: LBRACE localDecls stmtList RBRACE  */
 #line 129 "Parser/parser.y"
-                                        {(yyval.node) = TreeNode::CreateCompoundStmt((yyvsp[-2].node), (yyvsp[-1].node));}
+                                        {(yyval.node) = TreeNode::CreateCompoundStmt((yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[-3].tokenData));}
 #line 2046 "build/parser.tab.c"
     break;
 
@@ -2167,43 +2167,43 @@ yyreduce:
 
   case 58: /* exp: mutable ASSIGN exp  */
 #line 177 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
 #line 2172 "build/parser.tab.c"
     break;
 
   case 59: /* exp: mutable ADDASS exp  */
 #line 178 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
 #line 2178 "build/parser.tab.c"
     break;
 
   case 60: /* exp: mutable SUBASS exp  */
 #line 179 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
 #line 2184 "build/parser.tab.c"
     break;
 
   case 61: /* exp: mutable MULASS exp  */
 #line 180 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
 #line 2190 "build/parser.tab.c"
     break;
 
   case 62: /* exp: mutable DIVASS exp  */
 #line 181 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
 #line 2196 "build/parser.tab.c"
     break;
 
   case 63: /* exp: mutable INC  */
 #line 182 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
 #line 2202 "build/parser.tab.c"
     break;
 
   case 64: /* exp: mutable DEC  */
 #line 183 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
 #line 2208 "build/parser.tab.c"
     break;
 
@@ -2389,19 +2389,19 @@ yyreduce:
 
   case 95: /* unaryop: MINUS  */
 #line 253 "Parser/parser.y"
-                {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
+                {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
 #line 2394 "build/parser.tab.c"
     break;
 
   case 96: /* unaryop: STAR  */
 #line 254 "Parser/parser.y"
-                {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
+                {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
 #line 2400 "build/parser.tab.c"
     break;
 
   case 97: /* unaryop: QUESTION  */
 #line 255 "Parser/parser.y"
-                {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
+                {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
 #line 2406 "build/parser.tab.c"
     break;
 
@@ -2425,7 +2425,7 @@ yyreduce:
 
   case 101: /* mutable: ID LBRACKET exp RBRACKET  */
 #line 265 "Parser/parser.y"
-                                {(yyval.node) = TreeNode::CreateIdExp((yyvsp[-3].tokenData));}
+                                {(yyval.node) = TreeNode::CreateIdxExp((yyvsp[-1].node), (yyvsp[-3].tokenData), (yyvsp[-2].tokenData));}
 #line 2430 "build/parser.tab.c"
     break;
 
@@ -2479,31 +2479,31 @@ yyreduce:
 
   case 110: /* constant: NUMCONST  */
 #line 289 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp((yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, (yyvsp[0].tokenData));}
 #line 2484 "build/parser.tab.c"
     break;
 
   case 111: /* constant: CHARCONST  */
 #line 290 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp((yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData));}
 #line 2490 "build/parser.tab.c"
     break;
 
   case 112: /* constant: STRINGCONST  */
 #line 291 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp((yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::STRING, (yyvsp[0].tokenData));}
 #line 2496 "build/parser.tab.c"
     break;
 
   case 113: /* constant: TRUE  */
 #line 292 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp((yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData));}
 #line 2502 "build/parser.tab.c"
     break;
 
   case 114: /* constant: FALSE  */
 #line 293 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp((yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData));}
 #line 2508 "build/parser.tab.c"
     break;
 
