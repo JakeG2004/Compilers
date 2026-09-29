@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "errorhandler.h"
+#include "arghandler.h"
 #include "treenode.h"
 
 int yylex(void);
@@ -304,15 +305,26 @@ int main(int argc, char* argv[])
 {
     yydebug = 0;
 
-    if(argc > 2 || (argc == 1 && isatty(fileno(stdin)))) {
-        printf("Invalid Usage! Correct usage is\n./c- <filename>\nor cat <filename> | ./c-\nor ./c- < <filename>\n");
-        return 2;
+    bool printFlag = false;
+
+    ArgHandler::ProcessArgs(argc, argv);
+
+    if(ArgHandler::IsFlagSet("-p"))
+        printFlag = true;
+    if(ArgHandler::IsFlagSet("-d"))
+        yydebug = 1;
+    if(ArgHandler::IsFlagSet("?")) {
+        ArgHandler::PrintHelp();
+        return 0;
     }
 
-    if(argc == 2) {
-        FILE* file = fopen(argv[1], "r");
+    bool isRedirect = !(isatty(fileno(stdin)));
+
+    if(!isRedirect) {
+        int filePathArg = argc - 1;
+        FILE* file = fopen(argv[filePathArg], "r");
         if(!file) {
-            perror(argv[1]);
+            perror(argv[filePathArg]);
             return 1;
         }
 
@@ -321,6 +333,8 @@ int main(int argc, char* argv[])
 
     yyparse();
 
-    ASTRoot->Print();
+    if(printFlag)
+        ASTRoot->Print();
+
     return 0;
 }

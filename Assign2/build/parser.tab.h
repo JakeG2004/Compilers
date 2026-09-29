@@ -122,7 +122,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "Parser/parser.y"
+#line 28 "Parser/parser.y"
 
     int NUMBER;
     TreeNode::VarType varType;
