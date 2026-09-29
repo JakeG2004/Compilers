@@ -97,10 +97,6 @@ void TreeNode::PrintDecl()
             std::cout << "Func: " << tokenData->tokenStr << " returns type " << GetTypeString();
             break;
 
-        case DeclType::EXPTYPE:
-            std::cout << "Exp: " << tokenData->tokenStr << " of type " << GetTypeString();
-            break;
-
         default:
             std::cout << "Unknown Decl: " << tokenData->tokenStr;
             break;
@@ -112,10 +108,6 @@ void TreeNode::PrintDecl()
 void TreeNode::PrintStmt()
 {
     switch(subType.stmt) {
-        case StmtType::NULLTYPE:
-            std::cout << "Null";
-            break;
-
         case StmtType::IFTYPE:
             std::cout << "If";
             break;
@@ -191,6 +183,10 @@ void TreeNode::PrintExp()
     std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
 }
 
+// ========================
+// === HELPER FUNCTIONS ===
+// ========================
+
 std::string TreeNode::GetTypeString()
 {
     switch(varType) {
@@ -207,14 +203,8 @@ std::string TreeNode::GetTypeString()
         case VarType::CHARACTER:
             return "char";
 
-        case VarType::CHARINT:
-            return "charint";
-
-        case VarType::EQUAL:
-            return "equal";
-
         case VarType::UNDEFINED:
-            return "I DONT KNOW!!!";
+            return "undefined (the defined one)";
             break;
 
         default:
@@ -295,161 +285,143 @@ void TreeNode::SetTypeFromTypedef(TreeNode* typeDef)
     varType = typeDef->varType;
 }
 
-TreeNode* TreeNode::CreateVarDecl(TokenClass* index, TokenClass* tokenData)
+// ======================
+// === DECL FACTORIES ===
+// ======================
+
+TreeNode* TreeNode::CreateVarDecl(TokenClass* indexOrSize, TokenClass* id)
 {
     TreeNode* newNode = new TreeNode(
         DeclType::VARTYPE,
         VarType::VOID,
-        tokenData,
+        id,
         nullptr,
         nullptr,
         nullptr
     );
+
+    if(indexOrSize != nullptr)
+        newNode->indexOrSize = indexOrSize->numVal;
 
     return newNode;
 }
 
-TreeNode* TreeNode::CreateFuncDecl(VarType typeDef, TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateFuncDecl(VarType varType, TreeNode* parms, TreeNode* stmt, TokenClass* id)
 {
     return new TreeNode(
         DeclType::FUNCTYPE,
-        typeDef,
-        tokenData,
-        leftChild,
-        middleChild,
+        varType,
+        id,
+        parms,
+        stmt,
         nullptr
     ); 
 }
 
-TreeNode* TreeNode::CreateIdExp(TokenClass* tokenData)
-{
-    return new TreeNode(
-        ExpType::IDTYPE,
-        tokenData,
-        nullptr,
-        nullptr,
-        nullptr
-    );
-}
+// ======================
+// === STMT FACTORIES ===
+// ======================
 
-TreeNode* TreeNode::CreateParmExp(TokenClass* tokenData)
-{
-    return new TreeNode(
-        ExpType::PARMTYPE,
-        tokenData,
-        nullptr,
-        nullptr,
-        nullptr
-    );
-}
-
-TreeNode* TreeNode::CreateInitExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
-{
-    return new TreeNode(
-        ExpType::INITTYPE,
-        tokenData,
-        leftChild,
-        middleChild,
-        nullptr
-    );
-}
-
-TreeNode* TreeNode::CreateCompoundStmt(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateCompoundStmt(TreeNode* localDecls, TreeNode* stmtList, TokenClass* lbrace)
 {
     return new TreeNode(
         StmtType::COMPOUNDTYPE,
-        tokenData,
-        leftChild,
-        middleChild,
+        lbrace,
+        localDecls,
+        stmtList,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateIfStmt(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateIfStmt(TreeNode* condition, TreeNode* thenStmt, TreeNode* elseStmt, TokenClass* ifToken)
 {
     return new TreeNode(
         StmtType::IFTYPE,
-        tokenData,
-        leftChild,
-        middleChild,
-        rightChild
+        ifToken,
+        condition,
+        thenStmt,
+        elseStmt
     );
 }
 
-TreeNode* TreeNode::CreateWhileStmt(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateWhileStmt(TreeNode* condition, TreeNode* stmt, TokenClass* whileToken)
 {
     return new TreeNode(
         StmtType::WHILETYPE,
-        tokenData,
-        leftChild,
-        middleChild,
+        whileToken,
+        condition,
+        stmt,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateForStmt(TokenClass* id, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateForStmt(TreeNode* range, TreeNode* stmt, TokenClass* id, TokenClass* forToken)
 {
     TreeNode* forNode = new TreeNode(
         StmtType::FORTYPE,
-        tokenData,
+        forToken,
         CreateVarDecl(nullptr, id),
-        middleChild,
-        rightChild
+        range,
+        stmt
     );
 
     forNode->leftChild->varType = VarType::INTEGER;
     return forNode;
 }
 
-TreeNode* TreeNode::CreateRangeStmt(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateRangeStmt(TreeNode* lowExp, TreeNode* highExp, TreeNode* byExp, TokenClass* toToken)
 {
     return new TreeNode(
         StmtType::RANGETYPE,
-        tokenData,
-        leftChild,
-        middleChild,
-        rightChild
+        toToken,
+        lowExp,
+        highExp,
+        byExp
     );
 }
 
-TreeNode* TreeNode::CreateReturnStmt(TreeNode* leftChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateReturnStmt(TreeNode* retVal, TokenClass* returnToken)
 {
     return new TreeNode(
         StmtType::RETURNTYPE,
-        tokenData,
-        leftChild,
+        returnToken,
+        retVal,
         nullptr,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateBreakStmt(TreeNode* leftChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateBreakStmt(TreeNode* breakVal, TokenClass* breakToken)
 {
     return new TreeNode(
         StmtType::BREAKTYPE,
-        tokenData,
-        leftChild,
+        breakToken,
+        breakVal,
         nullptr,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateOpExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+// =====================
+// === EXP FACTORIES ===
+// =====================
+
+TreeNode* TreeNode::CreateOpExp(TreeNode* lhs, TreeNode* rhs, TokenClass* opToken)
 {
     return new TreeNode(
         ExpType::OPTYPE,
-        tokenData,
-        leftChild,
-        middleChild,
+        opToken,
+        lhs,
+        rhs,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* tokenData)
+TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* unaryOpToken)
 {
     TreeNode* newNode = new TreeNode(
         ExpType::OPTYPE,
-        tokenData,
+        unaryOpToken,
         nullptr,
         nullptr,
         nullptr
@@ -460,22 +432,22 @@ TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* tokenData)
     return newNode;
 }
 
-TreeNode* TreeNode::CreateCallExp(TreeNode* leftChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateCallExp(TreeNode* args, TokenClass* id)
 {
     return new TreeNode(
         ExpType::CALLTYPE,
-        tokenData,
-        leftChild,
+        id,
+        args,
         nullptr,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateConstExp(VarType typeDef, TokenClass* tokenData)
+TreeNode* TreeNode::CreateConstExp(VarType typeDef, TokenClass* constToken)
 {
     TreeNode* newNode = new TreeNode(
         ExpType::CONSTTYPE,
-        tokenData,
+        constToken,
         nullptr,
         nullptr,
         nullptr
@@ -490,27 +462,53 @@ TreeNode* TreeNode::CreateConstExp(VarType typeDef, TokenClass* tokenData)
     return newNode;
 }
 
-TreeNode* TreeNode::CreateAssignExp(TreeNode* leftChild, TreeNode* middleChild, TokenClass* tokenData)
+TreeNode* TreeNode::CreateIdExp(TokenClass* id)
 {
     return new TreeNode(
-        ExpType::ASSIGNTYPE,
-        tokenData,
-        leftChild,
-        middleChild,
+        ExpType::IDTYPE,
+        id,
+        nullptr,
+        nullptr,
         nullptr
     );
 }
 
-TreeNode* TreeNode::CreateIdxExp(TreeNode* exp, TokenClass* id, TokenClass* lbracket)
+TreeNode* TreeNode::CreateParmExp(TokenClass* parmToken)
+{
+    return new TreeNode(
+        ExpType::PARMTYPE,
+        parmToken,
+        nullptr,
+        nullptr,
+        nullptr
+    );
+}
+
+TreeNode* TreeNode::CreateAssignExp(TreeNode* lhs, TreeNode* rhs, TokenClass* assignToken)
+{
+    return new TreeNode(
+        ExpType::ASSIGNTYPE,
+        assignToken,
+        lhs,
+        rhs,
+        nullptr
+    );
+}
+
+TreeNode* TreeNode::CreateIdxExp(TreeNode* idxExp, TokenClass* id, TokenClass* lbracket)
 {
     TreeNode* bracketNode = CreateOpExp(
         CreateIdExp(id),
-        exp,
+        idxExp,
         lbracket
     );
 
     return bracketNode;
 }
+
+// ======================
+// === NODE FUNCTIONS ===
+// ======================
 
 TreeNode* TreeNode::PullUpNode(TreeNode* rootNode, TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild)
 {
