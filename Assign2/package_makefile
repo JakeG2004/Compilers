@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -I. -Ibuild -Wall -Wextra -g -fsanitize=address,undefined
+CXXFLAGS = -I. -Ibuild -std=c++14
 
 all: c-
 build: c-

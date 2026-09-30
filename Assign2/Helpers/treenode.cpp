@@ -156,7 +156,11 @@ void TreeNode::PrintExp()
             break;
 
         case ExpType::CONSTTYPE:
-            std::cout << "Const" << GetArrText() << " of type " << GetTypeString() << ": " << tokenData->stringVal;
+            std::cout << "Const" << GetArrText() << " of type " << GetTypeString() << ": ";
+            if(varType == VarType::INTEGER)
+                std::cout << tokenData->numVal;
+            else
+                std::cout << tokenData->stringVal;
             break;
 
         case ExpType::IDTYPE:

@@ -5,3 +5,5 @@ int dog() {
     if 1 then 666;
     x = true;
 }
+
+

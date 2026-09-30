@@ -1,4 +1,4 @@
-// C-S21
+// C-F26
 int gcd(int u, v)
 {
     if v==0 then return u;

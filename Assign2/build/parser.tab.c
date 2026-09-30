@@ -2755,11 +2755,9 @@ void yyerror(const char* s)
 int main(int argc, char* argv[])
 {
     yydebug = 0;
-
     bool printFlag = false;
 
     ArgHandler::ProcessArgs(argc, argv);
-
     if(ArgHandler::IsFlagSet("-p"))
         printFlag = true;
     if(ArgHandler::IsFlagSet("-d"))
@@ -2769,31 +2767,16 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    bool isRedirect = !(isatty(fileno(stdin)));
-
-    if(!isRedirect) {
-        int filePathArg = argc - 1;
-        FILE* file = fopen(argv[filePathArg], "r");
-        if(!file) {
-            perror(argv[filePathArg]);
-            return 1;
-        }
-
-        yyin = file;
+    const char* filePath = nullptr;
+    for(int i = 1; i < argc; i++) {
+        if(argv[i][0] != '-' && argv[i][0] != '?')
+            filePath = argv[i];
     }
 
-    yyparse();
-
-    if(printFlag)
-        ASTRoot->Print();
-
-    return 0;
-
-    /*
-    if(argc > 0) {
-        FILE* file = fopen(argv[argc - 1], "r");
+    if(filePath) {
+        FILE* file = fopen(filePath, "r");
         if(!file) {
-            perror(argv[argc - 1]);
+            perror(filePath);
             return 1;
         }
         yyin = file;
@@ -2801,29 +2784,17 @@ int main(int argc, char* argv[])
         yyin = stdin;
     }
 
-    FILE* temp = tmpfile();
-    if (!temp) {
-        perror("tmpfile");
-        if (argc <= 1) fclose(yyin);
-        return 1;
+    if(yyin == NULL) {
+        printf("YYIN IS NULL!!!!!! BAD!!!!\n");
+        return 2;
     }
 
-    char buffer[1024];
-    size_t bytes;
-    while ((bytes = fread(buffer, 1, sizeof(buffer), yyin)) > 0) {
-        fwrite(buffer, 1, bytes, stdout);
-        fwrite(buffer, 1, bytes, temp);
-    }
+    int result = yyparse();
 
-    if (argc == 2) {
-        fclose(yyin);
-    }
+    printf("[%s]\n", filePath);
 
-    rewind(temp);
-    yyin = temp;
-
-    fclose(temp);
+    if(printFlag && ASTRoot)
+        ASTRoot->Print();
 
     return 0;
-    */
 }
