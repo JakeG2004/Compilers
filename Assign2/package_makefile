@@ -1,11 +1,11 @@
 CXX = g++
-CXXFLAGS = -I. -Ibuild
+CXXFLAGS = -I. -Ibuild -Wall -Wextra -g -fsanitize=address,undefined
 
 all: c-
 build: c-
 
-c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o
-	$(CXX) $^ -o $@
+c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o build/arghandler.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 build/parser.tab.c build/parser.tab.h: parser.y
 	mkdir -p build
@@ -34,6 +34,10 @@ build/errorhandler.o: errorhandler.cpp errorhandler.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/treenode.o: treenode.cpp treenode.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/arghandler.o: arghandler.cpp arghandler.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

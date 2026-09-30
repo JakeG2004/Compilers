@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -IHelpers -Ibuild
+CXXFLAGS = -IHelpers -Ibuild -std=c++14
 
 TESTDIR    = Tests
 OUTDIR     = Outputs
@@ -26,7 +26,7 @@ test: c-
 			skip=$$((skip+1)); \
 			continue; \
 		fi; \
-		./c- < "$$f" > "$$actual" 2>&1; \
+		./c- -p < "$$f" > "$$actual" 2>&1; \
 		if diff -q "$$actual" "$$expected" > /dev/null 2>&1; then \
 			echo "PASS  $$name"; \
 			pass=$$((pass+1)); \
@@ -71,7 +71,7 @@ package:
 
 
 c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o build/arghandler.o
-	$(CXX) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 # Generate parser files in build/
 build/parser.tab.c build/parser.tab.h: Parser/parser.y

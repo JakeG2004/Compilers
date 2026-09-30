@@ -1,6 +1,15 @@
 char zev[10]:"corgis";
-char yurt[20];
 int x:42, y:666;
+char yurt[20];
+
+
+// note that functions are defined using a statement
+int max(int a, b) if a>b then return a; else return b;
+
+
+// use the max operator
+int max3(int a, b, c) return a >> b >> c;
+
 
 int ant(int bat, cat[]; bool dog, elk; int fox; char gnu) 
 { 
@@ -21,21 +30,18 @@ int ant(int bat, cat[]; bool dog, elk; int fox; char gnu)
         }
      }
 
-    for i = 0 to *zev-1 do {
+     for i=1 to 10 by 3 do {  // i is an int local to the loop
          if x==1 then cat[i] = bat;
          else if x==2 then cat[i] = bat%17;
          else if x==3 then cat[i] = 78;
          else x++;
-    }
-    if zev > "dog" then outputs("bark");
-    yurt = zev;
-    yurt[3] = zev[?*zev];
+         if cat[i]<0 then break cat[i]=0;
+     }
 
-    return (fox+bat*cat[bat])/-fox;
+     while true do if x>333 then break; else x++;
+
+     yurt = zev;
+     yurt[3] = zev[?*zev];
+
+     return (fox+bat*cat[bat])/-fox;
 }
-
-// note that functions are defined using a statement
-int max(int a, b) if a>b then return a; else return b;
-
-// use the max operator
-int max3(int a, b, c) return a >> b >> c;

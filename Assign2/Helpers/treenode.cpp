@@ -83,6 +83,10 @@ void TreeNode::PrintSelf()
         case NodeType::EXPNODE:
             PrintExp();
             break;
+
+        default:
+            std::cout << "NODE: IDK!!!!" << std::endl;
+            break;
     }
 }
 

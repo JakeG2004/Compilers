@@ -31,8 +31,8 @@ void ArgHandler::PrintHelp()
     std::cout << "\tor, cat <filename> | ./c- <args>" << std::endl;
     std::cout << "\tor, ./c- <args> < <filename>" << std::endl;
 
-    std::cout << "\nAvailable flags are:" << std::endl;
+    std::cout << "\n\tAvailable flags are:" << std::endl;
     std::cout << "\t-p: Prints the AST" << std::endl;
     std::cout << "\t-d: Prints the yydebug info" << std::endl;
-    std::cout << "?: Brings up this help text" << std::endl;
+    std::cout << "\t?: Brings up this help text" << std::endl;
 }

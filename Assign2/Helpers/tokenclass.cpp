@@ -71,7 +71,7 @@ void TokenClass::GetTokenStringFromId()
             break;
 
         default:
-            for(int i =0; i < tokenStr.length(); i++) {
+            for(size_t i =0; i < tokenStr.length(); i++) {
                 tokenName += toupper(tokenStr[i]);
             }
             break;
@@ -82,7 +82,7 @@ void TokenClass::GetStringValue()
 {
     std::string newStrVal;
 
-    for (int i = 0; i < (int)tokenStr.length(); i++) {
+    for (size_t i = 0; i < tokenStr.length(); i++) {
         if (tokenStr[i] == '\\' && i + 1 < tokenStr.length()) {
             switch (tokenStr[i + 1]) {
                 case '0':  newStrVal += '\0'; break;

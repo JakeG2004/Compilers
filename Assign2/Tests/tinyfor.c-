@@ -1,0 +1,14 @@
+main()
+{
+        int z;
+
+        for index=1 to 10 do  break;
+        for index=1 to 10 by 351 do break z=231+56;
+
+        for cheese=1 to 10 do for crackers=1 to 19 do  break;
+        for cheese=1 to 10 do {
+             for crackers=1 to 19 do break;
+             ?z;
+        }
+        return;
+}

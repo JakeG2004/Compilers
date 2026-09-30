@@ -27,5 +27,8 @@ void Error::Print()
         case EMPTY_CHAR:
             std::cout << "Empty character " << offending << ".  Characters ignored." << std::endl;
             break;
+
+        default:
+            break;
     }
 }
