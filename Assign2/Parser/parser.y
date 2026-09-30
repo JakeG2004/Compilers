@@ -303,6 +303,7 @@ void yyerror(const char* s)
 
 int main(int argc, char* argv[])
 {
+    // argument flags
     yydebug = 0;
     bool printFlag = false;
 

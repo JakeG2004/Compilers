@@ -69,6 +69,18 @@ package:
 		exit 1; \
 	fi
 
+gettests:
+	rm -rf $(PACKAGEDIR)
+	mkdir -p $(PACKAGEDIR)
+	cp ./tests_makefile $(PACKAGEDIR)/makefile
+	tar -cf submission.tar -C $(PACKAGEDIR) .
+
+unpacktests: tests.b64
+	base64 -d tests.b64 > Tests.tar
+	mkdir -p Tests
+	tar -xvf Tests.tar -C Tests
+	rm Tests.tar
+	rm tests.b64
 
 c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o build/arghandler.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -114,7 +126,7 @@ clean: pclean
 	rm -rf build c- results
 
 pclean:
-	rm -rf package submission.tar
+	rm -rf package submission.tar Tests.tar tests.b64
 
 .PHONY: all build test test-one clean pclean
 
