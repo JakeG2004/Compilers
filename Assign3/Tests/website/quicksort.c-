@@ -1,0 +1,126 @@
+//  Title:      A Quicksort algorithm in C Minus (C-) 
+//              to sort an array of integers
+//  author:     Oshan Karki
+//  semester:   Spring 2021
+
+// output a string
+outputs(char s[])
+{
+   for i = 0 to *s do outputc(s[i]);
+}
+
+revArray(int arr[])
+{
+   for i = 0 to *arr/2 do {
+       int tmp;
+
+       tmp = arr[i];
+       arr[i] = arr[*arr-1-i];
+       arr[*arr-1-i] = tmp;
+   }
+}
+       
+
+// prints array
+printArray(int arr[])
+{
+    int i : 0;
+    while i < *arr do {
+        output(arr[i]);
+        i = i + 1;
+    }
+    outnl();
+}
+
+//  function to get partion index
+int partition(int arr[], low, high) 
+{
+    int pivot, tmp, i, x;
+
+    pivot = arr[high];
+    i = low-1;
+    x = low;
+
+    while x < high do {
+        if arr[x] <= pivot then {
+            i++;
+
+            tmp = arr[i];
+            arr[i] = arr[x];
+            arr[x] = tmp;
+        }
+        x++;
+    }
+
+    tmp = arr[i+1];
+    arr[i+1] = arr[high];
+    arr[high] = tmp;
+
+    return i+1;
+}
+
+//  recursive function to perform quicksort algorithm
+quicksort(int arr[], low, high) 
+{
+    int pi:2;
+    if low < high then {
+        pi = partition(arr, low, high);
+
+        quicksort(arr, low, pi - 1);    //  perform quicksort on left of partition
+        quicksort(arr, pi + 1, high);   //  perform quicksort on right of partition
+    }
+}
+
+//  recursive function to check if the 
+//  given array is sorted or not
+bool sorted(int arr[], n) 
+{
+    if n==1 or n==0 then {
+        return true;
+    }
+
+    if arr[n-1] < arr[n-2] then {
+        return false;
+    }
+
+    return sorted(arr, n-1);
+}
+
+// main program
+int main() 
+{
+    int arr[61];
+
+    for i=0 to *arr do arr[i] = ?100;
+
+    printArray(arr);
+
+    //  if unsorted perform quicksort
+    quicksort(arr, 0, *arr);
+
+    if sorted(arr, *arr) then outputs("Array is sorted.");
+    else outputs("ERROR: array is NOT sorted!");
+    outnl();
+    printArray(arr);
+
+    // sort it again
+    quicksort(arr, 0, *arr);
+
+    if sorted(arr, *arr) then outputs("Array is sorted.");
+    else outputs("ERROR: array is NOT sorted!");
+    outnl();
+    printArray(arr);
+
+    revArray(arr);
+    printArray(arr);
+
+    // sort it again
+    quicksort(arr, 0, *arr);
+
+    if sorted(arr, *arr) then outputs("Array is sorted.");
+    else outputs("ERROR: array is NOT sorted!");
+    outnl();
+    printArray(arr);
+
+    return 0;
+}

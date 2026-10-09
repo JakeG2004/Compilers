@@ -1,0 +1,15 @@
+#!/usr/local/bin/python3
+import sys
+
+mem = {}
+def main() :
+    while 1 :
+        n = sys.stdin.readline()
+        if n== "exit" : break;
+        if n in mem : 
+            print("seen it!")
+        else :
+            mem[n] = 1
+            print("haven't seen it.")
+
+main()

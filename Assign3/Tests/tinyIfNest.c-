@@ -1,0 +1,28 @@
+// C-F20
+int main(int q)
+{
+   int x, y, z;
+
+   if x>=0 then
+       if true then x;
+       else y;
+
+   111;
+
+   if y>=0 then y;
+   else if true then z;
+
+   222;
+
+   if y>=0 then y;
+   else if true then z;
+        else x;
+
+   333;
+   
+   if x>=0 then if true then x;
+             else y;
+   else z;
+
+   return 0;
+}

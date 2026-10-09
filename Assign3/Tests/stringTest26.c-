@@ -1,0 +1,48 @@
+"DOUBLE QUOTES"
+"dog"
+""
+"123"
+" 	"
+"'"
+"\'\"\\\^"
+"\\\^"
+"\\\x"
+"\\x"
+"\x"
+"a\d\o\g\'\"\\\^"
+"dog cat"
+"dogs^Icats^Jrats"
+"dogs""cats""rats"
+"dogs\""cats"\"rats"
+"dogs
+cats"
+"dogs\ncats"
+"SINGLE QUOTES"
+'d'
+'1'
+' '
+'dogs'
+'	'
+zzz
+'"'
+'\"'
+'\''
+'\\'
+'\^'
+'\x'
+'\@'
+'a'
+'\d'
+'^I'
+'^J'
+'\t'
+'\n'
+'\0'
+'\r'
+'\''
+'while'
+"dogs" "and" "cats"
+'O' 'M' 'G'
+'meerkats are great'
+"Amy, technology isn't intrinsically good or evil.  It's how it's used, like the Death Ray."
+"THE END"

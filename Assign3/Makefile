@@ -1,0 +1,140 @@
+CXX = g++
+CXXFLAGS = -IHelpers -Ibuild -std=c++14
+
+TESTDIR    = Tests
+OUTDIR     = Outputs
+RESULTSDIR = results
+PACKAGEDIR = package
+
+# Every Tests/foo.c- is expected to have a matching Outputs/foo.out
+TESTSRCS = $(wildcard $(TESTDIR)/*.c-)
+
+all: c-
+build: c-
+
+# Run every test, print PASS/FAIL for each, and a summary at the end.
+test: c-
+	@mkdir -p $(RESULTSDIR)
+	@pass=0; fail=0; skip=0; total=0; \
+	for f in $(TESTSRCS); do \
+		name=$$(basename "$$f" .c-); \
+		expected="$(OUTDIR)/$$name.out"; \
+		actual="$(RESULTSDIR)/$$name.out"; \
+		total=$$((total+1)); \
+		if [ ! -f "$$expected" ]; then \
+			echo "SKIP  $$name  (no $$expected)"; \
+			skip=$$((skip+1)); \
+			continue; \
+		fi; \
+		./c- -p < "$$f" > "$$actual" 2>&1; \
+		if diff -q "$$actual" "$$expected" > /dev/null 2>&1; then \
+			echo "PASS  $$name"; \
+			pass=$$((pass+1)); \
+		else \
+			echo "FAIL  $$name"; \
+			fail=$$((fail+1)); \
+		fi; \
+	done; \
+	echo "------------------------------------"; \
+	echo "$$pass passed, $$fail failed, $$skip skipped ($$total total)"
+
+# Run a single test by name and show the diff, e.g. `make test-one NAME=chars`
+test-one: c-
+	@mkdir -p $(RESULTSDIR)
+	@if [ -z "$(NAME)" ]; then echo "Usage: make test-one NAME=<testname>"; exit 1; fi
+	@./c- < "$(TESTDIR)/$(NAME).c-" > "$(RESULTSDIR)/$(NAME).out" 2>&1; \
+	if diff -u "$(RESULTSDIR)/$(NAME).out" "$(OUTDIR)/$(NAME).out"; then \
+		echo "PASS  $(NAME)"; \
+	else \
+		echo "FAIL  $(NAME)"; \
+	fi
+
+package:
+	rm -rf $(PACKAGEDIR)
+	mkdir -p $(PACKAGEDIR)
+	cp Helpers/* $(PACKAGEDIR)
+	cp Parser/parser.y $(PACKAGEDIR)
+	cp Lexer/lexer.l $(PACKAGEDIR)
+	cp package_makefile $(PACKAGEDIR)/makefile
+	tar -cf submission.tar -C $(PACKAGEDIR) .
+	@temp_dir=$$(mktemp -d); \
+	trap 'rm -rf "$$temp_dir"' EXIT; \
+	mkdir -p "$$temp_dir/verify"; \
+	tar -xf submission.tar -C "$$temp_dir/verify"; \
+	echo "--- Verification Report ---"; \
+	if diff -rq $(PACKAGEDIR) "$$temp_dir/verify"; then \
+		echo "SUCCESS: All files match between $(PACKAGEDIR) and the tarball."; \
+	else \
+		echo "FAILURE: Mismatches found!"; \
+		exit 1; \
+	fi
+
+gettests:
+	rm -rf $(PACKAGEDIR)
+	mkdir -p $(PACKAGEDIR)
+	cp ./tests_makefile $(PACKAGEDIR)/makefile
+	tar -cf submission.tar -C $(PACKAGEDIR) .
+
+unpacktests: tests.b64
+	base64 -d tests.b64 > Tests.tar
+	mkdir -p Tests
+	tar -xvf Tests.tar -C Tests
+	rm Tests.tar
+	rm tests.b64
+
+c-: build/parser.tab.o build/lex.yy.o build/tokenclass.o build/error.o build/errorhandler.o build/treenode.o build/arghandler.o build/symboltable.o build/semanticanalyzer.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+# Generate parser files in build/
+build/parser.tab.c build/parser.tab.h: Parser/parser.y
+	mkdir -p build
+	bison -d Parser/parser.y -o build/parser.tab.c
+
+# Generate lexer files in build/
+build/lex.yy.c: Lexer/lexer.l build/parser.tab.h
+	mkdir -p build
+	flex -o build/lex.yy.c Lexer/lexer.l
+
+# Compile all object files into the build/ directory
+build/parser.tab.o: build/parser.tab.c
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/lex.yy.o: build/lex.yy.c
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/tokenclass.o: Helpers/tokenclass.cpp Helpers/tokenclass.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/error.o: Helpers/error.cpp Helpers/error.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/errorhandler.o: Helpers/errorhandler.cpp Helpers/errorhandler.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/treenode.o: Helpers/treenode.cpp Helpers/treenode.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/arghandler.o: Helpers/arghandler.cpp Helpers/arghandler.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/symboltable.o: Helpers/symboltable.cpp Helpers/symboltable.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+build/semanticanalyzer.o: Helpers/semanticanalyzer.cpp Helpers/semanticanalyzer.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean: pclean
+	rm -rf build c- results
+
+pclean:
+	rm -rf package submission.tar Tests.tar tests.b64
+
+.PHONY: all build test test-one clean pclean
+
