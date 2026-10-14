@@ -17,11 +17,11 @@ void ErrorHandler::AddWarning(std::string content, int lineNum)
 void ErrorHandler::InstAddErrorOrWarning(Error::ErrorType errorType, std::string content, int lineNum)
 {
     Error* newError = new Error(errorType, content, lineNum);
-    errors.push_back(newError);
+    newError->Print();
 
-    if(errorType > Error::ErrorType::ERROR)
+    if(errorType == Error::ErrorType::ERROR)
         numErrors++;
-    if(errorType < Error::ErrorType::WARNING)
+    if(errorType == Error::ErrorType::WARNING)
         numWarnings++;
 }
 

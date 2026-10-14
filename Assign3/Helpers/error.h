@@ -12,11 +12,11 @@ class Error
         };
 
         ErrorType errorType;
-        std::string offending;
+        std::string content;
         int lineNum;
     
     public:
-        Error(ErrorType errorType, std::string offending, int lineNum);
+        Error(ErrorType errorType, std::string content, int lineNum);
         void Print();
 };
 #endif

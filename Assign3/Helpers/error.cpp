@@ -1,19 +1,24 @@
 #include "error.h"
 #include <iostream>
 
-Error::Error(ErrorType errorType, std::string offending, int lineNum)
+Error::Error(ErrorType errorType, std::string content, int lineNum)
 {
     this->errorType = errorType;
-    this->offending = offending;
+    this->content = content;
     this->lineNum = lineNum;
 }
 
 void Error::Print()
 {
-    if(errorType >= ERROR)
-        std::cout << "ERROR(" << lineNum << "): ";
-    if(errorType <= WARNING)
-        std::cout << "WARNING(" << lineNum << "): ";
+    std::string lineStr = std::to_string(lineNum);
+    if(lineNum == -1) {
+        lineStr = std::string("LINKER");
+    }
 
-    std::cout << offending << std::endl;
+    if(errorType == ERROR)
+        std::cout << "ERROR(" << lineStr << "): ";
+    if(errorType == WARNING)
+        std::cout << "WARNING(" << lineStr << "): ";
+
+    std::cout << content << std::endl;
 }

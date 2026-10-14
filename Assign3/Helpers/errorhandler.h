@@ -44,7 +44,7 @@ class ErrorHandler
         static void AddUnusedVarWarn(TreeNode* node);
         static void AddUninitVarWarn(TreeNode* node);
 
-    public: // Linker
+    public: // Weird things like linker
         static void AddNoMainError(TreeNode* node);
 
     protected:
@@ -53,7 +53,6 @@ class ErrorHandler
         static void AddWarning(std::string content, int lineNum);
     
     protected:
-        std::vector<Error*> errors;
         int numWarnings = 0;
         int numErrors = 0;
 
