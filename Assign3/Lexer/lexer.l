@@ -73,7 +73,7 @@ comment             "//"[^\n]*
 "%"                 TOKEN(MOD)
 "?"                 TOKEN(QUESTION)
 
-''                  { ErrorHandler::AddError(Error::ErrorType::EMPTY_CHAR, std::string(yytext), yylineno); }
+''                  { /*ErrorHandler::AddError(Error::ErrorType::EMPTY_CHAR, std::string(yytext), yylineno);*/ }
 
 {letter}{letdig}*   TOKEN(ID)
 {digit}+            TOKEN(NUMCONST)
@@ -82,7 +82,7 @@ comment             "//"[^\n]*
 
 {comment}           ;
 [ \t\n]             ;
-.                   { ErrorHandler::AddError(Error::ErrorType::INVALID_CHAR, std::string(yytext), yylineno); }
+.                   { /*ErrorHandler::AddError(Error::ErrorType::INVALID_CHAR, std::string(yytext), yylineno);*/ }
 %%
 
 int AddToken(int tokenClass)
@@ -102,7 +102,7 @@ int AddToken(int tokenClass)
             int len = strlen(yytext);
             if (yytext[1] == '\\') {
                 if (len > 4)
-                    ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
+                    {}//ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
                 switch (yytext[2]) {
                     case '0':  c = '\0'; break;
                     case 'n':  c = '\n'; break;
@@ -113,7 +113,7 @@ int AddToken(int tokenClass)
                 }
             } else {
                 if (len > 3) {
-                    ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
+                    //ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
                 }
                 c = yytext[1];
             }

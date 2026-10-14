@@ -1089,7 +1089,7 @@ TOKEN(QUESTION)
 case 50:
 YY_RULE_SETUP
 #line 76 "Lexer/lexer.l"
-{ ErrorHandler::AddError(Error::ErrorType::EMPTY_CHAR, std::string(yytext), yylineno); }
+{ /*ErrorHandler::AddError(Error::ErrorType::EMPTY_CHAR, std::string(yytext), yylineno);*/ }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
@@ -1125,7 +1125,7 @@ YY_RULE_SETUP
 case 57:
 YY_RULE_SETUP
 #line 85 "Lexer/lexer.l"
-{ ErrorHandler::AddError(Error::ErrorType::INVALID_CHAR, std::string(yytext), yylineno); }
+{ /*ErrorHandler::AddError(Error::ErrorType::INVALID_CHAR, std::string(yytext), yylineno);*/ }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
@@ -2169,7 +2169,7 @@ int AddToken(int tokenClass)
             int len = strlen(yytext);
             if (yytext[1] == '\\') {
                 if (len > 4)
-                    ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
+                    {}//ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
                 switch (yytext[2]) {
                     case '0':  c = '\0'; break;
                     case 'n':  c = '\n'; break;
@@ -2180,7 +2180,7 @@ int AddToken(int tokenClass)
                 }
             } else {
                 if (len > 3) {
-                    ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
+                    //ErrorHandler::AddError(Error::ErrorType::LONG_CHAR, std::string(yytext), yylineno);
                 }
                 c = yytext[1];
             }

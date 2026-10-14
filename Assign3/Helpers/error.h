@@ -7,14 +7,8 @@ class Error
     public:
         enum ErrorType
         {
-            LONG_CHAR,
             WARNING,
-
-            // COMPARE ENUM VALUES TO MAKE PRINTING SIMPLER
-
             ERROR,
-            INVALID_CHAR,
-            EMPTY_CHAR,
         };
 
         ErrorType errorType;

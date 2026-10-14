@@ -68,6 +68,8 @@ class TreeNode
         bool isStatic = false;
         bool isUnary = false;
 
+        int declAt = -1;
+
         union {
             DeclType decl;
             StmtType stmt;

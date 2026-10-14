@@ -2,7 +2,7 @@
 #define ERROR_HANDLER_H
 
 #include "error.h"
-#include "tokenclass.h"
+#include "treenode.h"
 
 #include <iostream>
 #include <vector>
@@ -19,34 +19,39 @@ class ErrorHandler
         static int GetNumErrors();
         static int GetNumWarnings();
 
-    public:
-        static void AddAddError(Error::ErrorType errorType, std::string content, int lineNum);
-        static void AddVarCallError(TokenClass* token);
-        static void AddFunVarError(TokenClass* token);
-        static void AddBothOpArrError(TokenClass* token);
-        static void AddLHSOpError(TokenClass* token);
-        static void AddRHSOpError(TokenClass* token);
-        static void AddBothOpTypeError(TokenClass* token);
-        static void AddUnaryOpError(TokenClass* token);
-        static void AddRetArrError(TokenClass* token);
-        static void AddReDeclError(TokenClass* token);
-        static void AddUnDeclError(TokenClass* token);
-        static void AddArrIdxTypeError(TokenClass* token);
-        static void AddIdxWithArrError(TokenClass* token);
-        static void AddIdxNonArrError(TokenClass* token);
-        static void AddNonArrOpError(TokenClass* token);
-        static void AddOnlyArrOpError(TokenClass* token);
-    
-    public:
-        static void AddUnusedVarWarn(TokenClass* token);
-        static void AddUninitVarWarn(TokenClass* token);
+    public: // Errors
+        static void AddVarCallError(TreeNode* node);
+        static void AddFunVarError(TreeNode* node);
 
-    public:
-        static void AddNoMainError(TokenClass* token);
+        static void AddBothOpArrError(TreeNode* node, bool leftIsArr, bool rightIsArr);
+        static void AddLHSOpError(TreeNode* node, std::string targetType, std::string lhsType);
+        static void AddRHSOpError(TreeNode* node, std::string targetType, std::string rhsType);
+        static void AddBothOpTypeError(TreeNode* node, std::string lhsType, std::string rhsType);
+        static void AddUnaryOpError(TreeNode* node, std::string targetType, std::string actualType);
+
+        static void AddRetArrError(TreeNode* node);
+
+        static void AddReDeclError(TreeNode* node);
+        static void AddUnDeclError(TreeNode* node);
+
+        static void AddArrIdxTypeError(TreeNode* node, std::string otherType);
+        static void AddIdxWithArrError(TreeNode* node, std::string otherArrName);
+        static void AddIdxNonArrError(TreeNode* node);
+        static void AddNonArrOpError(TreeNode* node);
+        static void AddOnlyArrOpError(TreeNode* node);
+    
+    public: // Warnings
+        static void AddUnusedVarWarn(TreeNode* node);
+        static void AddUninitVarWarn(TreeNode* node);
+
+    public: // Linker
+        static void AddNoMainError(TreeNode* node);
 
     protected:
-        void InstAddError(Error::ErrorType errorType, std::string content, int lineNum);
-
+        void InstAddErrorOrWarning(Error::ErrorType errorType, std::string content, int lineNum);
+        static void AddError(std::string content, int lineNum);
+        static void AddWarning(std::string content, int lineNum);
+    
     protected:
         std::vector<Error*> errors;
         int numWarnings = 0;
