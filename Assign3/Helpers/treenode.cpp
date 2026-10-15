@@ -436,6 +436,7 @@ TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* unaryOpToken)
     );
 
     newNode->isUnary = true;
+    newNode->varType = VarType::INTEGER;
 
     return newNode;
 }

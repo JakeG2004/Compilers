@@ -1,0 +1,70 @@
+int i;
+
+main(int x, y);
+
+int fred(bool b)
+{
+   int ia[7], notused;
+   char ca[10];
+   bool b;
+   char c;
+   bool c;
+
+   {
+      bool b:0;   
+      char c;
+   }
+
+   i;
+   i();
+   ia = i;
+   'a' + 5;
+   6 + 'a';
+   c;
+   i == c;
+   c--;
+   ia['x'];
+   ia[ia];
+   i[5];
+   fred[5];
+   fred = 8;
+   undcl = 67;
+   ?ia;
+   9 + ia;
+   -'u';
+   *i;
+   
+   i =
+   b =
+   c = 37;   
+
+   i + b
+   + c
+   + 'x';   
+
+   ia = ia;
+   ca = ca;
+   ca = "porcupine";
+   ia = ca;
+
+   true > false;
+
+   undcl + undcl;
+   jane() + jane();
+   ia[jane()];
+   i = i = undcl;
+
+   (i = 'z') + (i++);
+
+   (i++) + (i = c);
+   (i++) + (c = i);
+
+   (i++) + (i + 'z');
+   (i++) + ('z'+i);
+
+   for i = 1 to 10 do {
+      int i;
+   }
+
+   return ia;
+}   
