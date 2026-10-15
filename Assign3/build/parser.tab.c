@@ -2169,43 +2169,43 @@ yyreduce:
 
   case 58: /* exp: mutable ASSIGN exp  */
 #line 179 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = (yyvsp[0].node)->varType; }
 #line 2174 "build/parser.tab.c"
     break;
 
   case 59: /* exp: mutable ADDASS exp  */
 #line 180 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2180 "build/parser.tab.c"
     break;
 
   case 60: /* exp: mutable SUBASS exp  */
 #line 181 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2186 "build/parser.tab.c"
     break;
 
   case 61: /* exp: mutable MULASS exp  */
 #line 182 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2192 "build/parser.tab.c"
     break;
 
   case 62: /* exp: mutable DIVASS exp  */
 #line 183 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2198 "build/parser.tab.c"
     break;
 
   case 63: /* exp: mutable INC  */
 #line 184 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2204 "build/parser.tab.c"
     break;
 
   case 64: /* exp: mutable DEC  */
 #line 185 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData));}
+                            {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2210 "build/parser.tab.c"
     break;
 
@@ -2217,7 +2217,7 @@ yyreduce:
 
   case 66: /* simpleExp: simpleExp OR andExp  */
 #line 190 "Parser/parser.y"
-                        {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                        {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
 #line 2222 "build/parser.tab.c"
     break;
 
@@ -2229,7 +2229,7 @@ yyreduce:
 
   case 68: /* andExp: andExp AND unaryRelExp  */
 #line 195 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData));}
+                            {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
 #line 2234 "build/parser.tab.c"
     break;
 
@@ -2241,7 +2241,7 @@ yyreduce:
 
   case 70: /* unaryRelExp: NOT unaryRelExp  */
 #line 200 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateOpExp((yyvsp[0].node), nullptr, (yyvsp[-1].tokenData));}
+                    {(yyval.node) = TreeNode::CreateOpExp((yyvsp[0].node), nullptr, (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
 #line 2246 "build/parser.tab.c"
     break;
 
@@ -2253,7 +2253,7 @@ yyreduce:
 
   case 72: /* relExp: minmaxExp relop minmaxExp  */
 #line 205 "Parser/parser.y"
-                                {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr);}
+                                {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
 #line 2258 "build/parser.tab.c"
     break;
 
@@ -2301,7 +2301,7 @@ yyreduce:
 
   case 80: /* minmaxExp: minmaxExp minmaxop sumExp  */
 #line 219 "Parser/parser.y"
-                                {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr);}
+                                {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2306 "build/parser.tab.c"
     break;
 
@@ -2313,19 +2313,19 @@ yyreduce:
 
   case 82: /* minmaxop: MIN  */
 #line 224 "Parser/parser.y"
-            {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
+            {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2318 "build/parser.tab.c"
     break;
 
   case 83: /* minmaxop: MAX  */
 #line 225 "Parser/parser.y"
-            {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
+            {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2324 "build/parser.tab.c"
     break;
 
   case 84: /* sumExp: sumExp sumop mulExp  */
 #line 229 "Parser/parser.y"
-                        {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr);}
+                        {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2330 "build/parser.tab.c"
     break;
 
@@ -2349,7 +2349,7 @@ yyreduce:
 
   case 88: /* mulExp: mulExp mulop unaryExp  */
 #line 239 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr);}
+                            {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
 #line 2354 "build/parser.tab.c"
     break;
 
@@ -2427,7 +2427,7 @@ yyreduce:
 
   case 101: /* mutable: ID LBRACKET exp RBRACKET  */
 #line 267 "Parser/parser.y"
-                                {(yyval.node) = TreeNode::CreateIdxExp((yyvsp[-1].node), (yyvsp[-3].tokenData), (yyvsp[-2].tokenData));}
+                                {(yyval.node) = TreeNode::CreateIdxExp((yyvsp[-1].node), (yyvsp[-3].tokenData), (yyvsp[-2].tokenData)); (yyval.node)->varType = (yyvsp[-1].node)->varType; }
 #line 2432 "build/parser.tab.c"
     break;
 
@@ -2817,11 +2817,11 @@ int main(int argc, char* argv[])
 
     int result = yyparse();
 
-    if(printFlag && ASTRoot)
-        ASTRoot->Print();
+    if((printFlag || typePrintFlag) && ASTRoot)
+        ASTRoot->Print(0, -1, 0, typePrintFlag);
 
-    SemanticAnalyzer* analyzer = new SemanticAnalyzer();
-    analyzer->Analyze(ASTRoot, stDebugFlag);
+    SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
+    analyzer->Analyze(ASTRoot, true);
 
     return 0;
 }

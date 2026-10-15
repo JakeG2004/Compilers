@@ -176,33 +176,33 @@ breakStmt:
     ;
 
 exp:
-    mutable ASSIGN exp      {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = #3->varType; }
-    | mutable ADDASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = VarType::INTEGER; }
-    | mutable SUBASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = VarType::INTEGER; }
-    | mutable MULASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = VarType::INTEGER; }
-    | mutable DIVASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = VarType::INTEGER; }
-    | mutable INC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2); $$->varType = VarType::INTEGER; }
-    | mutable DEC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2); $$->varType = VarType::INTEGER; }
+    mutable ASSIGN exp      {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = $3->varType; }
+    | mutable ADDASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
+    | mutable SUBASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
+    | mutable MULASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
+    | mutable DIVASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
+    | mutable INC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2); $$->varType = TreeNode::VarType::INTEGER; }
+    | mutable DEC           {$$ = TreeNode::CreateAssignExp($1, nullptr, $2); $$->varType = TreeNode::VarType::INTEGER; }
     | simpleExp             {$$ = $1;}
     ;
 
 simpleExp:
-    simpleExp OR andExp {$$ = TreeNode::CreateOpExp($1, $3, $2); $$->varType = VarType::BOOLEAN; }
+    simpleExp OR andExp {$$ = TreeNode::CreateOpExp($1, $3, $2); $$->varType = TreeNode::VarType::BOOLEAN; }
     | andExp            {$$ = $1;}
     ;
 
 andExp:
-    andExp AND unaryRelExp  {$$ = TreeNode::CreateOpExp($1, $3, $2); $$->varType = VarType::BOOLEAN; }
+    andExp AND unaryRelExp  {$$ = TreeNode::CreateOpExp($1, $3, $2); $$->varType = TreeNode::VarType::BOOLEAN; }
     | unaryRelExp           {$$ = $1;}
     ;
 
 unaryRelExp:
-    NOT unaryRelExp {$$ = TreeNode::CreateOpExp($2, nullptr, $1); $$->varType = VarType::BOOLEAN; }
+    NOT unaryRelExp {$$ = TreeNode::CreateOpExp($2, nullptr, $1); $$->varType = TreeNode::VarType::BOOLEAN; }
     | relExp        {$$ = $1;}
     ;
 
 relExp:
-    minmaxExp relop minmaxExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = VarType::BOOLEAN; }
+    minmaxExp relop minmaxExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = TreeNode::VarType::BOOLEAN; }
     | minmaxExp                 {$$ = $1;}
     ;
 
@@ -216,17 +216,17 @@ relop:
     ;
 
 minmaxExp:
-    minmaxExp minmaxop sumExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = VarType::INTEGER; }
+    minmaxExp minmaxop sumExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = TreeNode::VarType::INTEGER; }
     | sumExp                    {$$ = $1;}
     ;
 
 minmaxop:
-    MIN     {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1); $$->varType = VarType::INTEGER; }
-    | MAX   {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1); $$->varType = VarType::INTEGER; }
+    MIN     {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1); $$->varType = TreeNode::VarType::INTEGER; }
+    | MAX   {$$ = TreeNode::CreateOpExp(nullptr, nullptr, $1); $$->varType = TreeNode::VarType::INTEGER; }
     ;
 
 sumExp:
-    sumExp sumop mulExp {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = VarType::INTEGER; }
+    sumExp sumop mulExp {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = TreeNode::VarType::INTEGER; }
     | mulExp            {$$ = $1;}
     ;
 
@@ -236,7 +236,7 @@ sumop:
     ;
 
 mulExp:
-    mulExp mulop unaryExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = VarType::INTEGER; }
+    mulExp mulop unaryExp   {$$ = TreeNode::PullUpNode($2, $1, $3, nullptr); $$->varType = TreeNode::VarType::INTEGER; }
     | unaryExp              {$$ = $1;}
     ;
 
@@ -264,7 +264,7 @@ factor:
 
 mutable:
     ID                          {$$ = TreeNode::CreateIdExp($1);}
-    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdxExp($3, $1, $2); $$->varType = $1->varType}
+    | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdxExp($3, $1, $2); $$->varType = $3->varType; }
     ;
 
 immutable:
@@ -366,11 +366,11 @@ int main(int argc, char* argv[])
 
     int result = yyparse();
 
-    if(printFlag && ASTRoot)
-        ASTRoot->Print();
+    if((printFlag || typePrintFlag) && ASTRoot)
+        ASTRoot->Print(0, -1, 0, typePrintFlag);
 
     SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
-    analyzer->Analyze(ASTRoot);
+    analyzer->Analyze(ASTRoot, true);
 
     return 0;
 }

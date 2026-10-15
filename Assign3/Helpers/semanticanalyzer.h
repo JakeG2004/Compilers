@@ -9,11 +9,12 @@ class SemanticAnalyzer
 {
     public:
         SemanticAnalyzer(bool stDebug);
-        void Analyze(TreeNode* node);
+        void Analyze(TreeNode* node, bool canAddNewScope = true);
         bool IsArray(TreeNode* node);
         int GetSymbolToken(TreeNode* node);
         TreeNode::VarType GetTypeOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode* node);
+        std::string GetTypeStringOf(TreeNode::VarType type);
 
     public:
         void CheckForOperatorErrors(TreeNode* node);

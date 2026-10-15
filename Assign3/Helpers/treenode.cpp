@@ -31,7 +31,7 @@ TreeNode::TreeNode(ExpType expType, TokenClass* tokenData, TreeNode* leftChild, 
     this->nodeType = NodeType::EXPNODE;
 }
 
-void TreeNode::Print(int depth, int childNo, int siblingNo)
+void TreeNode::Print(int depth, int childNo, int siblingNo, bool printType)
 {
     int nextDepth = depth;
 
@@ -48,40 +48,40 @@ void TreeNode::Print(int depth, int childNo, int siblingNo)
         std::cout << "Sibling: " << siblingNo << "  ";
 
     // print the data in the node
-    PrintSelf();
+    PrintSelf(printType);
 
     nextDepth++;
 
     if(leftChild != nullptr) {
-        leftChild->Print(nextDepth, 0);
+        leftChild->Print(nextDepth, 0, 0, printType);
     }
 
     if(middleChild != nullptr) {
-        middleChild->Print(nextDepth, 1);
+        middleChild->Print(nextDepth, 1, 0, printType);
     }
 
     if(rightChild != nullptr) {
-        rightChild->Print(nextDepth, 2);
+        rightChild->Print(nextDepth, 2, 0, printType);
     }
 
     if(sibling != nullptr) {
-        sibling->Print(depth, -1, siblingNo + 1);
+        sibling->Print(depth, -1, siblingNo + 1, printType);
     }
 }
 
-void TreeNode::PrintSelf()
+void TreeNode::PrintSelf(bool printType)
 {
     switch(nodeType) {
         case NodeType::DECLNODE:
-            PrintDecl();
+            PrintDecl(printType);
             break;
 
         case NodeType::STMTNODE:
-            PrintStmt();
+            PrintStmt(printType);
             break;
 
         case NodeType::EXPNODE:
-            PrintExp();
+            PrintExp(printType);
             break;
 
         default:
@@ -90,7 +90,7 @@ void TreeNode::PrintSelf()
     }
 }
 
-void TreeNode::PrintDecl()
+void TreeNode::PrintDecl(bool printType)
 {
     switch(subType.decl) {
         case DeclType::VARTYPE:
@@ -106,10 +106,10 @@ void TreeNode::PrintDecl()
             break;
     }
 
-    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+    std::cout << " [line: " << tokenData->lineNum << "]" << PrintType(printType) << std::endl;
 }
 
-void TreeNode::PrintStmt()
+void TreeNode::PrintStmt(bool printType)
 {
     switch(subType.stmt) {
         case StmtType::IFTYPE:
@@ -145,10 +145,10 @@ void TreeNode::PrintStmt()
             break;
     }
 
-    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+    std::cout << " [line: " << tokenData->lineNum << "]" << PrintType(printType) << varType << std::endl;
 }
 
-void TreeNode::PrintExp()
+void TreeNode::PrintExp(bool printType)
 {
     switch(subType.exp) {
         case ExpType::OPTYPE:
@@ -188,12 +188,21 @@ void TreeNode::PrintExp()
             break;
     }
 
-    std::cout << " [line: " << tokenData->lineNum << "]" << std::endl;
+    std::cout << " [line: " << tokenData->lineNum << "]" << PrintType(printType) << std::endl;
 }
 
 // ========================
 // === HELPER FUNCTIONS ===
 // ========================
+
+std::string TreeNode::PrintType(bool printType)
+{
+    if(printType) {
+        return " OF TYPE: " + GetTypeString() + " "; 
+    }
+
+    else return "";
+}
 
 std::string TreeNode::GetTypeString()
 {

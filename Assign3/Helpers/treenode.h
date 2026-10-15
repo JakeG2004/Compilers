@@ -78,7 +78,6 @@ class TreeNode
 
         long long int indexOrSize = 0;
 
-    protected:
         TreeNode* leftChild = nullptr;
         TreeNode* middleChild = nullptr;
         TreeNode* rightChild = nullptr;
@@ -93,14 +92,15 @@ class TreeNode
         void SetSibling(TreeNode* newSibling);
         void SetChild(int childIdx, TreeNode* newChild);
         void SetTypeFromTypedef(TreeNode* typeDef);
-        void Print(int depth = 0, int childNo = -1, int siblingNo = 0);
+        void Print(int depth = 0, int childNo = -1, int siblingNo = 0, bool printType = false);
 
     protected:
-        void PrintSelf();
-        void PrintDecl();
-        void PrintStmt();
-        void PrintExp();
+        void PrintSelf(bool printType);
+        void PrintDecl(bool printType);
+        void PrintStmt(bool printType);
+        void PrintExp(bool printType);
 
+        std::string PrintType(bool printType);
         std::string GetTypeString();
         std::string GetArrText();
         std::string GetUnaryOrRegOp();

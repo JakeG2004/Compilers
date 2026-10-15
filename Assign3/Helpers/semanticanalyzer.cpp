@@ -9,19 +9,22 @@ SemanticAnalyzer::SemanticAnalyzer(bool stDebug)
 {
     symbolTable = new SymbolTable();
     symbolTable->debug(stDebug);
+    symbolTable->enter(std::string("Global"));
 }
 
-void SemanticAnalyzer::Analyze(TreeNode* node)
+void SemanticAnalyzer::Analyze(TreeNode* node, bool canAddNewScope)
 {
+    if(node == nullptr) {
+        return;
+    }
+
     CheckForOperatorErrors(node);
     CheckForSymbolErrors(node);
 
-    if(node->leftChild != nullptr)
-        Analyze(node->leftChild);
-    if(node->middleChild != nullptr)
-        Analyze(node->middleChild);
-    if(node->rightChild != nullptr)
-        Analyze(node->rightChild);
+    Analyze(node->leftChild);
+    Analyze(node->middleChild);
+    Analyze(node->rightChild);
+    Analyze(node->sibling);
 }
 
 void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node) 
@@ -80,7 +83,7 @@ void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node)
 
         case NOT:
             if(node->leftChild->varType != TreeNode::VarType::BOOLEAN)
-                ErrorHandler::AddLHSOpError(node, TreeNode::VarTYpe::BOOLEAN, node->leftChild->varType);
+                ErrorHandler::AddLHSOpError(node, GetTypeStringOf(TreeNode::VarType::BOOLEAN), GetTypeStringOf(node->leftChild->varType));
             break;
     }
 }
@@ -95,7 +98,7 @@ void SemanticAnalyzer::CheckForSymbolWarnings(TreeNode* node)
 
 }
 
-void CheckLBracketErrors(TreeNode* node)
+void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 {
     if(GetTypeOf(node->middleChild) != TreeNode::VarType::INTEGER) {
         ErrorHandler::AddArrIdxTypeError(node, GetTypeStringOf(node->middleChild));
@@ -106,40 +109,46 @@ void CheckLBracketErrors(TreeNode* node)
     }
 
     if(!IsArray(node->leftChild)) {
-        ErrorHandler::AddIdxNonArrError(node);
+        ErrorHandler::AddIdxNonArrError(node->leftChild);
     }
 }
 
-void CheckAssignErrors(TreeNode* node)
+void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
 {
-    if(GetTypeOf(node->leftChild) != GetTypeOf(node->middleChild)) {
-        ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(node->leftChild), GetTypeStringOf(node->middleChild));
+    bool leftIsArr = IsArray(node->leftChild);
+    bool rightIsArr = IsArray(node->middleChild);
+
+    TreeNode::VarType leftType = GetTypeOf(node->leftChild);
+    TreeNode::VarType rightType = GetTypeOf(node->middleChild);
+
+    if(leftType != rightType) {
+        ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(leftType), GetTypeStringOf(rightType));
     }
 
-    if(!(IsArray(node->leftChild) && IsArray(node->middleChild))) {
-        ErrorHandler::AddBothOpArrError(node, IsArray(node->leftChild), IsArray(node->middleChild));
+    if(!(leftIsArr && rightIsArr)) {
+        ErrorHandler::AddBothOpArrError(node, leftIsArr, rightIsArr);
     }
 }
 
-void CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
+void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
 {
     if(GetTypeOf(node->middleChild) != type) {
-        ErrorHandler::AddRHSOpError(node, type, GetTypeStringOf(node->middleChild));
+        ErrorHandler::AddRHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(node->middleChild));
     }
 
     if(GetTypeOf(node->leftChild) != type) {
-        ErrorHandler::AddLHSOpError(node, type, GetTypeStringOf(node->leftChild));
+        ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(node->leftChild));
     }
 }
 
-void CheckUnaryOpErrors(TreeNode* node) 
+void SemanticAnalyzer::CheckUnaryOpErrors(TreeNode* node) 
 {
     if(GetTypeOf(node->leftChild) != TreeNode::VarType::INTEGER) {
-        ErrorHandler::AddUnaryOpError(node, TreeNode::VarType::INTEGER, GetTypeStringOf(node->leftChild));
+        ErrorHandler::AddUnaryOpError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(node->leftChild));
     }
 }
 
-void CheckMinusErrors(TreeNode* node)
+void SemanticAnalyzer::CheckMinusErrors(TreeNode* node)
 {
     if(node->isUnary)
         CheckLHSRHSErrors(node, TreeNode::VarType::BOOLEAN);
@@ -147,7 +156,7 @@ void CheckMinusErrors(TreeNode* node)
         CheckLHSRHSErrors(node, TreeNode::VarType::INTEGER);
 }
 
-void CheckStarErrors(TreeNode* node)
+void SemanticAnalyzer::CheckStarErrors(TreeNode* node)
 {
     if(!(node->isUnary)) {
         CheckLHSRHSErrors(node, TreeNode::VarType::INTEGER);
@@ -159,7 +168,7 @@ void CheckStarErrors(TreeNode* node)
     }
 }
 
-void CheckComparisonErrors(TreeNode* node)
+void SemanticAnalyzer::CheckComparisonErrors(TreeNode* node)
 {
     if(GetTypeOf(node->middleChild) != GetTypeOf(node->leftChild)) {
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(node->leftChild), GetTypeStringOf(node->middleChild));
@@ -178,25 +187,34 @@ TreeNode::VarType SemanticAnalyzer::GetTypeOf(TreeNode* node)
 
 std::string SemanticAnalyzer::GetTypeStringOf(TreeNode* node)
 {
-    switch(GetTypeOf(node)) {
-        case VOID:
+    return GetTypeStringOf(GetTypeOf(node));
+}
+
+std::string SemanticAnalyzer::GetTypeStringOf(TreeNode::VarType type)
+{
+    switch(type) {
+        case TreeNode::VarType::VOID:
             return std::string("Void");
             break;
 
-        case INTEGER:
+        case TreeNode::VarType::INTEGER:
             return std::string("Integer");
             break;
 
-        case BOOLEAN:
+        case TreeNode::VarType::BOOLEAN:
             return std::string("Boolean");
             break;
 
-        case STRING:
+        case TreeNode::VarType::STRING:
             return std::string("String");
             break;
 
-        case UNDEFINED:
+        case TreeNode::VarType::UNDEFINED:
             return std::string("Undefined");
+            break;
+
+        default:
+            return std::string("Unknown");
             break;
     }
 }

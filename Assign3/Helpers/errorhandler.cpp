@@ -52,7 +52,7 @@ void ErrorHandler::AddFunVarError(TreeNode* node)
 void ErrorHandler::AddBothOpArrError(TreeNode* node, bool leftIsArr, bool rightIsArr)
 {
     std::stringstream ss;
-    ss << "'" << node->tokenData->tokenStr << "' requires both operands be arrays or not but lhs is " << (leftIsArr ? "" : " not") << "an array and rhs is " << (rightIsArr ? "" : " not") << "an array.";
+    ss << "'" << node->tokenData->tokenStr << "' requires both operands be arrays or not but lhs is" << (leftIsArr ? "" : " not") << " an array and rhs is" << (rightIsArr ? "" : " not") << " an array.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
