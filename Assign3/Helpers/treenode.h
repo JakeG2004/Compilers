@@ -67,8 +67,7 @@ class TreeNode
         bool isArray = false;
         bool isStatic = false;
         bool isUnary = false;
-
-        int declAt = -1;
+        bool isUsed = false;
 
         union {
             DeclType decl;
@@ -82,6 +81,8 @@ class TreeNode
         TreeNode* middleChild = nullptr;
         TreeNode* rightChild = nullptr;
         TreeNode* sibling = nullptr;
+
+        TreeNode* initializedAt = nullptr;
 
     public:
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);

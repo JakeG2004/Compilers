@@ -17,9 +17,12 @@ class SemanticAnalyzer
         std::string GetTypeStringOf(TreeNode::VarType type);
 
     public:
+        void InsertNodeIfReqd(TreeNode* node);
+        TreeNode* LookupNode(TreeNode* node);
+
+    public:
         void CheckForOperatorErrors(TreeNode* node);
-        void CheckForSymbolErrors(TreeNode* node);
-        void CheckForSymbolWarnings(TreeNode* node);
+        static void CheckForSymbolWarnings(std::string sym, void* node);
 
     public:
         void CheckLBracketErrors(TreeNode* node);
@@ -31,6 +34,10 @@ class SemanticAnalyzer
     public:
         void CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type);
         void CheckUnaryOpErrors(TreeNode* node);
+
+    public:
+        void EnterScopeIfReqd(TreeNode* node, bool* canAddNewScope);
+        void ExitScopeIfReqd(TreeNode* node);
 
     public:
         SymbolTable* symbolTable = nullptr;

@@ -92,7 +92,7 @@ void ErrorHandler::AddRetArrError(TreeNode* node)
 void ErrorHandler::AddReDeclError(TreeNode* node)
 {
     std::stringstream ss;
-    ss << "Symbol '" << node->tokenData->tokenStr << "' is already declared at line " << node->declAt << ".";
+    ss << "Symbol '" << node->tokenData->tokenStr << "' is already declared at line " << node->initializedAt->tokenData->lineNum << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
