@@ -67,7 +67,6 @@ class TreeNode
         bool isArray = false;
         bool isStatic = false;
         bool isUnary = false;
-        bool isUsed = false;
 
         union {
             DeclType decl;
@@ -82,6 +81,7 @@ class TreeNode
         TreeNode* rightChild = nullptr;
         TreeNode* sibling = nullptr;
 
+        TreeNode* declaredAt = nullptr;
         TreeNode* initializedAt = nullptr;
 
     public:

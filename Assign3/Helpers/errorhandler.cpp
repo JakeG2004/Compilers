@@ -92,7 +92,7 @@ void ErrorHandler::AddRetArrError(TreeNode* node)
 void ErrorHandler::AddReDeclError(TreeNode* node)
 {
     std::stringstream ss;
-    ss << "Symbol '" << node->tokenData->tokenStr << "' is already declared at line " << node->initializedAt->tokenData->lineNum << ".";
+    ss << "Symbol '" << node->tokenData->tokenStr << "' is already declared at line " << node->declaredAt->tokenData->lineNum << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -106,14 +106,14 @@ void ErrorHandler::AddUnDeclError(TreeNode* node)
 void ErrorHandler::AddArrIdxTypeError(TreeNode* node, std::string otherType)
 {
     std::stringstream ss;
-    ss << "Array '" << node->tokenData->tokenStr << "' should be indexed by type int but got " << otherType << ".";
+    ss << "Array '" << node->leftChild->tokenData->tokenStr << "' should be indexed by type int but got " << otherType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddIdxWithArrError(TreeNode* node, std::string otherArrName)
 {
     std::stringstream ss;
-    ss << "Array '" << node->leftChild->tokenData->tokenStr << "' index is the unindexed array '" << otherArrName << "'.";
+    ss << "Array index is the unindexed array '" << otherArrName << "'.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 

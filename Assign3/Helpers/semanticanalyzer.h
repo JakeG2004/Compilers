@@ -23,11 +23,12 @@ class SemanticAnalyzer
 
     public:
         void InsertNodeIfReqd(TreeNode* node);
-        TreeNode* LookupNode(TreeNode* node);
+        TreeNode* LookupNode(TreeNode* node, bool issueUninitWarn = true);
 
     public:
         void CheckForOperatorErrors(TreeNode* node);
-        static void CheckForSymbolWarnings(std::string sym, void* node);
+        void CheckForSymbolErrors(TreeNode* node);
+        static void CheckUsageOnScopeExit(std::string sym, void* node);
 
     public:
         void CheckLBracketErrors(TreeNode* node);
@@ -35,6 +36,10 @@ class SemanticAnalyzer
         void CheckMinusErrors(TreeNode* node);
         void CheckStarErrors(TreeNode* node);
         void CheckComparisonErrors(TreeNode* node);
+
+    public:
+        void CheckUninitIDErrors(TreeNode* node);
+        void CheckCallErrors(TreeNode* node);
 
     public:
         void CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type);

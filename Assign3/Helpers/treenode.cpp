@@ -338,7 +338,7 @@ TreeNode* TreeNode::CreateFuncDecl(VarType varType, TreeNode* parms, TreeNode* s
 
 TreeNode* TreeNode::CreateParmDecl(TokenClass* parmToken)
 {
-    return new TreeNode(
+    TreeNode* newNode = new TreeNode(
         DeclType::PARMTYPE,
         VarType::VOID,
         parmToken,
@@ -346,6 +346,10 @@ TreeNode* TreeNode::CreateParmDecl(TokenClass* parmToken)
         nullptr,
         nullptr
     );
+
+    newNode->initializedAt = newNode;
+
+    return newNode;
 }
 
 // ======================
