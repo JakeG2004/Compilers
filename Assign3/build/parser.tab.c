@@ -1989,13 +1989,13 @@ yyreduce:
 
   case 28: /* parmId: ID  */
 #line 110 "Parser/parser.y"
-                        {(yyval.node) = TreeNode::CreateParmExp((yyvsp[0].tokenData));}
+                        {(yyval.node) = TreeNode::CreateParmDecl((yyvsp[0].tokenData));}
 #line 1994 "build/parser.tab.c"
     break;
 
   case 29: /* parmId: ID LBRACKET RBRACKET  */
 #line 111 "Parser/parser.y"
-                            {(yyval.node) = TreeNode::CreateParmExp((yyvsp[-2].tokenData)); (yyval.node)->isArray = true;}
+                            {(yyval.node) = TreeNode::CreateParmDecl((yyvsp[-2].tokenData)); (yyval.node)->isArray = true;}
 #line 2000 "build/parser.tab.c"
     break;
 

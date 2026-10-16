@@ -101,6 +101,10 @@ void TreeNode::PrintDecl(bool printType)
             std::cout << "Func: " << tokenData->tokenStr << " returns type " << GetTypeString();
             break;
 
+        case DeclType::PARMTYPE:
+            std::cout << "Parm: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
+            break;
+
         default:
             std::cout << "Unknown Decl: " << tokenData->tokenStr;
             break;
@@ -165,10 +169,6 @@ void TreeNode::PrintExp(bool printType)
 
         case ExpType::IDTYPE:
             std::cout << "Id: " << tokenData->tokenStr;
-            break;
-
-        case ExpType::PARMTYPE:
-            std::cout << "Parm: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
             break;
 
         case ExpType::ASSIGNTYPE:
@@ -335,6 +335,19 @@ TreeNode* TreeNode::CreateFuncDecl(VarType varType, TreeNode* parms, TreeNode* s
     ); 
 }
 
+
+TreeNode* TreeNode::CreateParmDecl(TokenClass* parmToken)
+{
+    return new TreeNode(
+        DeclType::PARMTYPE,
+        VarType::VOID,
+        parmToken,
+        nullptr,
+        nullptr,
+        nullptr
+    );
+}
+
 // ======================
 // === STMT FACTORIES ===
 // ======================
@@ -485,17 +498,6 @@ TreeNode* TreeNode::CreateIdExp(TokenClass* id)
     return new TreeNode(
         ExpType::IDTYPE,
         id,
-        nullptr,
-        nullptr,
-        nullptr
-    );
-}
-
-TreeNode* TreeNode::CreateParmExp(TokenClass* parmToken)
-{
-    return new TreeNode(
-        ExpType::PARMTYPE,
-        parmToken,
         nullptr,
         nullptr,
         nullptr

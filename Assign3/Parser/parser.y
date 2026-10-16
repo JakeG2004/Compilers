@@ -107,8 +107,8 @@ parmIdList:
     ;
 
 parmId:
-    ID                  {$$ = TreeNode::CreateParmExp($1);}
-    | ID LBRACKET RBRACKET  {$$ = TreeNode::CreateParmExp($1); $$->isArray = true;}
+    ID                  {$$ = TreeNode::CreateParmDecl($1);}
+    | ID LBRACKET RBRACKET  {$$ = TreeNode::CreateParmDecl($1); $$->isArray = true;}
     ;
 
 stmt:

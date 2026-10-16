@@ -12,51 +12,39 @@ SemanticAnalyzer::SemanticAnalyzer(bool stDebug)
     symbolTable->enter(std::string("Global"));
 }
 
-void SemanticAnalyzer::Analyze(TreeNode* node, bool canAddNewScope)
+void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 {
     if(node == nullptr)
         return;
 
-    EnterScopeIfReqd(node, &canAddNewScope);
-
     InsertNodeIfReqd(node);
-
+    bool openedScope = EnterScopeIfReqd(node, isScopeBody);
     CheckForOperatorErrors(node);
 
     Analyze(node->leftChild);
-    Analyze(node->middleChild);
-    Analyze(node->rightChild);
+    Analyze(node->middleChild, IsFunction(node));
+    Analyze(node->rightChild, IsLoop(node));
+
+    ExitScopeIfReqd(node, openedScope);
     Analyze(node->sibling);
-
-    ExitScopeIfReqd(node);
 }
 
-void SemanticAnalyzer::EnterScopeIfReqd(TreeNode* node, bool* canAddNewScope)
+bool SemanticAnalyzer::EnterScopeIfReqd(TreeNode* node, bool isScopeBody)
 {
-    bool addScope = false;
-
-    // Compound statements when the flag is set
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && (node->subType.stmt == TreeNode::StmtType::COMPOUNDTYPE))  {
-        if(*canAddNewScope == false) // reset the canaddnewscope variable
-            *canAddNewScope = true;
-        else
-            addScope = true;
-    }
-
-    // functions always
-    if(node->nodeType == TreeNode::NodeType::DECLNODE && (node->subType.decl == TreeNode::DeclType::FUNCTYPE))
-        addScope = true;
-    
-    if(addScope)
-        symbolTable->enter(node->tokenData->tokenStr);
+    bool addScope = IsFunction(node) || IsLoop(node) || (IsCompound(node) && !isScopeBody);
+    if(addScope) symbolTable->enter(node->tokenData->tokenStr);
+    return addScope;
 }
 
-void SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node)
+bool SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node, bool openedScope)
 {
-    if(node->subType.stmt == TreeNode::StmtType::COMPOUNDTYPE && symbolTable->depth() > 1) {
+    if(openedScope && symbolTable->depth() > 1) {
         symbolTable->applyToAll(CheckForSymbolWarnings);
         symbolTable->leave();
+        return true;
     }
+
+    return false;
 }
 
 void SemanticAnalyzer::InsertNodeIfReqd(TreeNode* node)
@@ -163,10 +151,13 @@ void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckForSymbolWarnings(std::string sym, void* node)
 {
-    printf("Test\n");
     TreeNode* treeNode = (TreeNode*)node;
-    if(!(treeNode->isUsed) && sym != "main")
+    bool isVar = (treeNode->subType.decl == TreeNode::DeclType::VARTYPE);
+    bool isParm = (treeNode->subType.decl == TreeNode::DeclType::PARMTYPE);
+
+    if (!(treeNode->isUsed) && (isVar || isParm) && sym != "main") {
         ErrorHandler::AddUnusedVarWarn(treeNode);
+    }
 }
 
 void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
@@ -274,31 +265,31 @@ std::string SemanticAnalyzer::GetTypeStringOf(TreeNode::VarType type)
 {
     switch(type) {
         case TreeNode::VarType::VOID:
-            return std::string("Void");
+            return std::string("void");
             break;
 
         case TreeNode::VarType::INTEGER:
-            return std::string("Integer");
+            return std::string("int");
             break;
 
         case TreeNode::VarType::BOOLEAN:
-            return std::string("Boolean");
+            return std::string("bool");
             break;
 
         case TreeNode::VarType::CHARACTER:
-            return std::string("Character");
+            return std::string("char");
             break;
 
         case TreeNode::VarType::STRING:
-            return std::string("String");
+            return std::string("string");
             break;
 
         case TreeNode::VarType::UNDEFINED:
-            return std::string("Undefined");
+            return std::string("undef");
             break;
 
         default:
-            return std::string("Unknown");
+            return std::string("unknown");
             break;
     }
 }
@@ -306,4 +297,31 @@ std::string SemanticAnalyzer::GetTypeStringOf(TreeNode::VarType type)
 bool SemanticAnalyzer::IsArray(TreeNode* node)
 {
     return node->isArray;
+}
+
+bool SemanticAnalyzer::IsFunction(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::DECLNODE && node->subType.decl == TreeNode::DeclType::FUNCTYPE)
+        return true;
+
+    return false;
+}
+
+bool SemanticAnalyzer::IsLoop(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::WHILETYPE)
+        return true;
+
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::FORTYPE)
+        return true;
+
+    return false;
+}
+
+bool SemanticAnalyzer::IsCompound(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::COMPOUNDTYPE)
+        return true;
+
+    return false;
 }

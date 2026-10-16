@@ -19,6 +19,7 @@ class TreeNode
         enum DeclType {
             VARTYPE,
             FUNCTYPE,
+            PARMTYPE,
         };
 
         enum StmtType {
@@ -38,7 +39,6 @@ class TreeNode
             ASSIGNTYPE,
             INITTYPE,
             CALLTYPE,
-            PARMTYPE,
         };
 
         enum VarType{
@@ -109,6 +109,7 @@ class TreeNode
     public:
         static TreeNode* CreateVarDecl(TokenClass* indexOrSize, TokenClass* id);
         static TreeNode* CreateFuncDecl(VarType varType, TreeNode* parms, TreeNode* stmt, TokenClass* id);
+        static TreeNode* CreateParmDecl(TokenClass* parmToken);
 
         static TreeNode* CreateCompoundStmt(TreeNode* localDecls, TreeNode* stmtList, TokenClass* lbrace);
         static TreeNode* CreateIfStmt(TreeNode* condition, TreeNode* thenStmt, TreeNode* elseStmt, TokenClass* ifToken);
@@ -123,7 +124,6 @@ class TreeNode
         static TreeNode* CreateCallExp(TreeNode* args, TokenClass* id);
         static TreeNode* CreateConstExp(VarType typeDef, TokenClass* constToken);
         static TreeNode* CreateIdExp(TokenClass* id);
-        static TreeNode* CreateParmExp(TokenClass* parmToken);
         static TreeNode* CreateAssignExp(TreeNode* lhs, TreeNode* rhs, TokenClass* assignToken);
         static TreeNode* CreateIdxExp(TreeNode* idxExp, TokenClass* id, TokenClass* lbracket);
 

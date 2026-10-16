@@ -9,8 +9,13 @@ class SemanticAnalyzer
 {
     public:
         SemanticAnalyzer(bool stDebug);
-        void Analyze(TreeNode* node, bool canAddNewScope = true);
+        void Analyze(TreeNode* node, bool isScopeBody = false);
+
+    public:
         bool IsArray(TreeNode* node);
+        bool IsFunction(TreeNode* node);
+        bool IsLoop(TreeNode* node);
+        bool IsCompound(TreeNode* node);
         int GetSymbolToken(TreeNode* node);
         TreeNode::VarType GetTypeOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode* node);
@@ -36,8 +41,8 @@ class SemanticAnalyzer
         void CheckUnaryOpErrors(TreeNode* node);
 
     public:
-        void EnterScopeIfReqd(TreeNode* node, bool* canAddNewScope);
-        void ExitScopeIfReqd(TreeNode* node);
+        bool EnterScopeIfReqd(TreeNode* node, bool isScopeBody);
+        bool ExitScopeIfReqd(TreeNode* node, bool openedScope);
 
     public:
         SymbolTable* symbolTable = nullptr;

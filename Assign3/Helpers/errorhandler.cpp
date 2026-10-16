@@ -59,28 +59,28 @@ void ErrorHandler::AddBothOpArrError(TreeNode* node, bool leftIsArr, bool rightI
 void ErrorHandler::AddLHSOpError(TreeNode* node, std::string targetType, std::string lhsType)
 {
     std::stringstream ss;
-    ss << "'" << node->tokenData->tokenStr << "' requires operands of " << targetType << " but lhs is of " << lhsType << ".";
+    ss << "'" << node->tokenData->tokenStr << "' requires operands of type " << targetType << " but lhs is of type " << lhsType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddRHSOpError(TreeNode* node, std::string targetType, std::string rhsType)
 {
     std::stringstream ss;
-    ss << "'" << node->tokenData->tokenStr << "' requires operands of " << targetType << " but rhs is of " << rhsType << ".";
+    ss << "'" << node->tokenData->tokenStr << "' requires operands of type " << targetType << " but rhs is of type " << rhsType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddBothOpTypeError(TreeNode* node, std::string lhsType, std::string rhsType)
 {
     std::stringstream ss;
-    ss << "'" << node->tokenData->tokenStr << "' requires operands of the same type but lhs is " << lhsType << " and rhs is " << rhsType << ".";
+    ss << "'" << node->tokenData->tokenStr << "' requires operands of the same type but lhs is type " << lhsType << " and rhs is type " << rhsType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddUnaryOpError(TreeNode* node, std::string targetType, std::string actualType)
 {
     std::stringstream ss;
-    ss << "Unary '" << node->tokenData->tokenStr << "' requires an operand of " << targetType << " but was given " << actualType << ".";
+    ss << "Unary '" << node->tokenData->tokenStr << "' requires an operand of type " << targetType << " but was given type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -113,7 +113,7 @@ void ErrorHandler::AddArrIdxTypeError(TreeNode* node, std::string otherType)
 void ErrorHandler::AddIdxWithArrError(TreeNode* node, std::string otherArrName)
 {
     std::stringstream ss;
-    ss << "Array '" << node->tokenData->tokenStr << "Array index is the unindexed array '" << otherArrName << "'.";
+    ss << "Array '" << node->leftChild->tokenData->tokenStr << "' index is the unindexed array '" << otherArrName << "'.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
