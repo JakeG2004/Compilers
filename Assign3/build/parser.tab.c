@@ -2493,7 +2493,7 @@ yyreduce:
 
   case 112: /* constant: STRINGCONST  */
 #line 293 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::STRING, (yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData)); (yyval.node)->isArray = true; }
 #line 2498 "build/parser.tab.c"
     break;
 

@@ -80,7 +80,7 @@ void ErrorHandler::AddBothOpTypeError(TreeNode* node, std::string lhsType, std::
 void ErrorHandler::AddUnaryOpError(TreeNode* node, std::string targetType, std::string actualType)
 {
     std::stringstream ss;
-    ss << "Unary '" << node->tokenData->tokenStr << "' requires an operand of type " << targetType << " but was given type " << actualType << ".";
+    ss << "Unary '" << GetUnaryVersionOfOperator(node) << "' requires an operand of type " << targetType << " but was given type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -127,14 +127,14 @@ void ErrorHandler::AddIdxNonArrError(TreeNode* node)
 void ErrorHandler::AddNonArrOpError(TreeNode* node)
 {
     std::stringstream ss;
-    ss << "The operation << '" << node->tokenData->tokenStr << "' does not work with arrays.";
+    ss << "The operation '" << node->tokenData->tokenStr << "' does not work with arrays.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddOnlyArrOpError(TreeNode* node)
 {
     std::stringstream ss;
-    ss << "The operation << '" << node->tokenData->tokenStr << "' only works with arrays.";
+    ss << "The operation '" << GetUnaryVersionOfOperator(node) << "' only works with arrays.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -155,4 +155,14 @@ void ErrorHandler::AddUninitVarWarn(TreeNode* node)
 void ErrorHandler::AddNoMainError(TreeNode* node)
 {
     AddError("A function named 'main()' must be defined.", -1);
+}
+
+std::string ErrorHandler::GetUnaryVersionOfOperator(TreeNode* node)
+{
+    if(node->tokenData->tokenStr == "-")
+        return std::string("chsign");
+    else if(node->tokenData->tokenStr == "*")
+        return std::string("sizeof");
+    else
+        return node->tokenData->tokenStr;
 }

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -IHelpers -Ibuild -std=c++14
+CXXFLAGS = -IHelpers -Ibuild -std=c++14 -g
 
 TESTDIR    = Tests
 OUTDIR     = Outputs

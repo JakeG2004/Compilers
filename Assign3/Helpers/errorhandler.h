@@ -51,6 +51,9 @@ class ErrorHandler
         void InstAddErrorOrWarning(Error::ErrorType errorType, std::string content, int lineNum);
         static void AddError(std::string content, int lineNum);
         static void AddWarning(std::string content, int lineNum);
+
+    protected:
+        static std::string GetUnaryVersionOfOperator(TreeNode* node);
     
     protected:
         int numWarnings = 0;

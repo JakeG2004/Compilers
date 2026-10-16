@@ -30,7 +30,7 @@ class SemanticAnalyzer
         void CheckCallErrors(TreeNode* node);
 
     public: // ST Node Management
-        void InsertNodeIfReqd(TreeNode* node);
+        void InsertNodeIfReqd(TreeNode* node, bool force = false);
         TreeNode* LookupNode(TreeNode* node, bool issueUninitWarn = true);
 
     public: // Basic Helpers
@@ -38,6 +38,7 @@ class SemanticAnalyzer
         bool IsFunction(TreeNode* node);
         bool IsLoop(TreeNode* node);
         bool IsCompound(TreeNode* node);
+        bool IsOperator(TreeNode* node);
         int GetSymbolToken(TreeNode* node);
         TreeNode::VarType GetTypeOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode* node);

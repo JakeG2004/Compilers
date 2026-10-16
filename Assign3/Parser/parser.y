@@ -290,7 +290,7 @@ argList:
 constant:
     NUMCONST        {$$ = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, $1);}
     | CHARCONST     {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1);}
-    | STRINGCONST   {$$ = TreeNode::CreateConstExp(TreeNode::VarType::STRING, $1);}
+    | STRINGCONST   {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1); $$->isArray = true; }
     | TRUE          {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
     | FALSE         {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
     ;

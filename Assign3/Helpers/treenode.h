@@ -83,6 +83,7 @@ class TreeNode
 
         TreeNode* declaredAt = nullptr;
         TreeNode* initializedAt = nullptr;
+        TreeNode* inspectedAt = nullptr;
 
     public:
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
