@@ -31,70 +31,9 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     Analyze(node->sibling);
 }
 
-bool SemanticAnalyzer::EnterScopeIfReqd(TreeNode* node, bool isScopeBody)
-{
-    bool addScope = IsFunction(node) || IsLoop(node) || (IsCompound(node) && !isScopeBody);
-    if(addScope) symbolTable->enter(node->tokenData->tokenStr);
-    return addScope;
-}
-
-bool SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node, bool openedScope)
-{
-    if(openedScope && symbolTable->depth() > 1) {
-        symbolTable->applyToAll(CheckUsageOnScopeExit);
-        symbolTable->leave();
-        return true;
-    }
-
-    return false;
-}
-
-void SemanticAnalyzer::InsertNodeIfReqd(TreeNode* node)
-{
-    if(node->nodeType != TreeNode::NodeType::DECLNODE)
-        return;
-
-    bool cleanInsert = true;
-
-    if(symbolTable->depth() == 1)
-        cleanInsert = symbolTable->insertGlobal(node->tokenData->tokenStr, (void*)node);
-    else
-        cleanInsert = symbolTable->insert(node->tokenData->tokenStr, (void*)node);
-
-    if(!cleanInsert) {
-        LookupNode(node);
-        ErrorHandler::AddReDeclError(node);
-    }
-}
-
-TreeNode* SemanticAnalyzer::LookupNode(TreeNode* node, bool issueUninitWarn)
-{
-    if(node->declaredAt != nullptr)
-        return node->declaredAt;
-
-    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE)
-        return node;
-
-    void* lookupResult = nullptr;
-    if(symbolTable->depth() == 1)
-        lookupResult = symbolTable->lookupGlobal(node->tokenData->tokenStr);
-    else
-        lookupResult = symbolTable->lookup(node->tokenData->tokenStr);
-
-    TreeNode* treeResult = (TreeNode*)lookupResult;
-
-    if(treeResult == nullptr) {
-        ErrorHandler::AddUnDeclError(node);
-    }
-
-    if(treeResult->initializedAt == nullptr && node->nodeType != TreeNode::NodeType::DECLNODE && issueUninitWarn && !IsFunction(treeResult)) {
-        ErrorHandler::AddUninitVarWarn(node);
-        treeResult->initializedAt = treeResult;
-    }
-
-    node->declaredAt = treeResult;
-    return treeResult;
-}
+// ============================
+// === BULK CHECK FUNCTIONS ===
+// ============================
 
 void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node) 
 {
@@ -182,6 +121,10 @@ void SemanticAnalyzer::CheckUsageOnScopeExit(std::string sym, void* node)
         ErrorHandler::AddUnusedVarWarn(treeNode);
     }
 }
+
+// ========================
+// === OPERATOR CHECKS ===
+// =======================
 
 void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 {
@@ -274,6 +217,10 @@ void SemanticAnalyzer::CheckComparisonErrors(TreeNode* node)
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(lhs), GetTypeStringOf(rhs));
 }
 
+// =====================
+// === SYMBOL CHECKS ===
+// =====================
+
 void SemanticAnalyzer::CheckUninitIDErrors(TreeNode* node)
 {
     LookupNode(node);
@@ -284,6 +231,93 @@ void SemanticAnalyzer::CheckCallErrors(TreeNode* node)
     TreeNode* result = LookupNode(node);
     if(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE)
         ErrorHandler::AddVarCallError(node);
+}
+
+// ==========================
+// === ST NODE MANAGEMENT ===
+// ==========================
+
+void SemanticAnalyzer::InsertNodeIfReqd(TreeNode* node)
+{
+    if(node->nodeType != TreeNode::NodeType::DECLNODE)
+        return;
+
+    bool cleanInsert = true;
+
+    if(symbolTable->depth() == 1)
+        cleanInsert = symbolTable->insertGlobal(node->tokenData->tokenStr, (void*)node);
+    else
+        cleanInsert = symbolTable->insert(node->tokenData->tokenStr, (void*)node);
+
+    if(!cleanInsert) {
+        LookupNode(node);
+        ErrorHandler::AddReDeclError(node);
+    }
+}
+
+TreeNode* SemanticAnalyzer::LookupNode(TreeNode* node, bool issueUninitWarn)
+{
+    if(node->declaredAt != nullptr)
+        return node->declaredAt;
+
+    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE)
+        return node;
+
+    void* lookupResult = nullptr;
+    if(symbolTable->depth() == 1)
+        lookupResult = symbolTable->lookupGlobal(node->tokenData->tokenStr);
+    else
+        lookupResult = symbolTable->lookup(node->tokenData->tokenStr);
+
+    TreeNode* treeResult = (TreeNode*)lookupResult;
+
+    if(treeResult == nullptr) {
+        ErrorHandler::AddUnDeclError(node);
+    }
+
+    if(treeResult->initializedAt == nullptr && node->nodeType != TreeNode::NodeType::DECLNODE && issueUninitWarn && !IsFunction(treeResult)) {
+        ErrorHandler::AddUninitVarWarn(node);
+        treeResult->initializedAt = treeResult;
+    }
+
+    node->declaredAt = treeResult;
+    return treeResult;
+}
+
+// =====================
+// === BASIC HELPERS ===
+// =====================
+
+bool SemanticAnalyzer::IsArray(TreeNode* node)
+{
+    return node->isArray;
+}
+
+bool SemanticAnalyzer::IsFunction(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::DECLNODE && node->subType.decl == TreeNode::DeclType::FUNCTYPE)
+        return true;
+
+    return false;
+}
+
+bool SemanticAnalyzer::IsLoop(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::WHILETYPE)
+        return true;
+
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::FORTYPE)
+        return true;
+
+    return false;
+}
+
+bool SemanticAnalyzer::IsCompound(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::COMPOUNDTYPE)
+        return true;
+
+    return false;
 }
 
 int SemanticAnalyzer::GetSymbolToken(TreeNode* node)
@@ -334,34 +368,24 @@ std::string SemanticAnalyzer::GetTypeStringOf(TreeNode::VarType type)
     }
 }
 
-bool SemanticAnalyzer::IsArray(TreeNode* node)
+// ========================
+// === SCOPE MANAGEMENT ===
+// ========================
+
+bool SemanticAnalyzer::EnterScopeIfReqd(TreeNode* node, bool isScopeBody)
 {
-    return node->isArray;
+    bool addScope = IsFunction(node) || IsLoop(node) || (IsCompound(node) && !isScopeBody);
+    if(addScope) symbolTable->enter(node->tokenData->tokenStr);
+    return addScope;
 }
 
-bool SemanticAnalyzer::IsFunction(TreeNode* node)
+bool SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node, bool openedScope)
 {
-    if(node->nodeType == TreeNode::NodeType::DECLNODE && node->subType.decl == TreeNode::DeclType::FUNCTYPE)
+    if(openedScope && symbolTable->depth() > 1) {
+        symbolTable->applyToAll(CheckUsageOnScopeExit);
+        symbolTable->leave();
         return true;
-
-    return false;
-}
-
-bool SemanticAnalyzer::IsLoop(TreeNode* node)
-{
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::WHILETYPE)
-        return true;
-
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::FORTYPE)
-        return true;
-
-    return false;
-}
-
-bool SemanticAnalyzer::IsCompound(TreeNode* node)
-{
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::COMPOUNDTYPE)
-        return true;
+    }
 
     return false;
 }
