@@ -1,4 +1,5 @@
 #include "treenode.h"
+#include "parser.tab.h"
 
 TreeNode::TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData)
 {
@@ -94,15 +95,15 @@ void TreeNode::PrintDecl(bool printType)
 {
     switch(subType.decl) {
         case DeclType::VARTYPE:
-            std::cout << "Var: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
+            std::cout << "Var: " << tokenData->tokenStr << GetArrText() << " of " << GetTypeString();
             break;
 
         case DeclType::FUNCTYPE:
-            std::cout << "Func: " << tokenData->tokenStr << " returns type " << GetTypeString();
+            std::cout << "Func: " << tokenData->tokenStr << " returns " << GetTypeString();
             break;
 
         case DeclType::PARMTYPE:
-            std::cout << "Parm: " << tokenData->tokenStr << GetArrText() << " of type " << GetTypeString();
+            std::cout << "Parm: " << tokenData->tokenStr << GetArrText() << " of " << GetTypeString();
             break;
 
         default:
@@ -149,38 +150,39 @@ void TreeNode::PrintStmt(bool printType)
             break;
     }
 
-    std::cout << " [line: " << tokenData->lineNum << "]" << PrintType(printType) << varType << std::endl;
+    std::cout << " [line: " << tokenData->lineNum << "]" << PrintType(printType) << std::endl;
 }
 
 void TreeNode::PrintExp(bool printType)
 {
     switch(subType.exp) {
         case ExpType::OPTYPE:
-            std::cout << "Op: " << GetUnaryOrRegOp();
+            std::cout << "Op: " << GetUnaryOrRegOp() << " of " << GetTypeString();
             break;
 
         case ExpType::CONSTTYPE:
-            std::cout << "Const" << GetArrText() << " of type " << GetTypeString() << ": ";
+            std::cout << "Const" << GetArrText() << " ";
             if(varType == VarType::INTEGER)
                 std::cout << tokenData->numVal;
             else
                 std::cout << tokenData->stringVal;
+            std::cout << " of " << GetTypeString();
             break;
 
         case ExpType::IDTYPE:
-            std::cout << "Id: " << tokenData->tokenStr;
+            std::cout << "Id: " << tokenData->tokenStr << " of " << GetTypeString();
             break;
 
         case ExpType::ASSIGNTYPE:
-            std::cout << "Assign: " << tokenData->tokenStr;
+            std::cout << "Assign: " << tokenData->tokenStr << " of " << GetTypeString();
             break;
 
         case ExpType::INITTYPE:
-            std::cout << "Init: " << tokenData->tokenStr;
+            std::cout << "Init: " << tokenData->tokenStr << " of " << GetTypeString();
             break;
 
         case ExpType::CALLTYPE:
-            std::cout << "Call: " << tokenData->tokenStr;
+            std::cout << "Call: " << tokenData->tokenStr << " of " << GetTypeString();
             break;
 
         default:
@@ -208,20 +210,20 @@ std::string TreeNode::GetTypeString()
 {
     switch(varType) {
         case VarType::VOID:
-            return "void";
+            return "type void";
 
         case VarType::INTEGER:
-            return "int";
+            return "type int";
 
         case VarType::BOOLEAN:
-            return "bool";
+            return "type bool";
 
         case VarType::STRING:
         case VarType::CHARACTER:
-            return "char";
+            return "type char";
 
         case VarType::UNDEFINED:
-            return "undefined (the defined one)";
+            return "undefined type";
             break;
 
         default:
@@ -239,17 +241,27 @@ std::string TreeNode::GetArrText()
 
 std::string TreeNode::GetUnaryOrRegOp()
 {
-    if(tokenData->tokenStr == "-") {
-        if(isUnary) return "CHSIGN";
-        else return "-";
-    }
+    switch(tokenData->tokenClass) {
+        case MINUS:
+            if(isUnary) return "chsign";
+            else return "-";
 
-    else if(tokenData->tokenStr == "*") {
-        if(isUnary) return "SIZEOF";
-        else return "*";
-    }
+        case STAR:
+            if(isUnary) return "sizeof";
+            else return "*";
 
-    return tokenData->tokenName;
+        case NOT:
+            return "not";
+
+        case OR:
+            return "or";
+
+        case AND:
+            return "and";
+
+        default:
+            return tokenData->tokenName;
+    }
 }
 
 void TreeNode::SetSibling(TreeNode* newSibling) 

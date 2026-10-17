@@ -314,8 +314,8 @@ bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
     }
     if(ArgHandler::IsFlagSet("-p"))
         *printFlag = true;
-    if(ArgHandler::IsFlagSet("-P"))
-        *typePrintFlag = true;
+    //if(ArgHandler::IsFlagSet("-P"))
+    //    *typePrintFlag = true;
 
     return true;
 }
@@ -344,7 +344,8 @@ bool OpenFile(int argc, char* argv[])
         return false;
     }
 
-    printf("[%s]\n", filePath);
+    printf("====================================\n");
+    printf("FILE: %s\n", filePath);
 
     return true;
 }
@@ -366,11 +367,14 @@ int main(int argc, char* argv[])
 
     int result = yyparse();
 
+    SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
+    analyzer->StartAnalysis(ASTRoot);
+
     if((printFlag || typePrintFlag) && ASTRoot)
         ASTRoot->Print(0, -1, 0, typePrintFlag);
 
-    SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
-    analyzer->Analyze(ASTRoot, true);
+    std::cout << "Number of warnings: " << ErrorHandler::GetNumWarnings() << std::endl;
+    std::cout << "Number of errors: " << ErrorHandler::GetNumErrors() << std::endl;
 
     return 0;
 }

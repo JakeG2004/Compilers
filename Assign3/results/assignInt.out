@@ -1,0 +1,17 @@
+====================================
+FILE: assignInt.c-
+ERROR(10): Symbol 'output' is not declared.
+ERROR(12): Symbol 'output' is not declared.
+ERROR(14): Symbol 'output' is not declared.
+ERROR(16): Symbol 'output' is not declared.
+WARNING(16): Variable 'y' may be uninitialized when used here.
+ERROR(17): Symbol 'outnl' is not declared.
+ERROR(19): Symbol 'output' is not declared.
+ERROR(21): Symbol 'output' is not declared.
+ERROR(23): Symbol 'output' is not declared.
+ERROR(25): Symbol 'output' is not declared.
+WARNING(25): Variable 'sy' may be uninitialized when used here.
+ERROR(26): Symbol 'outnl' is not declared.
+WARNING(33): Variable 'zx' may be uninitialized when used here.
+Number of warnings: 3
+Number of errors: 10

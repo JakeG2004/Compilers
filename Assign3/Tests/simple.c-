@@ -1,0 +1,7 @@
+int alfa;
+
+bravo(int charlie) ;
+
+int delta(int echo) { int foxtrot; golf = hotel + india; }
+
+juliet() { int kilo, lima; kilo = 666; }

@@ -67,6 +67,7 @@ class TreeNode
         bool isArray = false;
         bool isStatic = false;
         bool isUnary = false;
+        bool isUsed = false;
 
         union {
             DeclType decl;

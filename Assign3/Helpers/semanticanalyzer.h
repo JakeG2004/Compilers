@@ -10,10 +10,13 @@ class SemanticAnalyzer
     public:
         SemanticAnalyzer(bool stDebug);
         void Analyze(TreeNode* node, bool isScopeBody = false);
+        void StartAnalysis(TreeNode* node);
 
     public: // Bulk Checks
         void CheckForOperatorErrors(TreeNode* node);
         void CheckForSymbolErrors(TreeNode* node);
+        void CheckForReturnErrors(TreeNode* node);
+        void CheckForRangeErrors(TreeNode* node);
         static void CheckUsageOnScopeExit(std::string sym, void* node);
 
     public: // Operator Checks
@@ -25,6 +28,9 @@ class SemanticAnalyzer
         void CheckStarErrors(TreeNode* node);
         void CheckComparisonErrors(TreeNode* node);
 
+        void ResolveWithoutWarn(TreeNode* node);
+        TreeNode* ResolveOperand(TreeNode* node);
+
     public: // Symbol Checks
         void CheckUninitIDErrors(TreeNode* node);
         void CheckCallErrors(TreeNode* node);
@@ -32,6 +38,7 @@ class SemanticAnalyzer
     public: // ST Node Management
         void InsertNodeIfReqd(TreeNode* node, bool force = false);
         TreeNode* LookupNode(TreeNode* node, bool issueUninitWarn = true);
+        TreeNode* LookupNode(std::string node, bool issueUninitWarn = true);
 
     public: // Basic Helpers
         bool IsArray(TreeNode* node);
@@ -39,6 +46,7 @@ class SemanticAnalyzer
         bool IsLoop(TreeNode* node);
         bool IsCompound(TreeNode* node);
         bool IsOperator(TreeNode* node);
+        bool IsInArray(TreeNode* node);
         int GetSymbolToken(TreeNode* node);
         TreeNode::VarType GetTypeOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode* node);
@@ -47,9 +55,11 @@ class SemanticAnalyzer
     public: // Scope Management
         bool EnterScopeIfReqd(TreeNode* node, bool isScopeBody);
         bool ExitScopeIfReqd(TreeNode* node, bool openedScope);
+        void CheckForMain();
 
     public:
         SymbolTable* symbolTable = nullptr;
+        bool warnArrayUse = false;
 };
 
 #endif

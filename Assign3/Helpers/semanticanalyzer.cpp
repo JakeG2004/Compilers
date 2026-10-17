@@ -9,7 +9,6 @@ SemanticAnalyzer::SemanticAnalyzer(bool stDebug)
 {
     symbolTable = new SymbolTable();
     symbolTable->debug(stDebug);
-    symbolTable->enter(std::string("Global"));
 }
 
 void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
@@ -20,15 +19,28 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     InsertNodeIfReqd(node);
     bool openedScope = EnterScopeIfReqd(node, isScopeBody);
 
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::FORTYPE && node->leftChild)
+        node->leftChild->initializedAt = node->leftChild;
+
     CheckForOperatorErrors(node);
     CheckForSymbolErrors(node);
+    CheckForReturnErrors(node);
 
     Analyze(node->leftChild);
     Analyze(node->middleChild, IsFunction(node));
     Analyze(node->rightChild, IsLoop(node));
 
+    CheckForRangeErrors(node);
+
     ExitScopeIfReqd(node, openedScope);
     Analyze(node->sibling);
+}
+
+void SemanticAnalyzer::StartAnalysis(TreeNode* node)
+{
+    Analyze(node, true);
+    symbolTable->applyToAll(CheckUsageOnScopeExit);
+    CheckForMain();
 }
 
 // ============================
@@ -73,6 +85,7 @@ void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node)
         case INC:
         case DEC:
         case QUESTION:
+        case NOT:
             CheckUnaryOpErrors(node);
             break;
 
@@ -87,11 +100,6 @@ void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node)
         case AND:
         case OR:
             CheckLHSRHSErrors(node, TreeNode::VarType::BOOLEAN);
-            break;
-
-        case NOT:
-            if(GetTypeOf(node->leftChild) != TreeNode::VarType::BOOLEAN)
-                ErrorHandler::AddLHSOpError(node, GetTypeStringOf(TreeNode::VarType::BOOLEAN), GetTypeStringOf(node->leftChild->varType));
             break;
     }
 }
@@ -111,13 +119,52 @@ void SemanticAnalyzer::CheckForSymbolErrors(TreeNode* node)
     }
 }
 
+void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RETURNTYPE && node->leftChild != nullptr)
+        if(IsArray(ResolveOperand(node->leftChild)))
+            ErrorHandler::AddRetArrError(node);
+}
+
+void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
+{
+    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE) {
+        if(node->leftChild != nullptr)
+            node->leftChild->varType = TreeNode::VarType::UNDEFINED;
+        if(node->middleChild != nullptr)
+            node->middleChild->varType = TreeNode::VarType::UNDEFINED;
+        if(node->rightChild != nullptr)
+            node->rightChild->varType = TreeNode::VarType::UNDEFINED;
+    }
+}
+
+void SemanticAnalyzer::ResolveWithoutWarn(TreeNode* node)
+{
+    if(node == nullptr)
+        return;
+
+    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::IDTYPE)
+        node->declaredAt = LookupNode(node, false);
+
+    ResolveWithoutWarn(node->leftChild);
+    ResolveWithoutWarn(node->middleChild);
+    ResolveWithoutWarn(node->rightChild);
+}
+
+// Operator nodes are their own result; everything else is looked up in the symbol table
+TreeNode* SemanticAnalyzer::ResolveOperand(TreeNode* node)
+{
+    return IsOperator(node) ? node : LookupNode(node);
+}
+
 void SemanticAnalyzer::CheckUsageOnScopeExit(std::string sym, void* node)
 {
     TreeNode* treeNode = (TreeNode*)node;
     bool isVar = (treeNode->subType.decl == TreeNode::DeclType::VARTYPE);
     bool isParm = (treeNode->subType.decl == TreeNode::DeclType::PARMTYPE);
+    bool isFunc = (treeNode->subType.decl == TreeNode::DeclType::FUNCTYPE);
 
-    if ((treeNode->declaredAt == nullptr) && (isVar || isParm) && sym != "main") {
+    if ((treeNode->declaredAt == nullptr) && !treeNode->isUsed && (isVar || isParm || isFunc) && sym != "main") {
         ErrorHandler::AddUnusedVarWarn(treeNode);
     }
 }
@@ -128,17 +175,30 @@ void SemanticAnalyzer::CheckUsageOnScopeExit(std::string sym, void* node)
 
 void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 {
+    // inspectedAt == node means this '[' was already checked (CheckLHSRHSErrors sets it to the parent, so no clash)
+    if(node->inspectedAt == node)
+        return;
+    node->inspectedAt = node;
+
+    warnArrayUse = true;
     TreeNode* baseArr = LookupNode(node->leftChild);
-    TreeNode* idx = LookupNode(node->middleChild);
+    warnArrayUse = false;
+    TreeNode* idx = IsOperator(node->middleChild) ? node->middleChild : LookupNode(node->middleChild);
+
+    node->varType = GetTypeOf(baseArr);
+
+    if(idx == nullptr) {
+        ErrorHandler::AddIdxNonArrError(node->leftChild);
+        return;
+    }
 
     if(IsFunction(baseArr))
         ErrorHandler::AddFunVarError(node->leftChild);
     if(IsFunction(idx))
         ErrorHandler::AddFunVarError(node->middleChild);
 
-    if(GetTypeOf(idx) != TreeNode::VarType::INTEGER) {
+    if(GetTypeOf(idx) != TreeNode::VarType::INTEGER)
         ErrorHandler::AddArrIdxTypeError(node, GetTypeStringOf(idx));
-    }
 
     if(IsArray(idx))
         ErrorHandler::AddIdxWithArrError(node, idx->tokenData->tokenStr);
@@ -149,9 +209,14 @@ void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
 {
-    TreeNode* rhs = IsOperator(node->middleChild) ? node->middleChild : LookupNode(node->middleChild);
-    TreeNode* lhs = LookupNode(node->leftChild, false);
+    if(IsInArray(node->leftChild)) {
+        ResolveWithoutWarn(node->leftChild);
+        CheckLBracketErrors(node->leftChild);
+    }
 
+    TreeNode* lhs = IsInArray(node->leftChild) ? node->leftChild : LookupNode(node->leftChild, false);
+    TreeNode* rhs = IsOperator(node->middleChild) ? node->middleChild : LookupNode(node->middleChild);
+    
     if(!rhs || !lhs)
         return;
 
@@ -163,6 +228,16 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
     TreeNode::VarType leftType = GetTypeOf(lhs);
     TreeNode::VarType rightType = GetTypeOf(rhs);
 
+    node->varType = rightType;
+
+    if(leftType == TreeNode::VarType::UNDEFINED || rightType == TreeNode::VarType::UNDEFINED)
+        return;
+
+    if(IsFunction(lhs)) {
+        ErrorHandler::AddFunVarError(node->leftChild);
+        return;
+    }
+
     if(leftType != rightType)
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(leftType), GetTypeStringOf(rightType));
 
@@ -172,6 +247,8 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
 {
+    node->varType = type;
+
     TreeNode* lhs = IsOperator(node->leftChild) ? node->leftChild : LookupNode(node->leftChild);
     TreeNode* rhs = IsOperator(node->middleChild) ? node->middleChild : LookupNode(node->middleChild);
 
@@ -181,29 +258,42 @@ void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
     lhs->inspectedAt = node;
     rhs->inspectedAt = node;
 
-    if(IsArray(lhs) || IsArray(rhs)) {
-        ErrorHandler::AddNonArrOpError(node);
+    TreeNode::VarType leftType = GetTypeOf(lhs);
+    TreeNode::VarType rightType = GetTypeOf(rhs);
+
+    if(leftType == TreeNode::VarType::UNDEFINED || rightType == TreeNode::VarType::UNDEFINED) {
+        if(IsArray(lhs) || IsArray(rhs))
+            ErrorHandler::AddNonArrOpError(node);
         return;
     }
 
-    if(GetTypeOf(rhs) != type)
-        ErrorHandler::AddRHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(rhs));
+    if(leftType != type)
+        ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(leftType));
 
-    if(GetTypeOf(lhs) != type)
-        ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(lhs));
+    if(rightType != type)
+        ErrorHandler::AddRHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(rightType));
+
+    if(IsArray(lhs) || IsArray(rhs))
+        ErrorHandler::AddNonArrOpError(node);
 }
 
 void SemanticAnalyzer::CheckUnaryOpErrors(TreeNode* node) 
 {
-    TreeNode* lhs = LookupNode(node->leftChild);
-
-    if(lhs->isArray) {
-        ErrorHandler::AddNonArrOpError(node);
+    TreeNode* lhs = ResolveOperand(node->leftChild);
+    if(lhs == nullptr)
         return;
+
+    TreeNode::VarType checkType = TreeNode::VarType::INTEGER;
+
+    if(node->tokenData->tokenClass == NOT) {
+        checkType = TreeNode::VarType::BOOLEAN;
     }
 
-    if(GetTypeOf(lhs) != TreeNode::VarType::INTEGER)
-        ErrorHandler::AddUnaryOpError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(lhs));
+    if(GetTypeOf(lhs) != checkType)
+        ErrorHandler::AddUnaryOpError(node, GetTypeStringOf(checkType), GetTypeStringOf(lhs));
+
+    if(lhs->isArray)
+        ErrorHandler::AddNonArrOpError(node);
 }
 
 void SemanticAnalyzer::CheckMinusErrors(TreeNode* node)
@@ -221,16 +311,21 @@ void SemanticAnalyzer::CheckStarErrors(TreeNode* node)
         return;
     }
 
-    TreeNode* lhs = LookupNode(node->leftChild);
+    //bool prevWarnArr = warnArrayUse;
+    //warnArrayUse = true;
 
-    if(!(lhs->isArray))
+    TreeNode* lhs = ResolveOperand(node->leftChild);
+
+    //warnArrayUse = prevWarnArr;
+
+    if(lhs != nullptr && !(lhs->isArray))
         ErrorHandler::AddOnlyArrOpError(node);
 }
 
 void SemanticAnalyzer::CheckComparisonErrors(TreeNode* node)
 {
-    TreeNode* lhs = LookupNode(node->leftChild);
-    TreeNode* rhs = LookupNode(node->middleChild);
+    TreeNode* lhs = ResolveOperand(node->leftChild);
+    TreeNode* rhs = ResolveOperand(node->middleChild);
 
     if(GetTypeOf(lhs) != GetTypeOf(rhs))
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(lhs), GetTypeStringOf(rhs));
@@ -248,6 +343,12 @@ void SemanticAnalyzer::CheckUninitIDErrors(TreeNode* node)
 void SemanticAnalyzer::CheckCallErrors(TreeNode* node)
 {
     TreeNode* result = LookupNode(node);
+
+    for(TreeNode* arg = node->leftChild; arg != nullptr; arg = arg->sibling) {
+        if(arg->nodeType == TreeNode::NodeType::EXPNODE && arg->subType.exp == TreeNode::ExpType::IDTYPE && IsFunction(LookupNode(arg)))
+            ErrorHandler::AddFunVarError(arg);
+    }
+
     if(!result)
         return;
 
@@ -279,32 +380,52 @@ void SemanticAnalyzer::InsertNodeIfReqd(TreeNode* node, bool force)
 
 TreeNode* SemanticAnalyzer::LookupNode(TreeNode* node, bool issueUninitWarn)
 {
-    if(node->declaredAt != nullptr)
+    if(node->declaredAt != nullptr) {
+        node->varType = node->declaredAt->varType;
         return node->declaredAt;
+    }
 
     if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE)
         return node;
 
-    void* lookupResult = nullptr;
-    if(symbolTable->depth() == 1)
-        lookupResult = symbolTable->lookupGlobal(node->tokenData->tokenStr);
-    else
-        lookupResult = symbolTable->lookup(node->tokenData->tokenStr);
+    TreeNode* treeResult = LookupNode(node->tokenData->tokenStr, issueUninitWarn);
 
-    TreeNode* treeResult = (TreeNode*)lookupResult;
-
-    if(treeResult == nullptr && node->inspectedAt == nullptr) {
-        ErrorHandler::AddUnDeclError(node);
+    if(treeResult == nullptr) {
+        if(node->inspectedAt == nullptr) {
+            ErrorHandler::AddUnDeclError(node);
+            node->inspectedAt = node;
+        }
         return treeResult;
     }
 
-    if(treeResult->initializedAt == nullptr && node->nodeType != TreeNode::NodeType::DECLNODE && issueUninitWarn && !IsFunction(treeResult)) {
+    node->varType = treeResult->varType;
+
+    bool isDeclNode = (node->nodeType == TreeNode::NodeType::DECLNODE);
+    if(!isDeclNode)
+        treeResult->isUsed = true;
+
+    bool isGlobalSym = (symbolTable->lookupGlobal(node->tokenData->tokenStr) == (void*)treeResult);
+
+    if(treeResult->initializedAt == nullptr && !isDeclNode && issueUninitWarn && (warnArrayUse || !treeResult->isArray) && !IsFunction(treeResult) && !isGlobalSym && !treeResult->isStatic) {
         ErrorHandler::AddUninitVarWarn(node);
         treeResult->initializedAt = treeResult;
     }
 
-    node->declaredAt = treeResult;
+    // Don't cache a silent lookup of a still-uninitialized variable, or the warning is lost later
+    if(issueUninitWarn || treeResult->initializedAt != nullptr || isDeclNode || isGlobalSym || IsFunction(treeResult))
+        node->declaredAt = treeResult;
     return treeResult;
+}
+
+TreeNode* SemanticAnalyzer::LookupNode(std::string node, bool issueUninitWarn)
+{
+    void* lookupResult = nullptr;
+    if(symbolTable->depth() == 1)
+        lookupResult = symbolTable->lookupGlobal(node);
+    else
+        lookupResult = symbolTable->lookup(node);
+
+    return (TreeNode*)lookupResult;
 }
 
 // =====================
@@ -393,6 +514,15 @@ bool SemanticAnalyzer::IsOperator(TreeNode* node)
     }
 }
 
+bool SemanticAnalyzer::IsInArray(TreeNode* node)
+{
+    int symToken = GetSymbolToken(node);
+    if(symToken != LBRACKET)
+        return false;
+
+    return true;
+}
+
 int SemanticAnalyzer::GetSymbolToken(TreeNode* node)
 {
     return node->tokenData->tokenClass;
@@ -400,6 +530,53 @@ int SemanticAnalyzer::GetSymbolToken(TreeNode* node)
 
 TreeNode::VarType SemanticAnalyzer::GetTypeOf(TreeNode* node)
 {
+    if(node == nullptr)
+        return TreeNode::VarType::UNDEFINED;
+
+    if(IsInArray(node))
+        return GetTypeOf(LookupNode(node->leftChild, false));
+
+    if(node->varType == TreeNode::VarType::UNDEFINED && IsOperator(node)) {
+        int symToken = GetSymbolToken(node);
+        switch(symToken) {
+            case PLUS:
+            case MINUS:
+            case STAR:
+            case DIVIDE:
+            case MOD:
+            case ADDASS:
+            case SUBASS:
+            case MULASS:
+            case DIVASS:
+            case MIN:
+            case MAX:
+            case INC:
+            case DEC:
+                return TreeNode::VarType::INTEGER;
+
+            case LEQ:
+            case LT:
+            case GT:
+            case GEQ:
+            case EQ:
+            case NEQ:
+            case AND:
+            case OR:
+            case NOT:
+                return TreeNode::VarType::BOOLEAN;
+
+            case COLON:
+            case ASSIGN:
+                return GetTypeOf(LookupNode(node->middleChild, false));
+
+            case LBRACKET:
+                return GetTypeOf(LookupNode(node->leftChild, false));
+
+            default:
+                break;
+        }
+    }
+
     return node->varType;
 }
 
@@ -459,6 +636,13 @@ bool SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node, bool openedScope)
         symbolTable->leave();
         return true;
     }
-
     return false;
+}
+
+void SemanticAnalyzer::CheckForMain()
+{
+    TreeNode* mainNode = LookupNode("main");
+    if(mainNode == nullptr || mainNode->middleChild == nullptr) {
+        ErrorHandler::AddNoMainError();
+    }        
 }

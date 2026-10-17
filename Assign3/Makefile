@@ -26,7 +26,8 @@ test: c-
 			skip=$$((skip+1)); \
 			continue; \
 		fi; \
-		./c- -p < "$$f" > "$$actual" 2>&1; \
+        flags=$$(awk -v n="$$name" '$$1==n { $$1=""; print; exit }' $(TESTDIR)/00_test_flags.txt); \
+        ( cd $(TESTDIR) && ../c- $$flags "$$name.c-" ) > "$$actual" 2>&1; \
 		if diff -q "$$actual" "$$expected" > /dev/null 2>&1; then \
 			echo "PASS  $$name"; \
 			pass=$$((pass+1)); \

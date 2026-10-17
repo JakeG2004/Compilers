@@ -1,0 +1,11 @@
+====================================
+FILE: compfunc.c-
+ERROR(4): Symbol 'x' is already declared at line 3.
+WARNING(25): The variable 'x' seems not to be used.
+WARNING(3): The variable 'elk' seems not to be used.
+WARNING(11): The variable 'fox' seems not to be used.
+WARNING(19): The variable 'gnu' seems not to be used.
+WARNING(25): The variable 'hog' seems not to be used.
+ERROR(LINKER): A function named 'main()' must be defined.
+Number of warnings: 5
+Number of errors: 2

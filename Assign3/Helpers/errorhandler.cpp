@@ -106,7 +106,7 @@ void ErrorHandler::AddUnDeclError(TreeNode* node)
 void ErrorHandler::AddArrIdxTypeError(TreeNode* node, std::string otherType)
 {
     std::stringstream ss;
-    ss << "Array '" << node->leftChild->tokenData->tokenStr << "' should be indexed by type int but got " << otherType << ".";
+    ss << "Array '" << node->leftChild->tokenData->tokenStr << "' should be indexed by type int but got type " << otherType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -152,7 +152,7 @@ void ErrorHandler::AddUninitVarWarn(TreeNode* node)
     AddWarning(ss.str(), node->tokenData->lineNum);
 }
 
-void ErrorHandler::AddNoMainError(TreeNode* node)
+void ErrorHandler::AddNoMainError()
 {
     AddError("A function named 'main()' must be defined.", -1);
 }

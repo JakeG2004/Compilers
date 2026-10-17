@@ -1,0 +1,22 @@
+# Per-test flags for 'make test'. Format: <testname> <flags...>
+# Tests not listed run with no flags. Lines starting with # are ignored.
+allgood -p
+break -p
+break3 -p
+break4 -p
+decl -p
+emptyline -p
+everythingS21 -p
+expL -p
+expR -p
+fora -p
+forb -p
+if -p
+ifNest -p
+init -p
+init4 -p
+mixedControl -p
+mixedControl2 -p
+mixedControl3 -p
+uninit2 -p
+while -p
