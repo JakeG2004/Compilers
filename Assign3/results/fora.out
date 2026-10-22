@@ -1,5 +1,4 @@
-====================================
-FILE: fora.c-
+WARNING(9): The variable 'i' seems not to be used.
 WARNING(3): The variable 'i' seems not to be used.
 WARNING(3): The variable 'j' seems not to be used.
 Func: main returns type void [line: 1]
@@ -9,17 +8,17 @@ Func: main returns type void [line: 1]
 .   .   Child: 1  For [line: 5]
 .   .   .   Child: 0  Var: i of type int [line: 5]
 .   .   .   Child: 1  Range [line: 5]
-.   .   .   .   Child: 0  Const 1 of undefined type [line: 5]
-.   .   .   .   Child: 1  Const 11 of undefined type [line: 5]
+.   .   .   .   Child: 0  Const 1 of type int [line: 5]
+.   .   .   .   Child: 1  Const 11 of type int [line: 5]
 .   .   .   Child: 2  Assign: = of type int [line: 5]
 .   .   .   .   Child: 0  Id: i of type int [line: 5]
 .   .   .   .   Child: 1  Const 3 of type int [line: 5]
 .   .   Sibling: 1  For [line: 7]
 .   .   .   Child: 0  Var: j of type int [line: 7]
 .   .   .   Child: 1  Range [line: 7]
-.   .   .   .   Child: 0  Const 2 of undefined type [line: 7]
-.   .   .   .   Child: 1  Const 22 of undefined type [line: 7]
-.   .   .   .   Child: 2  Const 3 of undefined type [line: 7]
+.   .   .   .   Child: 0  Const 2 of type int [line: 7]
+.   .   .   .   Child: 1  Const 22 of type int [line: 7]
+.   .   .   .   Child: 2  Const 3 of type int [line: 7]
 .   .   .   Child: 2  Assign: = of type int [line: 7]
 .   .   .   .   Child: 0  Id: j of type int [line: 7]
 .   .   .   .   Child: 1  Const 7 of type int [line: 7]
@@ -30,5 +29,5 @@ Func: main returns type void [line: 1]
 .   .   .   .   Child: 1  Id: i of undefined type [line: 9]
 .   .   .   .   Child: 2  Id: i of undefined type [line: 9]
 .   .   .   Child: 2  Const 666 of type int [line: 9]
-Number of warnings: 2
+Number of warnings: 3
 Number of errors: 0

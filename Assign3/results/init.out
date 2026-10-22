@@ -1,5 +1,3 @@
-====================================
-FILE: init.c-
 WARNING(8): The variable 'b' seems not to be used.
 WARNING(10): The variable 'c' seems not to be used.
 WARNING(9): The variable 'y' seems not to be used.

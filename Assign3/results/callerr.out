@@ -1,5 +1,3 @@
-====================================
-FILE: callerr.c-
 ERROR(16): Symbol 'lyra' is not declared.
 ERROR(22): Symbol 'lyra' is not declared.
 ERROR(23): Symbol 'lyra' is not declared.

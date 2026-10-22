@@ -1,5 +1,3 @@
-====================================
-FILE: call.c-
 ERROR(4): Symbol 'output' is not declared.
 ERROR(5): Symbol 'outputb' is not declared.
 ERROR(6): Symbol 'outputc' is not declared.

@@ -1,7 +1,19 @@
-// C-S21
+// C-S26
+int ga[7];
+bool gb[6];
+char gc[5];
+
 main()
 {
    int a;
    bool b;
    char c;
+
+   static int sa;
+   static bool sb;
+   static char sc;
 }
+
+int fa(int a; bool b; char c) return 0;
+bool fb(int a; bool b; char c) return true;
+char fc(int a; bool b; char c) return 'z';

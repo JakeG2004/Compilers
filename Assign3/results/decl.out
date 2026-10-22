@@ -1,12 +1,52 @@
-====================================
-FILE: decl.c-
-WARNING(4): The variable 'a' seems not to be used.
-WARNING(5): The variable 'b' seems not to be used.
-WARNING(6): The variable 'c' seems not to be used.
-Func: main returns type void [line: 2]
-.   Child: 1  Compound [line: 3]
-.   .   Child: 0  Var: a of type int [line: 4]
-.   .   Sibling: 1  Var: b of type bool [line: 5]
-.   .   Sibling: 2  Var: c of type char [line: 6]
-Number of warnings: 3
+WARNING(8): The variable 'a' seems not to be used.
+WARNING(9): The variable 'b' seems not to be used.
+WARNING(10): The variable 'c' seems not to be used.
+WARNING(12): The variable 'sa' seems not to be used.
+WARNING(13): The variable 'sb' seems not to be used.
+WARNING(14): The variable 'sc' seems not to be used.
+WARNING(17): The variable 'a' seems not to be used.
+WARNING(17): The variable 'b' seems not to be used.
+WARNING(17): The variable 'c' seems not to be used.
+WARNING(18): The variable 'a' seems not to be used.
+WARNING(18): The variable 'b' seems not to be used.
+WARNING(18): The variable 'c' seems not to be used.
+WARNING(19): The variable 'a' seems not to be used.
+WARNING(19): The variable 'b' seems not to be used.
+WARNING(19): The variable 'c' seems not to be used.
+WARNING(17): The variable 'fa' seems not to be used.
+WARNING(18): The variable 'fb' seems not to be used.
+WARNING(19): The variable 'fc' seems not to be used.
+WARNING(2): The variable 'ga' seems not to be used.
+WARNING(3): The variable 'gb' seems not to be used.
+WARNING(4): The variable 'gc' seems not to be used.
+Var: ga is array of type int [line: 2]
+Sibling: 1  Var: gb is array of type bool [line: 3]
+Sibling: 2  Var: gc is array of type char [line: 4]
+Sibling: 3  Func: main returns type void [line: 6]
+.   Child: 1  Compound [line: 7]
+.   .   Child: 0  Var: a of type int [line: 8]
+.   .   Sibling: 1  Var: b of type bool [line: 9]
+.   .   Sibling: 2  Var: c of type char [line: 10]
+.   .   Sibling: 3  Var: sa of type int [line: 12]
+.   .   Sibling: 4  Var: sb of type bool [line: 13]
+.   .   Sibling: 5  Var: sc of type char [line: 14]
+Sibling: 4  Func: fa returns type int [line: 17]
+.   Child: 0  Parm: a of type int [line: 17]
+.   Sibling: 1  Parm: b of type bool [line: 17]
+.   Sibling: 2  Parm: c of type char [line: 17]
+.   Child: 1  Return [line: 17]
+.   .   Child: 0  Const 0 of type int [line: 17]
+Sibling: 5  Func: fb returns type bool [line: 18]
+.   Child: 0  Parm: a of type int [line: 18]
+.   Sibling: 1  Parm: b of type bool [line: 18]
+.   Sibling: 2  Parm: c of type char [line: 18]
+.   Child: 1  Return [line: 18]
+.   .   Child: 0  Const true of type bool [line: 18]
+Sibling: 6  Func: fc returns type char [line: 19]
+.   Child: 0  Parm: a of type int [line: 19]
+.   Sibling: 1  Parm: b of type bool [line: 19]
+.   Sibling: 2  Parm: c of type char [line: 19]
+.   Child: 1  Return [line: 19]
+.   .   Child: 0  Const 'z' of type char [line: 19]
+Number of warnings: 21
 Number of errors: 0

@@ -1,5 +1,3 @@
-====================================
-FILE: nest.c-
 ERROR(18): Symbol 'output' is not declared.
 ERROR(19): Symbol 'output' is not declared.
 ERROR(20): Symbol 'output' is not declared.

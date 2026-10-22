@@ -1,5 +1,3 @@
-====================================
-FILE: exp.c-
 ERROR(8): Symbol 'output' is not declared.
 ERROR(9): Symbol 'output' is not declared.
 ERROR(10): Symbol 'output' is not declared.

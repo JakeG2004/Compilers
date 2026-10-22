@@ -47,6 +47,9 @@ class SemanticAnalyzer
         bool IsCompound(TreeNode* node);
         bool IsOperator(TreeNode* node);
         bool IsInArray(TreeNode* node);
+        bool IsConst(TreeNode* node);
+        static bool IsAssignmentOp(TreeNode* node);
+        static bool IsFuncUse(TreeNode* operand, TreeNode* resolved);
         int GetSymbolToken(TreeNode* node);
         TreeNode::VarType GetTypeOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode* node);
@@ -59,7 +62,6 @@ class SemanticAnalyzer
 
     public:
         SymbolTable* symbolTable = nullptr;
-        bool warnArrayUse = false;
 };
 
 #endif

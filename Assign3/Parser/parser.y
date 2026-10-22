@@ -57,7 +57,7 @@ varDecl:
     ;
 
 scopedVarDecl:
-    STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); $$->isStatic = true; TreeNode::SetNodeListTypes($2, $3);}
+    STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); for(TreeNode* v = $$; v != nullptr; v = v->sibling) v->isStatic = true; TreeNode::SetNodeListTypes($2, $3);}
     | typeSpec varDeclList SEMICOLON        {$$ = TreeNode::PullUpTypeNode($2, $1); TreeNode::SetNodeListTypes($1, $2);}
     ;
 
@@ -315,7 +315,7 @@ bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
     if(ArgHandler::IsFlagSet("-p"))
         *printFlag = true;
     //if(ArgHandler::IsFlagSet("-P"))
-    //    *typePrintFlag = true;
+    //    *printFlag = true;
 
     return true;
 }
@@ -344,8 +344,8 @@ bool OpenFile(int argc, char* argv[])
         return false;
     }
 
-    printf("====================================\n");
-    printf("FILE: %s\n", filePath);
+    //printf("====================================\n");
+    //printf("FILE: %s\n", filePath);
 
     return true;
 }

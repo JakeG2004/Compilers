@@ -1,5 +1,3 @@
-====================================
-FILE: ops.c-
 ERROR(25): Symbol 'outputb' is not declared.
 ERROR(26): Symbol 'outputb' is not declared.
 ERROR(27): Symbol 'outputb' is not declared.

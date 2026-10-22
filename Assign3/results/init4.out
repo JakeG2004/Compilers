@@ -1,6 +1,3 @@
-====================================
-FILE: init4.c-
-WARNING(4): Variable 'x' may be uninitialized when used here.
 WARNING(5): The variable 'roll' seems not to be used.
 WARNING(4): The variable 'y' seems not to be used.
 Func: main returns type int [line: 1]
@@ -17,5 +14,5 @@ Func: main returns type int [line: 1]
 .   .   Child: 1  Const 333 of type int [line: 6]
 .   .   Sibling: 1  Const 'z' of type char [line: 7]
 .   .   Sibling: 2  Const true of type bool [line: 8]
-Number of warnings: 3
+Number of warnings: 2
 Number of errors: 0

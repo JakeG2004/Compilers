@@ -1,5 +1,3 @@
-====================================
-FILE: scope.c-
 ERROR(7): Symbol 'bat' is not declared.
 WARNING(8): Variable 'a' may be uninitialized when used here.
 ERROR(8): 'or' requires operands of type bool but lhs is of type int.

@@ -1,5 +1,3 @@
-====================================
-FILE: return.c-
 ERROR(13): Symbol 'outputc' is not declared.
 ERROR(37): Symbol 'outnl' is not declared.
 ERROR(39): Symbol 'output' is not declared.

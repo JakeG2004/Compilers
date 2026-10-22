@@ -1,5 +1,3 @@
-====================================
-FILE: static.c-
 ERROR(6): Symbol 'output' is not declared.
 ERROR(8): Symbol 'output' is not declared.
 Number of warnings: 0

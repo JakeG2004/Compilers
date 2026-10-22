@@ -1,5 +1,3 @@
-====================================
-FILE: uninit2.c-
 WARNING(6): Variable 'b' may be uninitialized when used here.
 WARNING(8): Variable 'aa' may be uninitialized when used here.
 WARNING(9): Variable 'bb' may be uninitialized when used here.

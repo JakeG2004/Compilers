@@ -1,5 +1,3 @@
-====================================
-FILE: mixedControl2.c-
 Func: main returns type void [line: 2]
 .   Child: 1  Compound [line: 3]
 .   .   Child: 1  If [line: 4]

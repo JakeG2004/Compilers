@@ -66,6 +66,8 @@ comment             "//"[^\n]*
 "!="                TOKEN(NEQ)
 "<<"                TOKEN(MIN)
 ">>"                TOKEN(MAX)
+":<:"               TOKEN(MIN)
+":>:"               TOKEN(MAX)
 "+"                 TOKEN(PLUS)
 "-"                 TOKEN(MINUS)
 "*"                 TOKEN(STAR)

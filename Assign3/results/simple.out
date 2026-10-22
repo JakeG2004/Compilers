@@ -1,5 +1,3 @@
-====================================
-FILE: simple.c-
 WARNING(3): The variable 'charlie' seems not to be used.
 ERROR(5): Symbol 'golf' is not declared.
 ERROR(5): Symbol 'hotel' is not declared.

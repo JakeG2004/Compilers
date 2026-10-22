@@ -1,5 +1,3 @@
-====================================
-FILE: break2.c-
 ERROR(10): Symbol 'output' is not declared.
 ERROR(12): Symbol 'outnl' is not declared.
 ERROR(16): Symbol 'output' is not declared.

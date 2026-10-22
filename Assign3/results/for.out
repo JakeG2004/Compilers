@@ -1,5 +1,3 @@
-====================================
-FILE: for.c-
 ERROR(12): Symbol 'bb' is not declared.
 ERROR(12): Cannot index nonarray 'bb'.
 ERROR(13): Symbol 'bb' is not declared.

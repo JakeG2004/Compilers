@@ -1,5 +1,3 @@
-====================================
-FILE: strange.c-
 ERROR(2): Symbol 'main' is already declared at line 1.
 ERROR(3): Symbol 'main' is already declared at line 1.
 ERROR(9): 'main' is a simple variable and cannot be called.

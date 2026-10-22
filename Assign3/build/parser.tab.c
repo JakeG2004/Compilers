@@ -1869,7 +1869,7 @@ yyreduce:
 
   case 8: /* scopedVarDecl: STATIC typeSpec varDeclList SEMICOLON  */
 #line 60 "Parser/parser.y"
-                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); (yyval.node)->isStatic = true; TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
+                                            {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); for(TreeNode* v = (yyval.node); v != nullptr; v = v->sibling) v->isStatic = true; TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
 #line 1874 "build/parser.tab.c"
     break;
 
@@ -2765,8 +2765,8 @@ bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
     }
     if(ArgHandler::IsFlagSet("-p"))
         *printFlag = true;
-    //if(ArgHandler::IsFlagSet("-P"))
-    //    *typePrintFlag = true;
+    if(ArgHandler::IsFlagSet("-P"))
+        *printFlag = true;
 
     return true;
 }
@@ -2795,8 +2795,8 @@ bool OpenFile(int argc, char* argv[])
         return false;
     }
 
-    printf("====================================\n");
-    printf("FILE: %s\n", filePath);
+    //printf("====================================\n");
+    //printf("FILE: %s\n", filePath);
 
     return true;
 }

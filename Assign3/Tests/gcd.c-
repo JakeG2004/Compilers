@@ -1,0 +1,7 @@
+// C-S26
+int gcd(int u, v) if (v==0) then return u; else return gcd(v, u - u/v*v);
+
+main()
+{
+    gcd(3407, 4575);
+}

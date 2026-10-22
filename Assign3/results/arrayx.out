@@ -1,5 +1,3 @@
-====================================
-FILE: arrayx.c-
 ERROR(10): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
 ERROR(11): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
 ERROR(12): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.

@@ -1,5 +1,3 @@
-====================================
-FILE: randomRoll.c-
 ERROR(11): Symbol 'outputb' is not declared.
 ERROR(13): Symbol 'outputb' is not declared.
 ERROR(14): Symbol 'outnl' is not declared.

@@ -127,7 +127,7 @@ void ErrorHandler::AddIdxNonArrError(TreeNode* node)
 void ErrorHandler::AddNonArrOpError(TreeNode* node)
 {
     std::stringstream ss;
-    ss << "The operation '" << node->tokenData->tokenStr << "' does not work with arrays.";
+    ss << "The operation '" << GetUnaryVersionOfOperator(node) << "' does not work with arrays.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 

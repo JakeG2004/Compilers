@@ -1,0 +1,10 @@
+int main();
+
+int fred();
+
+int i;
+
+int george(int a)
+{
+    int y;
+}

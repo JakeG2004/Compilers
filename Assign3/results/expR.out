@@ -1,5 +1,3 @@
-====================================
-FILE: expR.c-
 WARNING(6): Variable 'x' may be uninitialized when used here.
 Func: main returns type void [line: 2]
 .   Child: 1  Compound [line: 3]
