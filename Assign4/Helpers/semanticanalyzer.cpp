@@ -4,6 +4,7 @@
 #include "errorhandler.h"
 #include "symboltable.h"
 #include "parser.tab.h"
+#include "tokenclass.h"
 
 SemanticAnalyzer* SemanticAnalyzer::instance = nullptr;
 
@@ -30,11 +31,16 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::FORTYPE && node->leftChild)
         node->leftChild->initializedAt = node->leftChild;
 
-    // the target of an assignment is written, not read, so nothing in it warns about being uninitialized
     if(node->leftChild != nullptr && IsAssignmentOp(node))
         ResolveWithoutWarn(node->leftChild);
 
+    if(IsFunction(node))
+        currentFunc = node;
+    if(IsLoop(node))
+        currentLoop = node;
+
     CheckForSymbolErrors(node);
+    CheckForBreakErrors(node);
 
     // identifiers in a for-range are never resolved: no undeclared errors, no uninit warnings, and they don't count as uses
     bool isRange = node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE;
@@ -58,6 +64,10 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     CheckForRangeErrors(node);
 
     ExitScopeIfReqd(node, openedScope);
+
+    currentFunc = nullptr;
+    currentLoop = nullptr;
+
     Analyze(node->sibling);
 }
 
@@ -65,9 +75,52 @@ void SemanticAnalyzer::StartAnalysis(TreeNode* node)
 {
     instance = this;
 
+    AddIOFunctions();
     Analyze(node, true);
     symbolTable->applyToAll(CheckUsageOnScopeExit);
     CheckForMain();
+}
+
+void SemanticAnalyzer::AddIOFunctions()
+{
+    TokenClass* inputNodeToken = new TokenClass(ID, -1, const_cast<char*>("input"), '\0', 0);
+    TreeNode* inputNode = TreeNode::CreateFuncDecl(TreeNode::VarType::INTEGER, nullptr, nullptr, inputNodeToken);
+
+    TokenClass* inputbNodeToken = new TokenClass(ID, -1, const_cast<char*>("inputb"), '\0', 0);
+    TreeNode* inputbNode = TreeNode::CreateFuncDecl(TreeNode::VarType::BOOLEAN, nullptr, nullptr, inputbNodeToken);
+
+    TokenClass* inputcNodeToken = new TokenClass(ID, -1, const_cast<char*>("inputc"), '\0', 0);
+    TreeNode* inputcNode = TreeNode::CreateFuncDecl(TreeNode::VarType::CHARACTER, nullptr, nullptr, inputcNodeToken);
+
+    TokenClass* outnlNodeToken = new TokenClass(ID, -1, const_cast<char*>("outnl"), '\0', 0);
+    TreeNode* outnlNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, nullptr, nullptr, outnlNodeToken);
+
+    TokenClass* outputToken = new TokenClass(ID, -1, const_cast<char*>("output"), '\0', 0);
+    TokenClass* outputParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
+    TreeNode* outputParmNode = TreeNode::CreateParmDecl(outputParms);
+    outputParmNode->varType == TreeNode::VarType::INTEGER;
+    TreeNode* outputNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputParmNode, nullptr, outputToken);
+
+    TokenClass* outputbToken = new TokenClass(ID, -1, const_cast<char*>("outputb"), '\0', 0);
+    TokenClass* outputbParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
+    TreeNode* outputbParmNode = TreeNode::CreateParmDecl(outputbParms);
+    outputbParmNode->varType == TreeNode::VarType::BOOLEAN;
+    TreeNode* outputbNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputbParmNode, nullptr, outputbToken);
+
+    TokenClass* outputcToken = new TokenClass(ID, -1, const_cast<char*>("outputc"), '\0', 0);
+    TokenClass* outputcParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
+    TreeNode* outputcParmNode = TreeNode::CreateParmDecl(outputcParms);
+    outputcParmNode->varType == TreeNode::VarType::CHARACTER;
+    TreeNode* outputcNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputcParmNode, nullptr, outputcToken);
+
+    inputNode->SetSibling(inputbNode);
+    inputbNode->SetSibling(inputcNode);
+    inputcNode->SetSibling(outputNode);
+    outputNode->SetSibling(outputbNode);
+    outputbNode->SetSibling(outputcNode);
+    outputcNode->SetSibling(outnlNode);
+
+    Analyze(inputNode, true);
 }
 
 // ============================
@@ -173,6 +226,12 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
         ClearRangeTypes(node->middleChild);
         ClearRangeTypes(node->rightChild);
     }
+}
+
+void SemanticAnalyzer::CheckForBreakErrors(TreeNode* node)
+{
+    if(currentLoop == nullptr)
+        ErrorHandler::AddBreakOutsideLoopError(node);
 }
 
 void SemanticAnalyzer::ResolveWithoutWarn(TreeNode* node)

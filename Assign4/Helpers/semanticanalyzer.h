@@ -11,12 +11,14 @@ class SemanticAnalyzer
         SemanticAnalyzer(bool stDebug);
         void Analyze(TreeNode* node, bool isScopeBody = false);
         void StartAnalysis(TreeNode* node);
+        void AddIOFunctions();
 
     public: // Bulk Checks
         void CheckForOperatorErrors(TreeNode* node);
         void CheckForSymbolErrors(TreeNode* node);
         void CheckForReturnErrors(TreeNode* node);
         void CheckForRangeErrors(TreeNode* node);
+        void CheckForBreakErrors(TreeNode* node);
         static void CheckUsageOnScopeExit(std::string sym, void* node);
 
     public: // Operator Checks
@@ -63,6 +65,9 @@ class SemanticAnalyzer
     public:
         static SemanticAnalyzer* instance;
         SymbolTable* symbolTable = nullptr;
+
+        TreeNode* currentLoop = nullptr;
+        TreeNode* currentFunc = nullptr;
 };
 
 #endif

@@ -138,8 +138,53 @@ void ErrorHandler::AddOnlyArrOpError(TreeNode* node)
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
+void ErrorHandler::AddBreakOutsideLoopError(TreeNode* node)
+{
+    std::stringstream ss;
+    ss << "Cannot have a break statement outside of loop.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddArrAsTestConditionError(TreeNode* node, std::string stmtType)
+{
+    std::stringstream ss;
+    ss << "Cannot use array as test condition in " << stmtType << " statement.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddNonBoolTestConditionError(TreeNode* node, std::string stmtType, std::string actualType)
+{
+    std::stringstream ss;
+    ss << "Expecting Boolean test condition in " << stmtType << " statement but got " << actualType << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddArrInRangeError(TreeNode* node, int pos)
+{
+    std::stringstream ss;
+    ss << "Cannot use array in position " << pos << " in range of for statement.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddWrongTypeInRangeError(TreeNode* node, std::string expectedType, std::string actualType, int pos)
+{
+    std::stringstream ss;
+    ss << "Expecting " << expectedType << " in position " << pos << " in range of for statement but got " << actualType << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddWrongTypeInCallError(TreeNode* node, std::string expectedType, std::string actualType, std::string functionName, int pos, int funcLineNum)
+{
+    std::stringstream ss;
+    ss << "Expecting " << expectedType << " in parameter " << pos << " of call to '" << functionName << "' declared on line " << funcLineNum << " but got " << actualType << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
 void ErrorHandler::AddUnusedVarWarn(TreeNode* node, bool isGlobal)
 {
+    if(node->tokenData->lineNum == -1)
+        return;
+
     std::stringstream ss;
     ss << "The " << GetScopeType(node, isGlobal) << " '" << node->tokenData->tokenStr << "' seems not to be used.";
     AddWarning(ss.str(), node->tokenData->lineNum);

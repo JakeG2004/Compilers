@@ -42,13 +42,13 @@ class ErrorHandler
 
         static void AddBreakOutsideLoopError(TreeNode* node);
 
-        static void AddArrAsTestConditionError(TreeNode* node);
-        static void AddNonBoolTestConditionError(TreeNode* node);
+        static void AddArrAsTestConditionError(TreeNode* node, std::string stmtType);
+        static void AddNonBoolTestConditionError(TreeNode* node, std::string stmtType, std::string actualType);
         
-        static void AddArrInRangeError(TreeNode* node);
-        static void AddWrongTypeInRangeError(TreeNode* node);
+        static void AddArrInRangeError(TreeNode* node, int pos);
+        static void AddWrongTypeInRangeError(TreeNode* node, std::string expectedType, std::string actualType, int pos);
 
-        static void AddWrongTypeInCallError(TreeNode* node);
+        static void AddWrongTypeInCallError(TreeNode* node, std::string expectedType, std::string actualType, std::string functionName, int pos, int funcLineNum);
         static void AddExpectArrInCallError(TreeNode* node);
         static void AddNotExpectArrInCallError(TreeNode* node);
         static void AddTooFewParmsInCallError(TreeNode* node);
