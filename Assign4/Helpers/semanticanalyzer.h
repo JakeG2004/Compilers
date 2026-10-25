@@ -19,6 +19,7 @@ class SemanticAnalyzer
         void CheckForReturnErrors(TreeNode* node);
         void CheckForRangeErrors(TreeNode* node);
         void CheckForBreakErrors(TreeNode* node);
+        void CheckTestConditionErrors(TreeNode* node);
         static void CheckUsageOnScopeExit(std::string sym, void* node);
 
     public: // Operator Checks

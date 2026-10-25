@@ -35,6 +35,10 @@ int ErrorHandler::GetNumWarnings()
     return GetInstance()->numWarnings;
 }
 
+// ==============
+// === ERRORS ===
+// ==============
+
 void ErrorHandler::AddVarCallError(TreeNode* node)
 {
     std::stringstream ss;
@@ -138,6 +142,8 @@ void ErrorHandler::AddOnlyArrOpError(TreeNode* node)
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
+// Assignment 4
+
 void ErrorHandler::AddBreakOutsideLoopError(TreeNode* node)
 {
     std::stringstream ss;
@@ -180,6 +186,80 @@ void ErrorHandler::AddWrongTypeInCallError(TreeNode* node, std::string expectedT
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
+void ErrorHandler::AddExpectArrInCallError(TreeNode* node, std::string functionName, int functionLineNum, int parmNum)
+{
+    std::stringstream ss;
+    ss << "Expecting array in parameter " << parmNum << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddNotExpectArrInCallError(TreeNode* node, std::string functionName, int functionLineNum, int parmNum)
+{
+    std::stringstream ss;
+    ss << "Not expecting array in parameter " << parmNum << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddTooFewParmsInCallError(TreeNode* node, std::string functionName, int functionLineNum)
+{
+    std::stringstream ss;
+    ss << "Too few parameters passed for function '" << functionName << "' declared on line " << functionLineNum << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddTooManyParmsInCallError(TreeNode* node, std::string functionName, int functionLineNum)
+{
+    std::stringstream ss;
+    ss << "Too many parameters passed for function '" << functionName << "' declared on line " << functionLineNum << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddUnexpectedRetValError(TreeNode* node, std::string funcName, int funcLineNum)
+{
+    std::stringstream ss;
+    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting no return value, but return has a value.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddExpectedRetValError(TreeNode* node, std::string funcName, std::string expectedType, int funcLineNum)
+{
+    std::stringstream ss;
+    ss << "Function '" << funcName << "' at line " << funcLineNum << "is expecting to return " << expectedType << "but return has no value.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddRetValTypeError(TreeNode* node, std::string funcName, std::string expectedType, std::string actualType, int funcLineNum)
+{
+    std::stringstream ss;
+    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return " << expectedType << " but returns " << actualType << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddNonConstInitError(TreeNode* node)
+{
+    std::stringstream ss;
+    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' is not a constant expression.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddInitTypeError(TreeNode* node, std::string expectedType, std::string actualType)
+{
+    std::stringstream ss;
+    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' of " << expectedType << " is of " << actualType << ".";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+void ErrorHandler::AddInitArrError(TreeNode* node, std::string lhsIsArr, std::string rhsIsArr)
+{
+    std::stringstream ss;
+    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' requires both operands be arrays or not but variable is " << lhsIsArr << " an array and rhs is " << rhsIsArr << " and array.";
+    AddError(ss.str(), node->tokenData->lineNum);
+}
+
+// ================
+// === WARNINGS ===
+// ================
+
 void ErrorHandler::AddUnusedVarWarn(TreeNode* node, bool isGlobal)
 {
     if(node->tokenData->lineNum == -1)
@@ -196,6 +276,17 @@ void ErrorHandler::AddUninitVarWarn(TreeNode* node)
     ss << "Variable '" << node->tokenData->tokenStr << "' may be uninitialized when used here.";
     AddWarning(ss.str(), node->tokenData->lineNum);
 }
+
+void ErrorHandler::AddMissingRetWarn(TreeNode* node, std::string funcName, std::string expectedType)
+{
+    std::stringstream ss;
+    ss << "Expecting to return " << expectedType << " but function '" << funcName << "' has no return statement.";
+    AddWarning(ss.str(), node->tokenData->lineNum);
+}
+
+// ===================
+// === WEIRD OTHER ===
+// ===================
 
 void ErrorHandler::AddNoMainError()
 {

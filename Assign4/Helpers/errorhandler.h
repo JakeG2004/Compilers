@@ -40,6 +40,8 @@ class ErrorHandler
         static void AddNonArrOpError(TreeNode* node);
         static void AddOnlyArrOpError(TreeNode* node);
 
+        // ASSIGN 4
+        
         static void AddBreakOutsideLoopError(TreeNode* node);
 
         static void AddArrAsTestConditionError(TreeNode* node, std::string stmtType);
@@ -49,24 +51,24 @@ class ErrorHandler
         static void AddWrongTypeInRangeError(TreeNode* node, std::string expectedType, std::string actualType, int pos);
 
         static void AddWrongTypeInCallError(TreeNode* node, std::string expectedType, std::string actualType, std::string functionName, int pos, int funcLineNum);
-        static void AddExpectArrInCallError(TreeNode* node);
-        static void AddNotExpectArrInCallError(TreeNode* node);
-        static void AddTooFewParmsInCallError(TreeNode* node);
-        static void AddTooManyParmsInCallError(TreeNode* node);
+        static void AddExpectArrInCallError(TreeNode* node, std::string functionName, int functionLineNum, int parmNum);
+        static void AddNotExpectArrInCallError(TreeNode* node, std::string funcLineNum, int functionLineNum, int parmNum);
+        static void AddTooFewParmsInCallError(TreeNode* node, std::string functionName, int funcLineNum);
+        static void AddTooManyParmsInCallError(TreeNode* node, std::string functionName, int functionLineNum);
 
-        static void AddUnexpectedRetValError(TreeNode* node);
-        static void AddExpectedRetValError(TreeNode* node);
-        static void AddRetValTypeError(TreeNode* node);
+        static void AddUnexpectedRetValError(TreeNode* node, std::string funcName, int funcLineNum);
+        static void AddExpectedRetValError(TreeNode* node, std::string funcName, std::string expectedType, int funcLineNum);
+        static void AddRetValTypeError(TreeNode* node, std::string funcName, std::string expectedType, std::string actualType, int funcLineNum);
 
         static void AddNonConstInitError(TreeNode* node);
-        static void AddInitTypeError(TreeNode* node);
-        static void AddInitArrError(TreeNode* node);
+        static void AddInitTypeError(TreeNode* node, std::string expectedType, std::string actualType);
+        static void AddInitArrError(TreeNode* node, std::string lhsIsArr, std::string rhsIsArr);
     
     public: // Warnings
         static void AddUnusedVarWarn(TreeNode* node, bool isGlobal);
         static void AddUninitVarWarn(TreeNode* node);
 
-        static void AddMissingRetWarn(TreeNode* node);
+        static void AddMissingRetWarn(TreeNode* node, std::string funcName, std::string expectedType);
 
     public: // Weird things like linker
         static void AddNoMainError();

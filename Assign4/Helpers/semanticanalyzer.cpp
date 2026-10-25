@@ -41,6 +41,7 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 
     CheckForSymbolErrors(node);
     CheckForBreakErrors(node);
+    CheckTestConditionErrors(node);
 
     // identifiers in a for-range are never resolved: no undeclared errors, no uninit warnings, and they don't count as uses
     bool isRange = node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE;
@@ -65,8 +66,11 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 
     ExitScopeIfReqd(node, openedScope);
 
-    currentFunc = nullptr;
-    currentLoop = nullptr;
+    if(IsFunction(node))
+        currentFunc = nullptr;
+
+    if(IsLoop(node))
+        currentLoop = nullptr;
 
     Analyze(node->sibling);
 }
@@ -221,17 +225,59 @@ static void ClearRangeTypes(TreeNode* node)
 
 void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
 {
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE) {
-        ClearRangeTypes(node->leftChild);
-        ClearRangeTypes(node->middleChild);
-        ClearRangeTypes(node->rightChild);
+    if(!(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE)) {
+        return;
+    }
+
+    ClearRangeTypes(node->leftChild);
+    ClearRangeTypes(node->middleChild);
+    ClearRangeTypes(node->rightChild);
+
+    TreeNode* children[3] = {node->leftChild, node->middleChild, node->rightChild};
+
+    // type check
+    for(int i = 0; i < 3; i++) {
+        TreeNode* curChild = children[i];
+        if(GetTypeOf(curChild) != TreeNode::VarType::INTEGER) {
+            ErrorHandler::AddWrongTypeInRangeError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(curChild), i);
+            break;
+        }
+    }
+
+    // arr check
+    for(int i = 0; i < 3; i++) {
+        TreeNode* curChild = children[i];
+        if(IsArray(curChild)) {
+            ErrorHandler::AddArrInRangeError(node, i);
+            break;
+        }
     }
 }
 
 void SemanticAnalyzer::CheckForBreakErrors(TreeNode* node)
 {
+    if(!(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::BREAKTYPE))
+        return;
+
     if(currentLoop == nullptr)
         ErrorHandler::AddBreakOutsideLoopError(node);
+}
+
+void SemanticAnalyzer::CheckTestConditionErrors(TreeNode* node)
+{
+    if(!(node->nodeType == TreeNode::NodeType::STMTNODE && (node->subType.stmt == TreeNode::StmtType::IFTYPE || node->subType.stmt == TreeNode::StmtType::WHILETYPE)))
+        return;
+
+    std::string stmtType = (node->subType.stmt == TreeNode::StmtType::IFTYPE ? "if" : "while");
+
+    if(IsArray(node->leftChild)) {
+        ErrorHandler::AddArrAsTestConditionError(node, stmtType);
+        return;
+    }
+
+    if(GetTypeOf(node->leftChild) != TreeNode::VarType::BOOLEAN) {
+        ErrorHandler::AddNonBoolTestConditionError(node, stmtType, GetTypeStringOf(node->leftChild));
+    }
 }
 
 void SemanticAnalyzer::ResolveWithoutWarn(TreeNode* node)
