@@ -61,6 +61,7 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 
     // operator checks run after the operands so errors come out operands first
     CheckForOperatorErrors(node);
+    CheckInitErrors(node);
     CheckForReturnErrors(node);
     CheckForRangeErrors(node);
 
@@ -141,7 +142,6 @@ void SemanticAnalyzer::CheckForOperatorErrors(TreeNode* node)
             break;
 
         case ASSIGN:
-        case COLON:
             CheckAssignErrors(node);
             break;
 
@@ -205,9 +205,55 @@ void SemanticAnalyzer::CheckForSymbolErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
 {
-    if(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RETURNTYPE && node->leftChild != nullptr)
+    if(IsFunction(node)) {
+        if(node->returnAt == nullptr && node->varType != TreeNode::VarType::VOID) {
+            ErrorHandler::AddMissingRetWarn(node, node->tokenData->tokenStr, GetTypeStringOf(node));
+        }
+        return;
+    }
+
+    if(!(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RETURNTYPE))
+        return;
+
+    if(node->leftChild != nullptr)
         if(IsArray(ResolveOperand(node->leftChild)))
             ErrorHandler::AddRetArrError(node);
+
+    if(currentFunc == nullptr)
+        return;
+
+    TreeNode* lookedUpFunc = LookupNode(currentFunc);
+
+    lookedUpFunc->returnAt = node;
+
+    TreeNode::VarType expectedRetType = lookedUpFunc->varType;
+    TreeNode::VarType actualRetType = TreeNode::VarType::VOID;
+    if(node->leftChild != nullptr && !IsConst(node->leftChild)) {
+        TreeNode* lookedUp = LookupNode(node->leftChild);
+        if(lookedUp == nullptr) {
+            ErrorHandler::AddUnDeclError(node->leftChild);
+            return;
+        } else {
+            actualRetType = lookedUp->varType;
+        }
+    } else if(node->leftChild != nullptr){
+        actualRetType = node->leftChild->varType;
+    }
+
+    if(expectedRetType == TreeNode::VarType::VOID && actualRetType != TreeNode::VarType::VOID) {
+        ErrorHandler::AddUnexpectedRetValError(node, lookedUpFunc->tokenData->tokenStr, lookedUpFunc->tokenData->lineNum);
+        return;
+    }
+
+    if(expectedRetType != TreeNode::VarType::VOID && actualRetType == TreeNode::VarType::VOID) {
+        ErrorHandler::AddExpectedRetValError(node, lookedUpFunc->tokenData->tokenStr, GetTypeStringOf(lookedUpFunc), lookedUpFunc->tokenData->lineNum);
+        return;
+    }
+
+    if(expectedRetType != actualRetType) {
+        ErrorHandler::AddRetValTypeError(node, lookedUpFunc->tokenData->tokenStr, GetTypeStringOf(lookedUpFunc), GetTypeStringOf(actualRetType), lookedUpFunc->tokenData->lineNum);
+        return;
+    }
 }
 
 static void ClearRangeTypes(TreeNode* node)
@@ -385,6 +431,31 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
         ErrorHandler::AddBothOpArrError(node, leftIsArr, rightIsArr);
 }
 
+void SemanticAnalyzer::CheckInitErrors(TreeNode* node)
+{
+    if(!(node->nodeType == TreeNode::NodeType::DECLNODE && node->subType.decl == TreeNode::DeclType::VARTYPE && node->leftChild != nullptr))
+       return;
+
+    TreeNode* init = node->leftChild;
+    TreeNode* rhs = IsOperator(init) ? init : LookupNode(init);
+    if(rhs == nullptr) return;
+
+    if(GetTypeOf(node) != GetTypeOf(rhs)) {
+        ErrorHandler::AddInitTypeError(node, GetTypeStringOf(node), GetTypeStringOf(rhs));
+        return;
+    }
+
+    if(IsArray(node) != IsArray(rhs)) {
+        ErrorHandler::AddInitArrError(node, IsArray(node) ? "is" : "is not", IsArray(rhs) ? "is" : "is not");
+        return;
+    }
+
+    if(!IsConst(rhs)) {
+        ErrorHandler::AddNonConstInitError(node);
+        return;
+    }
+}
+
 void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
 {
     node->varType = type;
@@ -525,6 +596,54 @@ void SemanticAnalyzer::CheckCallErrors(TreeNode* node)
 
     if(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE)
         ErrorHandler::AddVarCallError(node);
+
+    CheckCallParmErrors(node, result);
+}
+
+void SemanticAnalyzer::CheckCallParmErrors(TreeNode* node, TreeNode* funcNode)
+{
+    TreeNode* callParm = node->leftChild;
+    TreeNode* funcParm = funcNode->leftChild;
+
+    int callIdx = 0;
+
+    while(callParm != nullptr && funcParm != nullptr) {
+        TreeNode* curCallParm = callParm;
+        if(!IsConst(curCallParm))
+            curCallParm = LookupNode(curCallParm);
+        if(curCallParm == nullptr) {
+            ErrorHandler::AddUnDeclError(callParm);
+            return;
+        }
+
+        if(IsArray(curCallParm) && !IsArray(funcParm)) {
+            ErrorHandler::AddNotExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
+            return;
+        } else if(!IsArray(curCallParm) && IsArray(funcParm)) {
+            ErrorHandler::AddExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
+            return;
+        }
+
+        TreeNode::VarType callType = curCallParm->varType;
+        TreeNode::VarType parmType = funcParm->varType;
+
+        if(callType != parmType) {
+            ErrorHandler::AddWrongTypeInCallError(node, GetTypeStringOf(parmType), GetTypeStringOf(callType), funcNode->tokenData->tokenStr, callIdx, funcNode->tokenData->lineNum);
+            return;
+        }
+
+        callParm = callParm->sibling;
+        funcParm = funcParm->sibling;
+        callIdx++;
+    }
+
+    if(callParm == nullptr && funcParm == nullptr)
+        return;
+
+    if(callParm == nullptr)
+        ErrorHandler::AddTooFewParmsInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum);
+    else if(funcParm == nullptr)
+        ErrorHandler::AddTooManyParmsInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum);
 }
 
 // ==========================
@@ -848,8 +967,11 @@ bool SemanticAnalyzer::IsConst(TreeNode* node)
     if(node == nullptr)
         return false;
 
+    return node->isConst;
+
+    /*
     if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE)
         return true;
 
-    return false;
+    return false;*/
 }

@@ -25,6 +25,7 @@ class SemanticAnalyzer
     public: // Operator Checks
         void CheckLBracketErrors(TreeNode* node);
         void CheckAssignErrors(TreeNode* node);
+        void CheckInitErrors(TreeNode* node);
         void CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type);
         void CheckUnaryOpErrors(TreeNode* node);
         void CheckMinusErrors(TreeNode* node);
@@ -37,6 +38,7 @@ class SemanticAnalyzer
     public: // Symbol Checks
         void CheckUninitIDErrors(TreeNode* node);
         void CheckCallErrors(TreeNode* node);
+        void CheckCallParmErrors(TreeNode* node, TreeNode* funcNode);
 
     public: // ST Node Management
         void InsertNodeIfReqd(TreeNode* node, bool force = false);

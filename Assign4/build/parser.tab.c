@@ -2481,31 +2481,31 @@ yyreduce:
 
   case 110: /* constant: NUMCONST  */
 #line 291 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, (yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
 #line 2486 "build/parser.tab.c"
     break;
 
   case 111: /* constant: CHARCONST  */
 #line 292 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData));(yyval.node)->isConst = true; }
 #line 2492 "build/parser.tab.c"
     break;
 
   case 112: /* constant: STRINGCONST  */
 #line 293 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData)); (yyval.node)->isArray = true; }
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData)); (yyval.node)->isArray = true; (yyval.node)->isConst = true; }
 #line 2498 "build/parser.tab.c"
     break;
 
   case 113: /* constant: TRUE  */
 #line 294 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
 #line 2504 "build/parser.tab.c"
     break;
 
   case 114: /* constant: FALSE  */
 #line 295 "Parser/parser.y"
-                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData));}
+                    {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
 #line 2510 "build/parser.tab.c"
     break;
 

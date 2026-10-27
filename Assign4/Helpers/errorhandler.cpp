@@ -16,6 +16,9 @@ void ErrorHandler::AddWarning(std::string content, int lineNum)
 
 void ErrorHandler::InstAddErrorOrWarning(Error::ErrorType errorType, std::string content, int lineNum)
 {
+    if(lineNum == -1)
+        return;
+    
     Error* newError = new Error(errorType, content, lineNum);
     newError->Print();
 
@@ -224,7 +227,7 @@ void ErrorHandler::AddUnexpectedRetValError(TreeNode* node, std::string funcName
 void ErrorHandler::AddExpectedRetValError(TreeNode* node, std::string funcName, std::string expectedType, int funcLineNum)
 {
     std::stringstream ss;
-    ss << "Function '" << funcName << "' at line " << funcLineNum << "is expecting to return " << expectedType << "but return has no value.";
+    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return " << expectedType << " but return has no value.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 

@@ -68,6 +68,7 @@ class TreeNode
         bool isStatic = false;
         bool isUnary = false;
         bool isUsed = false;
+        bool isConst = false;
 
         union {
             DeclType decl;
@@ -85,6 +86,7 @@ class TreeNode
         TreeNode* declaredAt = nullptr;
         TreeNode* initializedAt = nullptr;
         TreeNode* inspectedAt = nullptr;
+        TreeNode* returnAt = nullptr;
 
     public:
         TreeNode(TreeNode* leftChild, TreeNode* middleChild, TreeNode* rightChild, TokenClass* tokenData);
@@ -133,6 +135,7 @@ class TreeNode
         static TreeNode* NodeList(TreeNode* rootNode, TreeNode* newSibling);
         static TreeNode* PullUpTypeNode(TreeNode* rootNode, VarType typeDef);
         static void SetNodeListTypes(VarType typeDef, TreeNode* node);
+        void UpdateIsConst();
 };
 
 #endif

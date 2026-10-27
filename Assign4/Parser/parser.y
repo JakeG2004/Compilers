@@ -288,11 +288,11 @@ argList:
     ;
 
 constant:
-    NUMCONST        {$$ = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, $1);}
-    | CHARCONST     {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1);}
-    | STRINGCONST   {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1); $$->isArray = true; }
-    | TRUE          {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
-    | FALSE         {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1);}
+    NUMCONST        {$$ = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, $1); $$->isConst = true; }
+    | CHARCONST     {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1);$$->isConst = true; }
+    | STRINGCONST   {$$ = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, $1); $$->isArray = true; $$->isConst = true; }
+    | TRUE          {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1); $$->isConst = true; }
+    | FALSE         {$$ = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, $1); $$->isConst = true; }
     ;
 
 %%

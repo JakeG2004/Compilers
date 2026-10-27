@@ -454,13 +454,22 @@ TreeNode* TreeNode::CreateBreakStmt(TreeNode* breakVal, TokenClass* breakToken)
 
 TreeNode* TreeNode::CreateOpExp(TreeNode* lhs, TreeNode* rhs, TokenClass* opToken)
 {
-    return new TreeNode(
+    TreeNode* newNode = new TreeNode(
         ExpType::OPTYPE,
         opToken,
         lhs,
         rhs,
         nullptr
     );
+
+    if(lhs != nullptr && rhs != nullptr)
+        newNode->isConst = (lhs->isConst && rhs->isConst);
+    else if (lhs != nullptr)
+        newNode->isConst = lhs->isConst;
+    else if (rhs != nullptr)
+        newNode->isConst = rhs->isConst;
+
+    return newNode;
 }
 
 TreeNode* TreeNode::CreateUnaryOpExp(TokenClass* unaryOpToken)
@@ -554,6 +563,7 @@ TreeNode* TreeNode::PullUpNode(TreeNode* rootNode, TreeNode* leftChild, TreeNode
     rootNode->SetChild(0, leftChild);
     rootNode->SetChild(1, middleChild);
     rootNode->SetChild(2, rightChild);
+    rootNode->UpdateIsConst();
 
     return rootNode;
 }
@@ -594,4 +604,24 @@ void TreeNode::SetNodeListTypes(VarType typeDef, TreeNode* node)
         p->varType = typeDef;
         p = p->sibling;
     }
+}
+
+void TreeNode::UpdateIsConst()
+{
+    if(nodeType != NodeType::EXPNODE || subType.exp != ExpType::OPTYPE)
+        return;
+
+    if(tokenData->tokenClass == QUESTION) {   // ?x is random, so never constant
+        isConst = false;
+        return;
+    }
+
+    TreeNode* kids[3] = {leftChild, middleChild, rightChild};
+    bool any = false, all = true;
+    for(TreeNode* k : kids) {
+        if(k == nullptr) continue;
+        any = true;
+        all = all && k->isConst;
+    }
+    isConst = any && all;
 }

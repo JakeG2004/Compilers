@@ -1,0 +1,36 @@
+int retInt()
+{
+    return 1;
+}
+
+int typeError()
+{
+    return 'a';
+}
+
+retVoidGood()
+{
+    return;
+}
+
+unexpectedRet()
+{
+    return 1;
+}
+
+int expectedRet()
+{
+    return;
+}
+
+noReturnGood()
+{
+
+}
+
+int noReturnBad()
+{
+    
+}
+
+main();
