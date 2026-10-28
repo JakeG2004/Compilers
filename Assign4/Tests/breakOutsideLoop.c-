@@ -1,7 +1,0 @@
-main() {
-    for x = values to 10 do {
-        break;
-    }
-
-    break;
-}

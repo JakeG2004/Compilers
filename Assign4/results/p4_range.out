@@ -1,0 +1,12 @@
+====================================
+FILE: p4_range.c-
+ERROR(12): Expecting int in position 1 in range of for statement but got char.
+ERROR(13): Expecting int in position 2 in range of for statement but got bool.
+ERROR(14): Expecting int in position 3 in range of for statement but got char.
+ERROR(15): Cannot use array in position 1 in range of for statement.
+ERROR(16): Cannot use array in position 2 in range of for statement.
+ERROR(17): Cannot use array in position 3 in range of for statement.
+ERROR(18): Expecting int in position 2 in range of for statement but got char.
+ERROR(19): Expecting int in position 1 in range of for statement but got bool.
+Number of warnings: 0
+Number of errors: 8

@@ -2795,8 +2795,8 @@ bool OpenFile(int argc, char* argv[])
         return false;
     }
 
-    //printf("====================================\n");
-    //printf("FILE: %s\n", filePath);
+    printf("====================================\n");
+    printf("FILE: %s\n", filePath);
 
     return true;
 }

@@ -1,0 +1,9 @@
+====================================
+FILE: p4_calltypes.c-
+ERROR(22): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(23): '+' requires operands of type int but rhs is of type bool.
+ERROR(25): Expecting Boolean test condition in if statement but got int.
+ERROR(26): Expecting int in position 1 in range of for statement but got char.
+ERROR(27): Expecting int in parameter 1 of call to 'output' declared on line -1 but got char.
+Number of warnings: 0
+Number of errors: 5

@@ -1,0 +1,19 @@
+// C-F26 a4: I/O library prototypes
+main()
+{
+    int n : input();
+    bool b : inputb();
+    char c : inputc();
+
+    output(n);
+    outputb(b);
+    outputc(c);
+    outnl();
+    output(b);                  // ERR param 1 wants int
+    outputb(n);                 // ERR param 1 wants bool
+    outputc(n);                 // ERR param 1 wants char
+    output();                   // ERR too few
+    outnl(1);                   // ERR too many
+    input(n);                   // ERR too many
+    n = outnl();                // ERR lhs int rhs void
+}

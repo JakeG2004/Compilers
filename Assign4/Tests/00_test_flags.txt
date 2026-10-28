@@ -1,0 +1,2 @@
+# Per-test flags for 'make test'. Format: <testname> <flags...>
+# (none of the p4_ tests need flags)

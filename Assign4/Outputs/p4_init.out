@@ -1,0 +1,18 @@
+====================================
+FILE: p4_init.c-
+ERROR(6): Initializer for variable 'gBad' is not a constant expression.
+ERROR(7): Initializer for variable 'gBadExpr' is not a constant expression.
+ERROR(11): Initializer for variable 'gIdx' is not a constant expression.
+ERROR(15): Initializer for variable 'a' of int is of char.
+ERROR(16): Initializer for variable 'b' of bool is of int.
+ERROR(17): Initializer for variable 'c' of char is of bool.
+ERROR(18): Initializer for variable 'd' of int is of bool.
+ERROR(19): Initializer for variable 'e' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(20): Initializer for variable 'f' requires both operands be arrays or not but variable is not an array and rhs is an array.
+ERROR(21): Initializer for variable 'h' is not a constant expression.
+ERROR(22): Initializer for variable 'i' of char is of int.
+ERROR(23): Symbol 'nope' is not declared.
+ERROR(24): Initializer for variable 'k' is not a constant expression.
+ERROR(26): Initializer for variable 'm' is not a constant expression.
+Number of warnings: 0
+Number of errors: 14

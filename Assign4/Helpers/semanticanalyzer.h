@@ -5,6 +5,8 @@
 #include "symboltable.h"
 #include "parser.tab.h"
 
+#include <stack>
+
 class SemanticAnalyzer
 {
     public:
@@ -69,8 +71,8 @@ class SemanticAnalyzer
         static SemanticAnalyzer* instance;
         SymbolTable* symbolTable = nullptr;
 
-        TreeNode* currentLoop = nullptr;
         TreeNode* currentFunc = nullptr;
+        std::stack<TreeNode*> loopStack;
 };
 
 #endif

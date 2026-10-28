@@ -18,7 +18,7 @@ void ErrorHandler::InstAddErrorOrWarning(Error::ErrorType errorType, std::string
 {
     if(lineNum == -1)
         return;
-    
+
     Error* newError = new Error(errorType, content, lineNum);
     newError->Print();
 
@@ -171,35 +171,35 @@ void ErrorHandler::AddNonBoolTestConditionError(TreeNode* node, std::string stmt
 void ErrorHandler::AddArrInRangeError(TreeNode* node, int pos)
 {
     std::stringstream ss;
-    ss << "Cannot use array in position " << pos << " in range of for statement.";
+    ss << "Cannot use array in position " << pos + 1 << " in range of for statement.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddWrongTypeInRangeError(TreeNode* node, std::string expectedType, std::string actualType, int pos)
 {
     std::stringstream ss;
-    ss << "Expecting " << expectedType << " in position " << pos << " in range of for statement but got " << actualType << ".";
+    ss << "Expecting " << expectedType << " in position " << pos + 1 << " in range of for statement but got " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddWrongTypeInCallError(TreeNode* node, std::string expectedType, std::string actualType, std::string functionName, int pos, int funcLineNum)
 {
     std::stringstream ss;
-    ss << "Expecting " << expectedType << " in parameter " << pos << " of call to '" << functionName << "' declared on line " << funcLineNum << " but got " << actualType << ".";
+    ss << "Expecting " << expectedType << " in parameter " << pos + 1 << " of call to '" << functionName << "' declared on line " << funcLineNum << " but got " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddExpectArrInCallError(TreeNode* node, std::string functionName, int functionLineNum, int parmNum)
 {
     std::stringstream ss;
-    ss << "Expecting array in parameter " << parmNum << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
+    ss << "Expecting array in parameter " << parmNum + 1 << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddNotExpectArrInCallError(TreeNode* node, std::string functionName, int functionLineNum, int parmNum)
 {
     std::stringstream ss;
-    ss << "Not expecting array in parameter " << parmNum << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
+    ss << "Not expecting array in parameter " << parmNum + 1 << " of call to '" << functionName << "' declared on line " << functionLineNum << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -255,7 +255,7 @@ void ErrorHandler::AddInitTypeError(TreeNode* node, std::string expectedType, st
 void ErrorHandler::AddInitArrError(TreeNode* node, std::string lhsIsArr, std::string rhsIsArr)
 {
     std::stringstream ss;
-    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' requires both operands be arrays or not but variable is " << lhsIsArr << " an array and rhs is " << rhsIsArr << " and array.";
+    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' requires both operands be arrays or not but variable is" << lhsIsArr << "an array and rhs is" << rhsIsArr << "an array.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -265,9 +265,6 @@ void ErrorHandler::AddInitArrError(TreeNode* node, std::string lhsIsArr, std::st
 
 void ErrorHandler::AddUnusedVarWarn(TreeNode* node, bool isGlobal)
 {
-    if(node->tokenData->lineNum == -1)
-        return;
-
     std::stringstream ss;
     ss << "The " << GetScopeType(node, isGlobal) << " '" << node->tokenData->tokenStr << "' seems not to be used.";
     AddWarning(ss.str(), node->tokenData->lineNum);

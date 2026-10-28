@@ -1,0 +1,10 @@
+====================================
+FILE: p4_return.c-
+ERROR(4): Function 'noRet' at line 2 is expecting no return value but return has a value.
+ERROR(9): Function 'needVal' at line 7 is expecting to return type int but return has no value.
+ERROR(14): Function 'wrongType' at line 12 is expecting to return type int but returns type char.
+ERROR(19): Function 'wrongBool' at line 17 is expecting to return type bool but returns type int.
+WARNING(27): Expecting to return type int but function 'noReturnStmt' has no return statement.
+ERROR(42): Symbol 'nope' is not declared.
+Number of warnings: 1
+Number of errors: 5

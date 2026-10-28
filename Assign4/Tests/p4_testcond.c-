@@ -1,0 +1,21 @@
+// C-F26 a4: if/while test conditions
+int garr[5];
+
+main()
+{
+    int n : 1;
+    bool b : true;
+    char c : 'x';
+
+    if n then b = false;            // ERR int
+    if b then n = 2;
+    if garr then n = 3;             // ERR array
+    if c then n = 4; else n = 5;    // ERR char
+    while n do n = 0;               // ERR int
+    while garr do n = 0;            // ERR array
+    while n < 3 do n++;
+    while b and n > 0 do b = false;
+    if nope then n = 6;             // ERR undeclared only
+    if n + 1 then n = 7;            // ERR int
+    if not n then n = 8;            // ERR unary not only (result is bool)
+}

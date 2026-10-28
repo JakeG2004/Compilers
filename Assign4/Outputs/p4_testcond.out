@@ -1,0 +1,12 @@
+====================================
+FILE: p4_testcond.c-
+ERROR(10): Expecting Boolean test condition in if statement but got type int.
+ERROR(12): Cannot use array as test condition in if statement.
+ERROR(13): Expecting Boolean test condition in if statement but got type char.
+ERROR(14): Expecting Boolean test condition in while statement but got type int.
+ERROR(15): Cannot use array as test condition in while statement.
+ERROR(18): Symbol 'nope' is not declared.
+ERROR(19): Expecting Boolean test condition in if statement but got type int.
+ERROR(20): Unary 'not' requires an operand of type bool but was given type int.
+Number of warnings: 0
+Number of errors: 8

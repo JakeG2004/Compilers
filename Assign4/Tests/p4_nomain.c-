@@ -1,0 +1,9 @@
+// C-F26 a4: unused function and a main that takes parameters
+unused()
+{
+}
+
+main(int argc)
+{
+    argc;
+}

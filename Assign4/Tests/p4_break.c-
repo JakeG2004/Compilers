@@ -1,0 +1,14 @@
+// C-F26 a4: break outside of a loop
+main()
+{
+    break;                      // ERR
+    while true do break;
+    for i = 1 to 3 do { i; break; }
+    if true then break;         // ERR
+    while true do {
+        if true then break;
+        while false do break;
+        break;                  // ok: still inside the outer while
+    }
+    break;                      // ERR
+}

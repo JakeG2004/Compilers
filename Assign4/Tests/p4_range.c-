@@ -1,0 +1,21 @@
+// C-F26 a4: for-range checks
+int garr[5];
+
+main()
+{
+    int n : 3;
+    char c : 'a';
+    bool b : true;
+
+    for i = 1 to 10 do i;
+    for i = 1 to n by 2 do i;
+    for i = c to 10 do i;           // ERR pos 1 char
+    for i = 1 to b do i;            // ERR pos 2 bool
+    for i = 1 to 10 by c do i;      // ERR pos 3 char
+    for i = garr to 10 do i;        // ERR pos 1 array
+    for i = 1 to garr by 2 do i;    // ERR pos 2 array
+    for i = 1 to 10 by garr do i;   // ERR pos 3 array
+    for i = 1 to 'z' do i;          // ERR pos 2 char
+    for i = true to 10 do i;        // ERR pos 1 bool
+    n; c; b;
+}

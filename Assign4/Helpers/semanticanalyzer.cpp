@@ -37,7 +37,7 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     if(IsFunction(node))
         currentFunc = node;
     if(IsLoop(node))
-        currentLoop = node;
+        loopStack.push(node);
 
     CheckForSymbolErrors(node);
     CheckForBreakErrors(node);
@@ -70,8 +70,8 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     if(IsFunction(node))
         currentFunc = nullptr;
 
-    if(IsLoop(node))
-        currentLoop = nullptr;
+    if(IsLoop(node) && !loopStack.empty())
+        loopStack.pop();
 
     Analyze(node->sibling);
 }
@@ -103,19 +103,19 @@ void SemanticAnalyzer::AddIOFunctions()
     TokenClass* outputToken = new TokenClass(ID, -1, const_cast<char*>("output"), '\0', 0);
     TokenClass* outputParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
     TreeNode* outputParmNode = TreeNode::CreateParmDecl(outputParms);
-    outputParmNode->varType == TreeNode::VarType::INTEGER;
+    outputParmNode->varType = TreeNode::VarType::INTEGER;
     TreeNode* outputNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputParmNode, nullptr, outputToken);
 
     TokenClass* outputbToken = new TokenClass(ID, -1, const_cast<char*>("outputb"), '\0', 0);
     TokenClass* outputbParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
     TreeNode* outputbParmNode = TreeNode::CreateParmDecl(outputbParms);
-    outputbParmNode->varType == TreeNode::VarType::BOOLEAN;
+    outputbParmNode->varType = TreeNode::VarType::BOOLEAN;
     TreeNode* outputbNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputbParmNode, nullptr, outputbToken);
 
     TokenClass* outputcToken = new TokenClass(ID, -1, const_cast<char*>("outputc"), '\0', 0);
     TokenClass* outputcParms = new TokenClass(ID, -1, const_cast<char*>("*dummy*"), '\0', 0);
     TreeNode* outputcParmNode = TreeNode::CreateParmDecl(outputcParms);
-    outputcParmNode->varType == TreeNode::VarType::CHARACTER;
+    outputcParmNode->varType = TreeNode::VarType::CHARACTER;
     TreeNode* outputcNode = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, outputcParmNode, nullptr, outputcToken);
 
     inputNode->SetSibling(inputbNode);
@@ -222,7 +222,7 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
     if(currentFunc == nullptr)
         return;
 
-    TreeNode* lookedUpFunc = LookupNode(currentFunc);
+    TreeNode* lookedUpFunc = ResolveOperand(currentFunc);
 
     lookedUpFunc->returnAt = node;
 
@@ -231,7 +231,6 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
     if(node->leftChild != nullptr && !IsConst(node->leftChild)) {
         TreeNode* lookedUp = LookupNode(node->leftChild);
         if(lookedUp == nullptr) {
-            ErrorHandler::AddUnDeclError(node->leftChild);
             return;
         } else {
             actualRetType = lookedUp->varType;
@@ -284,6 +283,11 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
     // type check
     for(int i = 0; i < 3; i++) {
         TreeNode* curChild = children[i];
+        if(i == 2 && curChild == nullptr)
+            break;
+        TreeNode* lookedUp = ResolveOperand(children[i]);
+        if(lookedUp != nullptr)
+            curChild = lookedUp;
         if(GetTypeOf(curChild) != TreeNode::VarType::INTEGER) {
             ErrorHandler::AddWrongTypeInRangeError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(curChild), i);
             break;
@@ -293,6 +297,11 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
     // arr check
     for(int i = 0; i < 3; i++) {
         TreeNode* curChild = children[i];
+        if(i == 2 && curChild == nullptr)
+            break;
+        TreeNode* lookedUp = LookupNode(children[i]);
+        if(lookedUp != nullptr)
+            curChild = lookedUp;
         if(IsArray(curChild)) {
             ErrorHandler::AddArrInRangeError(node, i);
             break;
@@ -305,7 +314,7 @@ void SemanticAnalyzer::CheckForBreakErrors(TreeNode* node)
     if(!(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::BREAKTYPE))
         return;
 
-    if(currentLoop == nullptr)
+    if(loopStack.empty())
         ErrorHandler::AddBreakOutsideLoopError(node);
 }
 
@@ -316,13 +325,18 @@ void SemanticAnalyzer::CheckTestConditionErrors(TreeNode* node)
 
     std::string stmtType = (node->subType.stmt == TreeNode::StmtType::IFTYPE ? "if" : "while");
 
-    if(IsArray(node->leftChild)) {
+    TreeNode* lhs = ResolveOperand(node->leftChild);
+    if(lhs == nullptr)
+        return;
+
+    if(IsArray(lhs)) {
         ErrorHandler::AddArrAsTestConditionError(node, stmtType);
         return;
     }
 
-    if(GetTypeOf(node->leftChild) != TreeNode::VarType::BOOLEAN) {
-        ErrorHandler::AddNonBoolTestConditionError(node, stmtType, GetTypeStringOf(node->leftChild));
+    if(GetTypeOf(lhs) != TreeNode::VarType::BOOLEAN) {
+        ErrorHandler::AddNonBoolTestConditionError(node, stmtType, GetTypeStringOf(lhs));
+        return;
     }
 }
 
@@ -446,7 +460,7 @@ void SemanticAnalyzer::CheckInitErrors(TreeNode* node)
     }
 
     if(IsArray(node) != IsArray(rhs)) {
-        ErrorHandler::AddInitArrError(node, IsArray(node) ? "is" : "is not", IsArray(rhs) ? "is" : "is not");
+        ErrorHandler::AddInitArrError(node, IsArray(node) ? " " : " not ", IsArray(rhs) ? " " : " not ");
         return;
     }
 
@@ -584,18 +598,19 @@ void SemanticAnalyzer::CheckUninitIDErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckCallErrors(TreeNode* node)
 {
-    TreeNode* result = LookupNode(node, false);
-
     for(TreeNode* arg = node->leftChild; arg != nullptr; arg = arg->sibling) {
         if(arg->nodeType == TreeNode::NodeType::EXPNODE && arg->subType.exp == TreeNode::ExpType::IDTYPE && IsFunction(LookupNode(arg, false)))
             ErrorHandler::AddFunVarError(arg);
     }
 
+    TreeNode* result = LookupNode(node, false);
     if(!result)
         return;
 
-    if(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE)
+    if(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE) {
         ErrorHandler::AddVarCallError(node);
+        return;
+    }
 
     CheckCallParmErrors(node, result);
 }
@@ -610,9 +625,8 @@ void SemanticAnalyzer::CheckCallParmErrors(TreeNode* node, TreeNode* funcNode)
     while(callParm != nullptr && funcParm != nullptr) {
         TreeNode* curCallParm = callParm;
         if(!IsConst(curCallParm))
-            curCallParm = LookupNode(curCallParm);
+            curCallParm = ResolveOperand(curCallParm);
         if(curCallParm == nullptr) {
-            ErrorHandler::AddUnDeclError(callParm);
             return;
         }
 

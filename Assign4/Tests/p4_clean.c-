@@ -1,0 +1,36 @@
+// C-F26 a4: no diagnostics expected
+int gcd(int u, v)
+{
+    if v == 0 then return u;
+    else return gcd(v, u - u / v * v);
+}
+
+int sum(int a[]; int n)
+{
+    int total : 0;
+
+    for i = 0 to n do total += a[i];
+    return total;
+}
+
+int data[5];
+
+main()
+{
+    int k : 3;
+    bool ok : true;
+
+    for j = 0 to 5 do data[j] = j * k;
+    while ok do {
+        k--;
+        if k < 0 then ok = false;
+    }
+    output(gcd(12, 18));
+    outnl();
+    output(sum(data, 5));
+    outnl();
+    outputb(ok);
+    outputc('x');
+    k = input();
+    return;
+}
