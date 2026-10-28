@@ -370,7 +370,7 @@ int main(int argc, char* argv[])
     SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
     analyzer->StartAnalysis(ASTRoot);
 
-    if((printFlag || typePrintFlag) && ASTRoot && ErrorHandler::GetNumErrors == 0)
+    if((printFlag || typePrintFlag) && ASTRoot/* && ErrorHandler::GetNumErrors == 0*/)
         ASTRoot->Print(0, -1, 0, typePrintFlag);
 
     std::cout << "Number of warnings: " << ErrorHandler::GetNumWarnings() << std::endl;

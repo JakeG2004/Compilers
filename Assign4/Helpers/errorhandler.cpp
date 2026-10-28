@@ -290,7 +290,7 @@ void ErrorHandler::AddMissingRetWarn(TreeNode* node, std::string funcName, std::
 
 void ErrorHandler::AddNoMainError()
 {
-    AddError("A function named 'main()' must be defined.", -1);
+    AddError("A function named 'main()' must be defined.", 0);
 }
 
 std::string ErrorHandler::GetUnaryVersionOfOperator(TreeNode* node)

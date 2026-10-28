@@ -11,7 +11,7 @@ Error::Error(ErrorType errorType, std::string content, int lineNum)
 void Error::Print()
 {
     std::string lineStr = std::to_string(lineNum);
-    if(lineNum == -1) {
+    if(lineNum == 0) {
         lineStr = std::string("LINKER");
     }
 

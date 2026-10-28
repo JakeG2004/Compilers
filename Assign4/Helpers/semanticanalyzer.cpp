@@ -970,9 +970,20 @@ bool SemanticAnalyzer::ExitScopeIfReqd(TreeNode* node, bool openedScope)
 void SemanticAnalyzer::CheckForMain()
 {
     TreeNode* mainNode = LookupNode("main");
-    // main() must be a function that takes no parameters
-    if(mainNode == nullptr || !IsFunction(mainNode) || mainNode->leftChild != nullptr) {
+    
+    if(mainNode == nullptr) {
         ErrorHandler::AddNoMainError();
+        return;
+    }
+
+    if(!IsFunction(mainNode)) {
+        ErrorHandler::AddNoMainError();
+        return;
+    }
+
+    if(mainNode->leftChild != nullptr) {
+        ErrorHandler::AddNoMainError();
+        return;
     }
 }
 
