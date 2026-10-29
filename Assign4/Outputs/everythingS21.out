@@ -15,8 +15,8 @@ WARNING(85): Variable 'gromit' may be uninitialized when used here.
 WARNING(90): The parameter 'y' seems not to be used.
 WARNING(97): The local variable 'pastry' seems not to be used.
 WARNING(124): Variable 'yarn' may be uninitialized when used here.
-WARNING(126): Variable 'preston' may be uninitialized when used here.
 WARNING(126): Variable 'shaun' may be uninitialized when used here.
+WARNING(126): Variable 'preston' may be uninitialized when used here.
 WARNING(115): The local variable 'wool' seems not to be used.
 WARNING(92): The function 'LadyCampanula' seems not to be used.
 WARNING(103): The function 'TheWereRabbit' seems not to be used.
@@ -528,7 +528,7 @@ Sibling: 17  Var: ant is array of type char [line: 133]
 Sibling: 18  Var: bat of type char [line: 134]
 .   Child: 0  Const ''' of type char [line: 134]
 Sibling: 19  Var: cat of type char [line: 135]
-.   Child: 0  Const '	' of type char [line: 135]
+.   Child: 0  Const 't' of type char [line: 135]
 Sibling: 20  Var: dog of type char [line: 136]
 .   Child: 0  Const '
 ' of type char [line: 136]

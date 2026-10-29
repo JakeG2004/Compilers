@@ -45,12 +45,15 @@ ERROR(42): '*' requires operands of type int but rhs is of type char.
 ERROR(44): Symbol 'parrot' is not declared.
 ERROR(44): Symbol 'emu' is not declared.
 ERROR(44): Symbol 'x' is not declared.
+ERROR(44): '+' requires operands of type int but rhs is of type bool.
 ERROR(44): Symbol 'x' is not declared.
 ERROR(45): Symbol 'emu' is not declared.
 ERROR(45): Symbol 'parrot' is not declared.
 ERROR(45): Symbol 'emu' is not declared.
 ERROR(45): Symbol 'x' is not declared.
+ERROR(45): '+' requires operands of type int but rhs is of type bool.
 ERROR(45): Symbol 'x' is not declared.
 ERROR(45): Symbol 'x' is not declared.
+ERROR(45): '*' requires operands of type int but rhs is of type bool.
 Number of warnings: 15
-Number of errors: 37
+Number of errors: 40

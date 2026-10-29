@@ -13,11 +13,11 @@ ERROR(11): Function 'tracy' at line 10 is expecting to return type char but retu
 WARNING(10): The parameter 'hawaii' seems not to be used.
 WARNING(13): Expecting to return type int but function 'stairways' has no return statement.
 ERROR(18): Initializer for variable 'a' of type int is of type char
-ERROR(20): Symbol 'b' is already declared at line 19.
 ERROR(20): Initializer for variable 'b' is not a constant expression.
+ERROR(20): Symbol 'b' is already declared at line 19.
 ERROR(21): Initializer for variable 'ja' requires both operands be arrays or not but variable is an array and rhs is not an array.
-ERROR(22): Symbol 'ja' is already declared at line 21.
 ERROR(22): Initializer for variable 'ja' is not a constant expression.
+ERROR(22): Symbol 'ja' is already declared at line 21.
 WARNING(26): Variable 'ia' may be uninitialized when used here.
 ERROR(26): Cannot use array as test condition in if statement.
 ERROR(26): Expecting Boolean test condition in if statement but got type int.

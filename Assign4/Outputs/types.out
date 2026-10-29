@@ -61,13 +61,13 @@ ERROR(79): '>' requires operands of the same type but lhs is type bool and rhs i
 ERROR(79): '>' requires operands of the same type but lhs is type int and rhs is type bool.
 ERROR(82): Expecting Boolean test condition in if statement but got type int.
 ERROR(85): Cannot use array as test condition in if statement.
-ERROR(88): Expecting Boolean test condition in if statement but got type int.
 ERROR(88): Cannot use array as test condition in if statement.
+ERROR(88): Expecting Boolean test condition in if statement but got type int.
 ERROR(94): Expecting Boolean test condition in if statement but got type int.
 ERROR(97): Expecting Boolean test condition in while statement but got type int.
 ERROR(98): Cannot use array as test condition in while statement.
-ERROR(99): Expecting Boolean test condition in while statement but got type int.
 ERROR(99): Cannot use array as test condition in while statement.
+ERROR(99): Expecting Boolean test condition in while statement but got type int.
 ERROR(101): Expecting Boolean test condition in while statement but got type int.
 ERROR(103): 'b' is a simple variable and cannot be called.
 ERROR(104): Cannot index nonarray 'b'.
@@ -85,8 +85,8 @@ ERROR(111): The operation '+' does not work with arrays.
 ERROR(112): Symbol 'a' is not declared.
 ERROR(113): The operation 'sizeof' only works with arrays.
 ERROR(114): Unary 'chsign' requires an operand of type int but was given type bool.
-ERROR(116): Function 'main' at line 2 is expecting to return type int but returns type bool.
 ERROR(116): Cannot return an array.
+ERROR(116): Function 'main' at line 2 is expecting to return type int but returns type bool.
 WARNING(8): The local variable 'c' seems not to be used.
 WARNING(10): The local variable 'pumpkin' seems not to be used.
 Number of warnings: 6

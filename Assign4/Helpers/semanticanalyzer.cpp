@@ -228,7 +228,7 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
     if(currentFunc == nullptr)
         return;
 
-    TreeNode* lookedUpFunc = LookupNode(currentFunc);
+    TreeNode* lookedUpFunc = currentFunc;
 
     lookedUpFunc->returnAt = node;
 
@@ -255,8 +255,9 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
         return;
     }
 
-    if(expectedRetType != actualRetType) {
-        ErrorHandler::AddRetValTypeError(node, lookedUpFunc->tokenData->tokenStr, GetTypeStringOf(lookedUpFunc), GetTypeStringOf(actualRetType), lookedUpFunc->tokenData->lineNum);
+    if(expectedRetType != actualRetType && expectedRetType != TreeNode::VarType::VOID) {
+        std::string actualTypeStr = GetTypeStringOf(actualRetType);
+        ErrorHandler::AddRetValTypeError(node, lookedUpFunc->tokenData->tokenStr, GetTypeStringOf(lookedUpFunc), actualTypeStr, lookedUpFunc->tokenData->lineNum);
         return;
     }
 }
@@ -387,7 +388,6 @@ void SemanticAnalyzer::CheckUsageOnScopeExit(std::string sym, void* node)
 
 void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 {
-    // inspectedAt == node means this '[' was already checked (CheckLHSRHSErrors sets it to the parent, so no clash)
     if(node->inspectedAt == node)
         return;
     node->inspectedAt = node;
@@ -449,8 +449,10 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
         return;
     }
 
-    if(leftType != rightType)
+    if(leftType != rightType && (rightType != TreeNode::VarType::UNDEFINED)) {
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(leftType), GetTypeStringOf(rightType));
+        node->varType = TreeNode::VarType::UNDEFINED;
+    }
 
     if((leftIsArr && !rightIsArr) || (!leftIsArr && rightIsArr))
         ErrorHandler::AddBothOpArrError(node, leftIsArr, rightIsArr);
@@ -488,6 +490,21 @@ void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
     TreeNode* lhs = IsOperator(node->leftChild) ? node->leftChild : LookupNode(node->leftChild);
     TreeNode* rhs = IsOperator(node->middleChild) ? node->middleChild : LookupNode(node->middleChild);
 
+    TreeNode::VarType leftType = GetTypeOf(lhs);
+    TreeNode::VarType rightType = GetTypeOf(rhs);
+
+    if(leftType != type && leftType != TreeNode::VarType::UNDEFINED)
+        ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(leftType));
+
+    if(rightType != type && rightType != TreeNode::VarType::UNDEFINED)
+        ErrorHandler::AddRHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(rightType));
+
+    if(leftType == TreeNode::VarType::UNDEFINED || rightType == TreeNode::VarType::UNDEFINED) {
+        if(IsArray(lhs) || IsArray(rhs))
+            ErrorHandler::AddNonArrOpError(node);
+        return;
+    }
+
     if(rhs == nullptr || lhs == nullptr)
         return;
 
@@ -502,21 +519,6 @@ void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
 
     lhs->inspectedAt = node;
     rhs->inspectedAt = node;
-
-    TreeNode::VarType leftType = GetTypeOf(lhs);
-    TreeNode::VarType rightType = GetTypeOf(rhs);
-
-    if(leftType == TreeNode::VarType::UNDEFINED || rightType == TreeNode::VarType::UNDEFINED) {
-        if(IsArray(lhs) || IsArray(rhs))
-            ErrorHandler::AddNonArrOpError(node);
-        return;
-    }
-
-    if(leftType != type)
-        ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(leftType));
-
-    if(rightType != type)
-        ErrorHandler::AddRHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(rightType));
 
     if(IsArray(lhs) || IsArray(rhs))
         ErrorHandler::AddNonArrOpError(node);
@@ -917,8 +919,10 @@ TreeNode::VarType SemanticAnalyzer::GetTypeOf(TreeNode* node)
                 return TreeNode::VarType::BOOLEAN;
 
             case COLON:
-            case ASSIGN:
                 return GetTypeOf(LookupNode(node->middleChild, false));
+
+            case ASSIGN:
+                break;
 
             case LBRACKET:
                 return GetTypeOf(LookupNode(node->leftChild, false));
