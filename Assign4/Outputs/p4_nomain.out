@@ -1,6 +1,0 @@
-====================================
-FILE: p4_nomain.c-
-WARNING(2): The function 'unused' seems not to be used.
-ERROR(LINKER): A function named 'main()' must be defined.
-Number of warnings: 1
-Number of errors: 1

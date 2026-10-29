@@ -1,0 +1,13 @@
+====================================
+FILE: overlapStatic.c-
+WARNING(8): The local variable 'b' seems not to be used.
+WARNING(11): The local variable 'c' seems not to be used.
+WARNING(15): The local variable 'b' seems not to be used.
+WARNING(18): The local variable 'c' seems not to be used.
+WARNING(6): The local variable 'a' seems not to be used.
+WARNING(4): The parameter 'p' seems not to be used.
+WARNING(2): The global variable 'g' seems not to be used.
+WARNING(23): The global variable 'h' seems not to be used.
+ERROR(LINKER): A function named 'main()' must be defined.
+Number of warnings: 8
+Number of errors: 1

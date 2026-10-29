@@ -66,8 +66,6 @@ comment             "//"[^\n]*
 "!="                TOKEN(NEQ)
 "<<"                TOKEN(MIN)
 ">>"                TOKEN(MAX)
-":<:"               TOKEN(MIN)
-":>:"               TOKEN(MAX)
 "+"                 TOKEN(PLUS)
 "-"                 TOKEN(MINUS)
 "*"                 TOKEN(STAR)
@@ -132,3 +130,11 @@ int AddToken(int tokenClass)
     yylval.tokenData = new TokenClass(tokenClass, yylineno, yytext, c, nVal);
     return tokenClass;
 }
+
+/*
+":<:"               TOKEN(MIN)
+":>:"               TOKEN(MAX)
+
+
+
+*/

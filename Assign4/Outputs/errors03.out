@@ -1,0 +1,54 @@
+====================================
+FILE: errors03.c-
+WARNING(3): The parameter 'x' seems not to be used.
+WARNING(3): The parameter 'y' seems not to be used.
+ERROR(9): Symbol 'b' is already declared at line 5.
+ERROR(11): Symbol 'c' is already declared at line 10.
+ERROR(14): Initializer for variable 'b' of type bool is of type int
+WARNING(14): The local variable 'b' seems not to be used.
+WARNING(15): The local variable 'c' seems not to be used.
+ERROR(19): 'i' is a simple variable and cannot be called.
+ERROR(20): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(21): '+' requires operands of type int but lhs is of type char.
+ERROR(22): '+' requires operands of type int but rhs is of type char.
+WARNING(23): Variable 'c' may be uninitialized when used here.
+ERROR(24): '==' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(25): Unary '--' requires an operand of type int but was given type char.
+ERROR(26): Array 'ia' should be indexed by type int but got type char.
+ERROR(27): Array index is the unindexed array 'ia'.
+ERROR(28): Cannot index nonarray 'i'.
+ERROR(29): Cannot use function 'fred' as a variable.
+ERROR(29): Cannot index nonarray 'fred'.
+ERROR(30): Cannot use function 'fred' as a variable.
+ERROR(31): Symbol 'undcl' is not declared.
+ERROR(32): The operation '?' does not work with arrays.
+ERROR(33): The operation '+' does not work with arrays.
+ERROR(34): Unary 'chsign' requires an operand of type int but was given type char.
+ERROR(35): The operation 'sizeof' only works with arrays.
+ERROR(39): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(38): '=' requires operands of the same type but lhs is type bool and rhs is type char.
+ERROR(37): '=' requires operands of the same type but lhs is type int and rhs is type bool.
+ERROR(41): '+' requires operands of type int but rhs is of type bool.
+ERROR(42): '+' requires operands of type int but rhs is of type char.
+ERROR(43): '+' requires operands of type int but rhs is of type char.
+WARNING(46): Variable 'ca' may be uninitialized when used here.
+ERROR(48): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(52): Symbol 'undcl' is not declared.
+ERROR(52): Symbol 'undcl' is not declared.
+ERROR(53): Symbol 'jane' is not declared.
+ERROR(53): Symbol 'jane' is not declared.
+ERROR(54): Symbol 'jane' is not declared.
+ERROR(55): Symbol 'undcl' is not declared.
+ERROR(57): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(59): '=' requires operands of the same type but lhs is type int and rhs is type char.
+ERROR(60): '=' requires operands of the same type but lhs is type char and rhs is type int.
+ERROR(60): '+' requires operands of type int but rhs is of type char.
+ERROR(62): '+' requires operands of type int but rhs is of type char.
+ERROR(63): '+' requires operands of type int but lhs is of type char.
+ERROR(66): Symbol 'i' is already declared at line 65.
+WARNING(65): The local variable 'i' seems not to be used.
+ERROR(69): Cannot return an array.
+WARNING(7): The local variable 'notused' seems not to be used.
+ERROR(LINKER): A function named 'main()' must be defined.
+Number of warnings: 8
+Number of errors: 42

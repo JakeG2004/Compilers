@@ -1,0 +1,5 @@
+====================================
+FILE: cover.c-
+ERROR(16): syntax error, unexpected ':', expecting ';'
+Number of warnings: 0
+Number of errors: 1

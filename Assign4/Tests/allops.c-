@@ -1,0 +1,58 @@
+main()
+{
+    int ia:1889, ib:73, ic:971;
+    bool ba:true, bb:true, bc:false;
+    char ca:'a', cb:'b', cc:'c';
+    
+    int aa[15];
+    
+    bc = ia==ib;
+    bc = ba==bb;
+    bc = ca==cb;
+    
+    bc = ia!=ib;
+    bc = ba!=bb;
+    bc = ca!=cb;
+    
+    bc = ia<=ib;
+    bc = ba<=bb;
+    bc = ca<=cb;
+    
+    bc = ia<ib;
+    bc = ba<bb;
+    bc = ca<cb;
+    
+    bc = ia>=ib;
+    bc = ba>=bb;
+    bc = ca>=cb;
+    
+    bc = ia>ib;
+    bc = ba>bb;
+    bc = ca>cb;
+    
+    ic = ia=ib;
+    bc = ba=bb;
+    cc = ca=cb;
+    
+    ic = ia+=ib;
+    ic = ia-=ib;
+    ic = ia*=ib;
+    ic = ia/=ib;
+    ic = ia<<ib;
+    ic = ia>>ib;
+    ic = ia* ib;
+    ic = ia+ ib;
+    ic = ia- ib;
+    ic = ia/ ib;
+    ic = ia% ib;
+    
+    ic = aa[ia];
+    
+    ic = ia--;
+    ic = ia++;
+    
+    ic = *aa;
+    
+    ic = -ia;
+    ic = ?ia;
+}

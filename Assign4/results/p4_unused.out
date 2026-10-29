@@ -1,8 +1,0 @@
-====================================
-FILE: p4_unused.c-
-WARNING(9): The parameter 'b' seems not to be used.
-WARNING(16): The local variable 'lUnused' seems not to be used.
-WARNING(2): The global variable 'gUnused' seems not to be used.
-WARNING(5): The function 'unusedFunc' seems not to be used.
-Number of warnings: 4
-Number of errors: 0

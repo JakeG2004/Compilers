@@ -259,6 +259,12 @@ std::string TreeNode::GetUnaryOrRegOp()
         case AND:
             return "and";
 
+        case MIN:
+            return "<<";
+
+        case MAX:
+            return ">>";
+
         default:
             return tokenData->tokenName;
     }

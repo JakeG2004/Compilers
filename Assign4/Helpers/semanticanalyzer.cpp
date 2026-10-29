@@ -19,7 +19,11 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     if(node == nullptr)
         return;
 
-    InsertNodeIfReqd(node);
+    bool deferInsert = node->nodeType == TreeNode::NodeType::DECLNODE
+                    && node->subType.decl == TreeNode::DeclType::VARTYPE
+                    && node->leftChild != nullptr;
+    if(!deferInsert)
+        InsertNodeIfReqd(node);
 
     // initialized declarations and parameters never trigger uninitialized warnings
     if(node->nodeType == TreeNode::NodeType::DECLNODE &&
@@ -62,6 +66,8 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     // operator checks run after the operands so errors come out operands first
     CheckForOperatorErrors(node);
     CheckInitErrors(node);
+    if(deferInsert)
+        InsertNodeIfReqd(node);
     CheckForReturnErrors(node);
     CheckForRangeErrors(node);
 
@@ -222,14 +228,14 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
     if(currentFunc == nullptr)
         return;
 
-    TreeNode* lookedUpFunc = ResolveOperand(currentFunc);
+    TreeNode* lookedUpFunc = LookupNode(currentFunc);
 
     lookedUpFunc->returnAt = node;
 
     TreeNode::VarType expectedRetType = lookedUpFunc->varType;
     TreeNode::VarType actualRetType = TreeNode::VarType::VOID;
     if(node->leftChild != nullptr && !IsConst(node->leftChild)) {
-        TreeNode* lookedUp = LookupNode(node->leftChild);
+        TreeNode* lookedUp = ResolveOperand(node->leftChild);
         if(lookedUp == nullptr) {
             return;
         } else {
@@ -261,7 +267,7 @@ static void ClearRangeTypes(TreeNode* node)
         return;
 
     if(!(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE))
-        node->varType = TreeNode::VarType::UNDEFINED;
+        node->varType = TreeNode::VarType::INTEGER;
 
     ClearRangeTypes(node->leftChild);
     ClearRangeTypes(node->middleChild);
@@ -285,12 +291,17 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
         TreeNode* curChild = children[i];
         if(i == 2 && curChild == nullptr)
             break;
+        MarkRangeIdUses(children[i]);
         TreeNode* lookedUp = ResolveOperand(children[i]);
+        if(IsFuncUse(children[i], lookedUp)) {
+            ErrorHandler::AddFunVarError(children[i]);
+            continue;
+        }
+
         if(lookedUp != nullptr)
             curChild = lookedUp;
         if(GetTypeOf(curChild) != TreeNode::VarType::INTEGER) {
             ErrorHandler::AddWrongTypeInRangeError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(curChild), i);
-            break;
         }
     }
 
@@ -299,12 +310,13 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
         TreeNode* curChild = children[i];
         if(i == 2 && curChild == nullptr)
             break;
-        TreeNode* lookedUp = LookupNode(children[i]);
+        TreeNode* lookedUp = ResolveOperand(children[i]);
+        if(IsFuncUse(children[i], lookedUp))
+            continue;
         if(lookedUp != nullptr)
             curChild = lookedUp;
         if(IsArray(curChild)) {
             ErrorHandler::AddArrInRangeError(node, i);
-            break;
         }
     }
 }
@@ -331,12 +343,10 @@ void SemanticAnalyzer::CheckTestConditionErrors(TreeNode* node)
 
     if(IsArray(lhs)) {
         ErrorHandler::AddArrAsTestConditionError(node, stmtType);
-        return;
     }
 
     if(GetTypeOf(lhs) != TreeNode::VarType::BOOLEAN) {
         ErrorHandler::AddNonBoolTestConditionError(node, stmtType, GetTypeStringOf(lhs));
-        return;
     }
 }
 
@@ -366,7 +376,7 @@ void SemanticAnalyzer::CheckUsageOnScopeExit(std::string sym, void* node)
     bool isParm = (treeNode->subType.decl == TreeNode::DeclType::PARMTYPE);
     bool isFunc = (treeNode->subType.decl == TreeNode::DeclType::FUNCTYPE);
 
-    if ((treeNode->declaredAt == nullptr) && !treeNode->isUsed && (isVar || isParm || isFunc) && sym != "main") {
+    if ((treeNode->declaredAt == nullptr || treeNode->declaredAt == treeNode) && !treeNode->isUsed && (isVar || isParm || isFunc) && !(isFunc && sym == "main")) {
         ErrorHandler::AddUnusedVarWarn(treeNode, instance->symbolTable->depth() == 1);
     }
 }
@@ -429,6 +439,7 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
     TreeNode::VarType rightType = GetTypeOf(rhs);
 
     node->varType = rightType;
+    node->isArray = rightIsArr;
 
     if(leftType == TreeNode::VarType::UNDEFINED || rightType == TreeNode::VarType::UNDEFINED)
         return;
@@ -452,21 +463,21 @@ void SemanticAnalyzer::CheckInitErrors(TreeNode* node)
 
     TreeNode* init = node->leftChild;
     TreeNode* rhs = IsOperator(init) ? init : LookupNode(init);
-    if(rhs == nullptr) return;
+    if(rhs == nullptr) {
+        ErrorHandler::AddNonConstInitError(node);
+        return;
+    }
 
     if(GetTypeOf(node) != GetTypeOf(rhs)) {
         ErrorHandler::AddInitTypeError(node, GetTypeStringOf(node), GetTypeStringOf(rhs));
-        return;
     }
 
     if(IsArray(node) != IsArray(rhs)) {
         ErrorHandler::AddInitArrError(node, IsArray(node) ? " " : " not ", IsArray(rhs) ? " " : " not ");
-        return;
     }
 
     if(!IsConst(rhs)) {
         ErrorHandler::AddNonConstInitError(node);
-        return;
     }
 }
 
@@ -550,7 +561,9 @@ void SemanticAnalyzer::CheckStarErrors(TreeNode* node)
         return;
     }
 
-    TreeNode* lhs = ResolveOperand(node->leftChild);
+    TreeNode* lhs = IsOperator(node->leftChild) ? ResolveOperand(node->leftChild) : LookupNode(node->leftChild);
+    if(lhs == nullptr)
+        return;
 
     if(IsFuncUse(node->leftChild, lhs)) {
         ErrorHandler::AddFunVarError(node->leftChild);
@@ -625,25 +638,35 @@ void SemanticAnalyzer::CheckCallParmErrors(TreeNode* node, TreeNode* funcNode)
     while(callParm != nullptr && funcParm != nullptr) {
         TreeNode* curCallParm = callParm;
         if(!IsConst(curCallParm))
-            curCallParm = ResolveOperand(curCallParm);
+            if(IsOperator(curCallParm))
+                curCallParm = ResolveOperand(curCallParm);
+            else
+                curCallParm = LookupNode(curCallParm);
         if(curCallParm == nullptr) {
-            return;
+            callParm = callParm->sibling;
+            funcParm = funcParm->sibling;
+            callIdx++;
+            continue;
+        }
+
+        if(GetTypeOf(curCallParm) == TreeNode::VarType::UNDEFINED) {
+            callParm = callParm->sibling;
+            funcParm = funcParm->sibling;
+            callIdx++;
+            continue;
         }
 
         if(IsArray(curCallParm) && !IsArray(funcParm)) {
             ErrorHandler::AddNotExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
-            return;
         } else if(!IsArray(curCallParm) && IsArray(funcParm)) {
             ErrorHandler::AddExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
-            return;
         }
 
-        TreeNode::VarType callType = curCallParm->varType;
-        TreeNode::VarType parmType = funcParm->varType;
+        TreeNode::VarType callType = GetTypeOf(curCallParm);
+        TreeNode::VarType parmType = GetTypeOf(funcParm);
 
         if(callType != parmType) {
             ErrorHandler::AddWrongTypeInCallError(node, GetTypeStringOf(parmType), GetTypeStringOf(callType), funcNode->tokenData->tokenStr, callIdx, funcNode->tokenData->lineNum);
-            return;
         }
 
         callParm = callParm->sibling;
@@ -677,7 +700,9 @@ void SemanticAnalyzer::InsertNodeIfReqd(TreeNode* node, bool force)
         cleanInsert = symbolTable->insert(node->tokenData->tokenStr, (void*)node);
 
     if(!cleanInsert) {
+        TreeNode::VarType ownType = node->varType;
         LookupNode(node);
+        node->varType = ownType;
         ErrorHandler::AddReDeclError(node);
     }
 }
@@ -993,10 +1018,17 @@ bool SemanticAnalyzer::IsConst(TreeNode* node)
         return false;
 
     return node->isConst;
+}
 
-    /*
-    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CONSTTYPE)
-        return true;
+void SemanticAnalyzer::MarkRangeIdUses(TreeNode* node)
+{
+    if(node == nullptr)
+        return;
 
-    return false;*/
+    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::IDTYPE)
+        LookupNode(node, false);
+
+    MarkRangeIdUses(node->leftChild);
+    MarkRangeIdUses(node->middleChild);
+    MarkRangeIdUses(node->rightChild);
 }

@@ -1,5 +1,0 @@
-====================================
-FILE: p4_ioredecl.c-
-ERROR(2): Symbol 'input' is already declared at line -1.
-Number of warnings: 0
-Number of errors: 1

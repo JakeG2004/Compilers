@@ -1,6 +1,0 @@
-// C-F26 a4: redeclaring a library function
-int input;
-
-main()
-{
-}

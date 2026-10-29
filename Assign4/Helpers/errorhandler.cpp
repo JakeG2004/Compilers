@@ -164,7 +164,7 @@ void ErrorHandler::AddArrAsTestConditionError(TreeNode* node, std::string stmtTy
 void ErrorHandler::AddNonBoolTestConditionError(TreeNode* node, std::string stmtType, std::string actualType)
 {
     std::stringstream ss;
-    ss << "Expecting Boolean test condition in " << stmtType << " statement but got " << actualType << ".";
+    ss << "Expecting Boolean test condition in " << stmtType << " statement but got type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -178,14 +178,14 @@ void ErrorHandler::AddArrInRangeError(TreeNode* node, int pos)
 void ErrorHandler::AddWrongTypeInRangeError(TreeNode* node, std::string expectedType, std::string actualType, int pos)
 {
     std::stringstream ss;
-    ss << "Expecting " << expectedType << " in position " << pos + 1 << " in range of for statement but got " << actualType << ".";
+    ss << "Expecting type " << expectedType << " in position " << pos + 1 << " in range of for statement but got type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddWrongTypeInCallError(TreeNode* node, std::string expectedType, std::string actualType, std::string functionName, int pos, int funcLineNum)
 {
     std::stringstream ss;
-    ss << "Expecting " << expectedType << " in parameter " << pos + 1 << " of call to '" << functionName << "' declared on line " << funcLineNum << " but got " << actualType << ".";
+    ss << "Expecting type " << expectedType << " in parameter " << pos + 1 << " of call to '" << functionName << "' declared on line " << funcLineNum << " but got type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -227,14 +227,14 @@ void ErrorHandler::AddUnexpectedRetValError(TreeNode* node, std::string funcName
 void ErrorHandler::AddExpectedRetValError(TreeNode* node, std::string funcName, std::string expectedType, int funcLineNum)
 {
     std::stringstream ss;
-    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return " << expectedType << " but return has no value.";
+    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return type " << expectedType << " but return has no value.";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
 void ErrorHandler::AddRetValTypeError(TreeNode* node, std::string funcName, std::string expectedType, std::string actualType, int funcLineNum)
 {
     std::stringstream ss;
-    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return " << expectedType << " but returns " << actualType << ".";
+    ss << "Function '" << funcName << "' at line " << funcLineNum << " is expecting to return type " << expectedType << " but returns type " << actualType << ".";
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -248,7 +248,7 @@ void ErrorHandler::AddNonConstInitError(TreeNode* node)
 void ErrorHandler::AddInitTypeError(TreeNode* node, std::string expectedType, std::string actualType)
 {
     std::stringstream ss;
-    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' of " << expectedType << " is of " << actualType << ".";
+    ss << "Initializer for variable '" << node->tokenData->tokenStr << "' of type " << expectedType << " is of type " << actualType;
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
@@ -280,7 +280,7 @@ void ErrorHandler::AddUninitVarWarn(TreeNode* node)
 void ErrorHandler::AddMissingRetWarn(TreeNode* node, std::string funcName, std::string expectedType)
 {
     std::stringstream ss;
-    ss << "Expecting to return " << expectedType << " but function '" << funcName << "' has no return statement.";
+    ss << "Expecting to return type " << expectedType << " but function '" << funcName << "' has no return statement.";
     AddWarning(ss.str(), node->tokenData->lineNum);
 }
 
