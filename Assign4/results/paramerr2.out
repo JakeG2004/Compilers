@@ -1,5 +1,3 @@
-====================================
-FILE: paramerr2.c-
 ERROR(3): Too many parameters passed for function 'cow' declared on line 3.
 WARNING(4): The parameter 'boar' seems not to be used.
 ERROR(10): Too many parameters passed for function 'cow' declared on line 3.

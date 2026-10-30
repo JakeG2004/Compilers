@@ -1,5 +1,3 @@
-====================================
-FILE: oparray.c-
 ERROR(11): Cannot use function 'main' as a variable.
 ERROR(11): Cannot index nonarray 'main'.
 WARNING(13): Variable 'xa' may be uninitialized when used here.

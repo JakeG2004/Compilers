@@ -1,5 +1,3 @@
-====================================
-FILE: types3.c-
 ERROR(5): Symbol 'lund' is already declared at line 3.
 WARNING(5): The parameter 'a' seems not to be used.
 ERROR(9): Symbol 'a' is already declared at line 9.
@@ -10,7 +8,6 @@ WARNING(9): Expecting to return type int but function 'fred' has no return state
 ERROR(16): Symbol 'fred' is already declared at line 9.
 ERROR(20): Symbol 'linda' is already declared at line 18.
 WARNING(18): The parameter 'linda' seems not to be used.
-ERROR(26): '+' requires operands of type int but lhs is of type void.
 ERROR(26): Cannot use function 'arwen' as a variable.
 WARNING(24): The parameter 'eowyn' seems not to be used.
 WARNING(23): The global variable 'galadriel' seems not to be used.
@@ -18,4 +15,4 @@ WARNING(18): The function 'linda' seems not to be used.
 WARNING(3): The global variable 'lund' seems not to be used.
 ERROR(LINKER): A function named 'main()' must be defined.
 Number of warnings: 7
-Number of errors: 10
+Number of errors: 9

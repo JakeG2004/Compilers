@@ -1,5 +1,3 @@
-====================================
-FILE: mixedControl2.c-
 ERROR(4): Expecting Boolean test condition in if statement but got type int.
 ERROR(5): Expecting Boolean test condition in while statement but got type int.
 ERROR(6): Expecting Boolean test condition in if statement but got type int.

@@ -1,5 +1,3 @@
-====================================
-FILE: ifevil.c-
 WARNING(5): Variable 'hog' may be uninitialized when used here.
 ERROR(5): Expecting Boolean test condition in if statement but got type int.
 WARNING(5): Variable 'bat' may be uninitialized when used here.

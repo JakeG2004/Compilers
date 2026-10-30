@@ -1,5 +1,3 @@
-====================================
-FILE: for2.c-
 WARNING(5): Variable 'a' may be uninitialized when used here.
 ERROR(5): Symbol 'j' is not declared.
 ERROR(5): Cannot use array in position 1 in range of for statement.

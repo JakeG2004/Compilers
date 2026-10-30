@@ -1,5 +1,3 @@
-====================================
-FILE: types3.c-
 ERROR(5): Symbol 'lund' is already declared at line 3.
 WARNING(5): The parameter 'a' seems not to be used.
 ERROR(9): Symbol 'a' is already declared at line 9.

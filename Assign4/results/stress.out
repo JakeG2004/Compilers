@@ -1,5 +1,3 @@
-====================================
-FILE: stress.c-
 WARNING(5): Variable 'z' may be uninitialized when used here.
 ERROR(8): Symbol 'x' is not declared.
 ERROR(8): Cannot index nonarray 'x'.

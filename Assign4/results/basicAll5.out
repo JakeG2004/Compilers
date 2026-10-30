@@ -1,5 +1,3 @@
-====================================
-FILE: basicAll5.c-
 ERROR(13): Symbol 'x' is already declared at line 11.
 ERROR(17): Symbol 'cat' is not declared.
 WARNING(19): Variable 'b' may be uninitialized when used here.
@@ -12,7 +10,7 @@ WARNING(22): The parameter 'x' seems not to be used.
 ERROR(31): Initializer for variable 'b' of type int is of type char
 ERROR(33): Initializer for variable 'd' is not a constant expression.
 ERROR(34): Initializer for variable 'e' is not a constant expression.
-ERROR(36): Function 'cat' at line 29 is expecting to return type char but returns type void.
+ERROR(36): Function 'cat' at line 29 is expecting to return type char but return has no value.
 WARNING(32): The local variable 'c' seems not to be used.
 WARNING(33): The local variable 'd' seems not to be used.
 WARNING(34): The local variable 'e' seems not to be used.
@@ -43,6 +41,7 @@ ERROR(79): Expecting type int in position 1 in range of for statement but got ty
 WARNING(79): The local variable 'i' seems not to be used.
 ERROR(80): Expecting type int in position 3 in range of for statement but got type char.
 WARNING(80): The local variable 'i' seems not to be used.
+ERROR(82): Cannot use function 'cat' as a variable.
 WARNING(83): Variable 'b' may be uninitialized when used here.
 ERROR(83): '=' requires operands of the same type but lhs is type char and rhs is type int.
 ERROR(84): '+=' requires operands of type int but lhs is of type char.
@@ -151,6 +150,8 @@ ERROR(167): Expecting type char in parameter 1 of call to 'ox' declared on line 
 ERROR(168): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type bool.
 ERROR(169): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type int.
 ERROR(171): '=' requires operands of the same type but lhs is type char and rhs is type bool.
+ERROR(171): '=' requires operands of the same type but lhs is type char and rhs is type bool.
+ERROR(173): '=' requires operands of the same type but lhs is type char and rhs is type int.
 ERROR(173): '=' requires operands of the same type but lhs is type char and rhs is type int.
 ERROR(175): '*' requires operands of type int but lhs is of type char.
 ERROR(175): '*' requires operands of type int but rhs is of type char.
@@ -181,4 +182,4 @@ WARNING(57): The function 'mane' seems not to be used.
 WARNING(40): The global variable 'unusedGlobal' seems not to be used.
 ERROR(LINKER): A function named 'main()' must be defined.
 Number of warnings: 31
-Number of errors: 149
+Number of errors: 152

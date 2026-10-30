@@ -1,5 +1,3 @@
-====================================
-FILE: exp4.c-
 ERROR(24): 'and' requires operands of type bool but rhs is of type int.
 ERROR(24): 'or' requires operands of type bool but rhs is of type int.
 WARNING(30): Variable 'z' may be uninitialized when used here.
@@ -22,6 +20,5 @@ ERROR(66): Symbol 'x' is not declared.
 ERROR(66): Symbol 'array' is not declared.
 ERROR(66): Symbol 'x' is not declared.
 ERROR(66): Cannot index nonarray 'array'.
-ERROR(66): The operation 'sizeof' only works with arrays.
 Number of warnings: 8
-Number of errors: 15
+Number of errors: 14

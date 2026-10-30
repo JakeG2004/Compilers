@@ -1,5 +1,3 @@
-====================================
-FILE: cover.c-
 Error: syntax error, unexpected COLON
 ERROR(LINKER): A function named 'main()' must be defined.
 Number of warnings: 0

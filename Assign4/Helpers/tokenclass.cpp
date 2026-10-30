@@ -89,6 +89,7 @@ void TokenClass::GetStringValue()
                 case 'n':  newStrVal += '\n'; break;
                 case '\\': newStrVal += '\\'; break;
                 case '"':  newStrVal += '"';  break;
+                case 't':  newStrVal += '\t'; break;
                 default:   newStrVal += tokenStr[i + 1]; break;
             }
             i++;

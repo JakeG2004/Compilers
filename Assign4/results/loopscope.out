@@ -1,5 +1,3 @@
-====================================
-FILE: loopscope.c-
 ERROR(6): Symbol 'y' is already declared at line 5.
 ERROR(11): Symbol 'y' is not declared.
 Number of warnings: 0

@@ -1,5 +1,3 @@
-====================================
-FILE: exp4.c-
 ERROR(24): 'and' requires operands of type bool but rhs is of type int.
 ERROR(24): 'or' requires operands of type bool but rhs is of type int.
 WARNING(30): Variable 'z' may be uninitialized when used here.

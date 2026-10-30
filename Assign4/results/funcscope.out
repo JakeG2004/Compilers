@@ -1,5 +1,3 @@
-====================================
-FILE: funcscope.c-
 ERROR(5): Symbol 'x' is already declared at line 5.
 ERROR(6): Symbol 'x' is already declared at line 5.
 WARNING(10): The parameter 'x' seems not to be used.

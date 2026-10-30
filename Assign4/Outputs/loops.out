@@ -1,5 +1,3 @@
-====================================
-FILE: loops.c-
 WARNING(10): The local variable 'y' seems not to be used.
 ERROR(12): Symbol 'lyra' is already declared at line 11.
 ERROR(16): Symbol 'asha' is not declared.

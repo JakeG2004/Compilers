@@ -1,5 +1,3 @@
-====================================
-FILE: compfunc.c-
 ERROR(4): Symbol 'x' is already declared at line 3.
 WARNING(25): The parameter 'x' seems not to be used.
 WARNING(3): The function 'elk' seems not to be used.

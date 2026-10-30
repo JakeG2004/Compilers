@@ -1,10 +1,8 @@
-====================================
-FILE: errors04.c-
 ERROR(5): Function 'fred' at line 4 is expecting no return value, but return has a value.
 WARNING(4): The parameter 'fire' seems not to be used.
 WARNING(4): The parameter 'ice' seems not to be used.
 WARNING(4): The local variable 'zelda' seems not to be used.
-ERROR(8): Function 'blondie' at line 7 is expecting to return type int but returns type void.
+ERROR(8): Function 'blondie' at line 7 is expecting to return type int but return has no value.
 WARNING(7): The parameter 'a' seems not to be used.
 WARNING(7): The parameter 'b' seems not to be used.
 WARNING(7): The parameter 'c' seems not to be used.

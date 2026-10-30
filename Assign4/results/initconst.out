@@ -1,5 +1,3 @@
-====================================
-FILE: initconst.c-
 ERROR(3): Initializer for variable 'u' is not a constant expression.
 ERROR(5): Initializer for variable 'y' is not a constant expression.
 WARNING(3): The local variable 'u' seems not to be used.

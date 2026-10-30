@@ -1,5 +1,3 @@
-====================================
-FILE: errors04.c-
 ERROR(5): Function 'fred' at line 4 is expecting no return value, but return has a value.
 WARNING(4): The parameter 'fire' seems not to be used.
 WARNING(4): The parameter 'ice' seems not to be used.

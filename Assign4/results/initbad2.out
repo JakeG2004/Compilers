@@ -1,5 +1,3 @@
-====================================
-FILE: initbad2.c-
 ERROR(1): Initializer for variable 'a' of type int is of type char
 ERROR(2): Initializer for variable 'b' of type bool is of type int
 ERROR(3): Initializer for variable 'c' of type char is of type bool

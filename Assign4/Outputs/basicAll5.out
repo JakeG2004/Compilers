@@ -1,5 +1,3 @@
-====================================
-FILE: basicAll5.c-
 ERROR(13): Symbol 'x' is already declared at line 11.
 ERROR(17): Symbol 'cat' is not declared.
 WARNING(19): Variable 'b' may be uninitialized when used here.
@@ -34,6 +32,7 @@ WARNING(72): Variable 'x' may be uninitialized when used here.
 ERROR(72): Expecting Boolean test condition in if statement but got type char.
 ERROR(73): Expecting Boolean test condition in if statement but got type char.
 ERROR(74): Expecting Boolean test condition in while statement but got type char.
+
 ERROR(75): Expecting type char in parameter 1 of call to 'ox' declared on line 48 but got type int.
 ERROR(75): Expecting Boolean test condition in while statement but got type void.
 WARNING(77): The local variable 'z' seems not to be used.
@@ -50,6 +49,7 @@ ERROR(84): '+=' requires operands of type int but lhs is of type char.
 ERROR(85): '-=' requires operands of type int but rhs is of type char.
 ERROR(86): '>' requires operands of the same type but lhs is type int and rhs is type char.
 WARNING(89): Variable 'bb' may be uninitialized when used here.
+
 ERROR(89): Expecting Boolean test condition in if statement but got type int.
 ERROR(89): Cannot use array as test condition in if statement.
 ERROR(90): Expecting Boolean test condition in if statement but got type int.
@@ -100,6 +100,7 @@ ERROR(120): The operation 'sizeof' only works with arrays.
 ERROR(121): 'and' requires operands of type bool but lhs is of type int.
 ERROR(121): 'and' requires operands of type bool but rhs is of type int.
 ERROR(127): Cannot use function 'cat' as a variable.
+
 ERROR(129): Array 'aa' should be indexed by type int but got type char.
 ERROR(129): Array index is the unindexed array 'aa'.
 ERROR(130): Symbol 'AA' is not declared.
@@ -109,6 +110,8 @@ ERROR(134): Symbol 'xyzzy' is not declared.
 ERROR(135): Symbol 'meerkat' is not declared.
 ERROR(136): Symbol 'xyzzy' is not declared.
 ERROR(136): 'and' requires operands of type bool but rhs is of type int.
+
+
 ERROR(138): Symbol 'flight' is not declared.
 ERROR(138): Unary 'not' requires an operand of type bool but was given type int.
 ERROR(138): Unary 'chsign' requires an operand of type int but was given type bool.
@@ -123,6 +126,7 @@ ERROR(143): Too few parameters passed for function 'ibex' declared on line 42.
 ERROR(145): Expecting type char in parameter 1 of call to 'dog' declared on line 11 but got type bool.
 ERROR(147): Not expecting array in parameter 1 of call to 'cat' declared on line 29.
 WARNING(148): Variable 'ba' may be uninitialized when used here.
+
 ERROR(148): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type bool.
 ERROR(148): Not expecting array in parameter 1 of call to 'cat' declared on line 29.
 ERROR(150): Expecting array in parameter 1 of call to 'ibex' declared on line 42.
@@ -139,6 +143,7 @@ ERROR(159): Array 'aa' should be indexed by type int but got type void.
 ERROR(160): Array 'aa' should be indexed by type int but got type char.
 ERROR(161): Array 'aa' should be indexed by type int but got type bool.
 ERROR(162): Cannot use function 'ox' as a variable.
+
 ERROR(163): Cannot use function 'ibex' as a variable.
 ERROR(165): Expecting type char in parameter 1 of call to 'ox' declared on line 48 but got type int.
 ERROR(165): '=' requires operands of the same type but lhs is type char and rhs is type void.
@@ -146,18 +151,22 @@ ERROR(166): Expecting type char in parameter 1 of call to 'ox' declared on line 
 ERROR(166): '+' requires operands of type int but lhs is of type char.
 ERROR(166): '+' requires operands of type int but rhs is of type void.
 ERROR(166): '=' requires operands of the same type but lhs is type char and rhs is type int.
+
 ERROR(167): Expecting type char in parameter 1 of call to 'ox' declared on line 48 but got type int.
 ERROR(167): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type void.
 ERROR(168): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type bool.
 ERROR(169): Expecting type char in parameter 1 of call to 'cat' declared on line 29 but got type int.
 ERROR(171): '=' requires operands of the same type but lhs is type char and rhs is type bool.
+ERROR(171): '=' requires operands of the same type but lhs is type char and rhs is type bool.
 ERROR(173): '=' requires operands of the same type but lhs is type char and rhs is type int.
-ERROR(173): '=' requires operands of the same type but lhs is type int and rhs is type char.
 ERROR(173): '=' requires operands of the same type but lhs is type char and rhs is type int.
 ERROR(175): '*' requires operands of type int but lhs is of type char.
 ERROR(175): '*' requires operands of type int but rhs is of type char.
 ERROR(175): 'and' requires operands of type bool but lhs is of type int.
 ERROR(175): 'and' requires operands of type bool but rhs is of type int.
+
+
+
 ERROR(177): '+' requires operands of type int but lhs is of type char.
 ERROR(177): Expecting type char in parameter 1 of call to 'emu' declared on line 53 but got type int.
 ERROR(177): Symbol 'parrot' is not declared.
@@ -165,6 +174,12 @@ ERROR(177): 'and' requires operands of type bool but lhs is of type int.
 ERROR(177): 'and' requires operands of type bool but rhs is of type char.
 ERROR(177): Expecting type char in parameter 3 of call to 'emu' declared on line 53 but got type bool.
 ERROR(178): Expecting type char in parameter 1 of call to 'emu' declared on line 53 but got type bool.
+
+
+
+
+
+
 ERROR(178): '+' requires operands of type int but lhs is of type char.
 ERROR(178): Expecting type char in parameter 1 of call to 'emu' declared on line 53 but got type int.
 ERROR(178): Symbol 'parrot' is not declared.

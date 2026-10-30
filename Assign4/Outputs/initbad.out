@@ -1,5 +1,3 @@
-====================================
-FILE: initbad.c-
 ERROR(2): Initializer for variable 'a' requires both operands be arrays or not but variable is an array and rhs is not an array.
 ERROR(4): Initializer for variable 'c' is not a constant expression.
 ERROR(6): Initializer for variable 'x' of type int is of type char

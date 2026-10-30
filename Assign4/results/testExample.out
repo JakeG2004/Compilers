@@ -1,5 +1,3 @@
-====================================
-FILE: testExample.c-
 ERROR(17): Symbol 'fred' is not declared.
 WARNING(30): The local variable 'z' seems not to be used.
 WARNING(4): The function 'ant' seems not to be used.

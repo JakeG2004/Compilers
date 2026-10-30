@@ -1,5 +1,3 @@
-====================================
-FILE: nested.c-
 WARNING(4): The local variable 'i' seems not to be used.
 WARNING(3): The local variable 'i' seems not to be used.
 WARNING(8): The local variable 'i' seems not to be used.

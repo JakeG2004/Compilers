@@ -1,5 +1,3 @@
-====================================
-FILE: notused.c-
 WARNING(11): The local variable 'y' seems not to be used.
 WARNING(7): Expecting to return type int but function 'main' has no return statement.
 WARNING(7): The parameter 'u' seems not to be used.

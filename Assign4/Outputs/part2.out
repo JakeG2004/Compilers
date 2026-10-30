@@ -1,5 +1,3 @@
-====================================
-FILE: part2.c-
 WARNING(4): Variable 'z' may be uninitialized when used here.
 ERROR(4): Cannot use array as test condition in if statement.
 ERROR(4): Expecting Boolean test condition in if statement but got type int.

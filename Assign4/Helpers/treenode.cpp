@@ -38,15 +38,15 @@ void TreeNode::Print(int depth, int childNo, int siblingNo, bool printType)
 
     // indentation
     for(int i = 0; i < depth; i++)
-        std::cout << ".   ";
+        std::cout << ". ";
 
     // child
     if(childNo != -1)
-        std::cout << "Child: " << childNo << "  ";
+        std::cout << "Child: " << childNo << " ";
 
     // sibling
     if(siblingNo != 0)
-        std::cout << "Sibling: " << siblingNo << "  ";
+        std::cout << "Sibling: " << siblingNo << " ";
 
     // print the data in the node
     PrintSelf(printType);

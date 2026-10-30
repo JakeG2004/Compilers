@@ -1,5 +1,3 @@
-====================================
-FILE: uninitialized.c-
 WARNING(11): Variable 'y' may be uninitialized when used here.
 WARNING(13): Variable 'a' may be uninitialized when used here.
 WARNING(13): Variable 'v' may be uninitialized when used here.

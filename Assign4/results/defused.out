@@ -1,5 +1,3 @@
-====================================
-FILE: defused.c-
 ERROR(7): Symbol 'v' is already declared at line 6.
 ERROR(8): Symbol 'x' is already declared at line 6.
 WARNING(12): Variable 'y' may be uninitialized when used here.

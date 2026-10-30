@@ -1,5 +1,3 @@
-====================================
-FILE: rangeifwhile.c-
 WARNING(6): Variable 'b' may be uninitialized when used here.
 ERROR(6): Cannot use array as test condition in if statement.
 ERROR(7): Expecting Boolean test condition in if statement but got type int.

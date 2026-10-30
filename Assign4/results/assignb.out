@@ -1,5 +1,3 @@
-====================================
-FILE: assignb.c-
 ERROR(7): Symbol 'x' is not declared.
 ERROR(7): Symbol 'x' is not declared.
 ERROR(8): Symbol 'x' is not declared.

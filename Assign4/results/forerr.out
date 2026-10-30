@@ -1,5 +1,3 @@
-====================================
-FILE: forerr.c-
 WARNING(7): Variable 'a' may be uninitialized when used here.
 WARNING(7): Variable 'aa' may be uninitialized when used here.
 ERROR(7): Cannot use array in position 2 in range of for statement.

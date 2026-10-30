@@ -1,5 +1,3 @@
-====================================
-FILE: undeclared.c-
 ERROR(3): Symbol 'z' is not declared.
 ERROR(3): Symbol 'i' is not declared.
 ERROR(4): Symbol 'z' is not declared.

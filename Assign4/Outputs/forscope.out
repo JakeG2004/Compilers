@@ -1,5 +1,3 @@
-====================================
-FILE: forscope.c-
 ERROR(5): Cannot use array in position 1 in range of for statement.
 ERROR(6): Symbol 'x' is already declared at line 5.
 ERROR(10): Cannot use array in position 1 in range of for statement.

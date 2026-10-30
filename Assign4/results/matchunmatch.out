@@ -1,5 +1,3 @@
-====================================
-FILE: matchunmatch.c-
 ERROR(6): Expecting Boolean test condition in if statement but got type int.
 WARNING(6): Variable 't' may be uninitialized when used here.
 WARNING(6): Variable 'a' may be uninitialized when used here.

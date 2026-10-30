@@ -1,5 +1,3 @@
-====================================
-FILE: redefined.c-
 ERROR(5): Symbol 'x' is already declared at line 5.
 ERROR(6): Symbol 'x' is already declared at line 5.
 ERROR(6): Symbol 'x' is already declared at line 5.

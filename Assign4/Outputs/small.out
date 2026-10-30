@@ -1,5 +1,3 @@
-====================================
-FILE: small.c-
 ERROR(21): Symbol 'aardvark' is not declared.
 ERROR(21): Cannot index nonarray 'aardvark'.
 WARNING(21): Variable 'in' may be uninitialized when used here.

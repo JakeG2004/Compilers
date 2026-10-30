@@ -1,5 +1,3 @@
-====================================
-FILE: tinygood.c-
 WARNING(4): The parameter 'corgi' seems not to be used.
 WARNING(4): The function 'dog' seems not to be used.
 ERROR(LINKER): A function named 'main()' must be defined.

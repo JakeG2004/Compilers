@@ -1,11 +1,9 @@
-====================================
-FILE: part2.c-
 WARNING(4): Variable 'z' may be uninitialized when used here.
 ERROR(4): Cannot use array as test condition in if statement.
 ERROR(4): Expecting Boolean test condition in if statement but got type int.
 ERROR(5): Cannot return an array.
 ERROR(10): Function 'bat' at line 8 is expecting no return value, but return has a value.
-ERROR(15): Function 'cat' at line 13 is expecting to return type int but returns type void.
+ERROR(15): Function 'cat' at line 13 is expecting to return type int but return has no value.
 ERROR(20): Symbol 'x' is already declared at line 18.
 ERROR(26): Symbol 'dog' is already declared at line 18.
 WARNING(26): Expecting to return type char but function 'dog' has no return statement.

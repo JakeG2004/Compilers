@@ -245,6 +245,12 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
         actualRetType = node->leftChild->varType;
     }
 
+    if(expectedRetType != actualRetType && expectedRetType != TreeNode::VarType::VOID && node->leftChild != nullptr && IsFunction(ResolveOperand(node->leftChild))) {
+        std::string actualTypeStr = GetTypeStringOf(actualRetType);
+        ErrorHandler::AddRetValTypeError(node, lookedUpFunc->tokenData->tokenStr, GetTypeStringOf(lookedUpFunc), actualTypeStr, lookedUpFunc->tokenData->lineNum);
+        return;
+    }
+
     if(expectedRetType == TreeNode::VarType::VOID && actualRetType != TreeNode::VarType::VOID) {
         ErrorHandler::AddUnexpectedRetValError(node, lookedUpFunc->tokenData->tokenStr, lookedUpFunc->tokenData->lineNum);
         return;
@@ -449,9 +455,17 @@ void SemanticAnalyzer::CheckAssignErrors(TreeNode* node)
         return;
     }
 
-    if(leftType != rightType && (rightType != TreeNode::VarType::UNDEFINED)) {
+    bool leftIsFunc = IsFuncUse(node->leftChild, lhs);
+    bool rightIsFunc = IsFuncUse(node->middleChild, rhs);
+    if(leftIsFunc)
+        ErrorHandler::AddFunVarError(node->leftChild);
+    if(rightIsFunc)
+        ErrorHandler::AddFunVarError(node->middleChild);
+    if(leftIsFunc || rightIsFunc)
+        return;
+
+    if(leftType != rightType) {
         ErrorHandler::AddBothOpTypeError(node, GetTypeStringOf(leftType), GetTypeStringOf(rightType));
-        node->varType = TreeNode::VarType::UNDEFINED;
     }
 
     if((leftIsArr && !rightIsArr) || (!leftIsArr && rightIsArr))
@@ -493,6 +507,15 @@ void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
     TreeNode::VarType leftType = GetTypeOf(lhs);
     TreeNode::VarType rightType = GetTypeOf(rhs);
 
+    bool leftIsFunc = IsFuncUse(node->leftChild, lhs);
+    bool rightIsFunc = IsFuncUse(node->middleChild, rhs);
+    if(leftIsFunc)
+        ErrorHandler::AddFunVarError(node->leftChild);
+    if(rightIsFunc)
+        ErrorHandler::AddFunVarError(node->middleChild);
+    if(leftIsFunc || rightIsFunc)
+        return;
+
     if(leftType != type && leftType != TreeNode::VarType::UNDEFINED)
         ErrorHandler::AddLHSOpError(node, GetTypeStringOf(type), GetTypeStringOf(leftType));
 
@@ -506,15 +529,6 @@ void SemanticAnalyzer::CheckLHSRHSErrors(TreeNode* node, TreeNode::VarType type)
     }
 
     if(rhs == nullptr || lhs == nullptr)
-        return;
-
-    bool leftIsFunc = IsFuncUse(node->leftChild, lhs);
-    bool rightIsFunc = IsFuncUse(node->middleChild, rhs);
-    if(leftIsFunc)
-        ErrorHandler::AddFunVarError(node->leftChild);
-    if(rightIsFunc)
-        ErrorHandler::AddFunVarError(node->middleChild);
-    if(leftIsFunc || rightIsFunc)
         return;
 
     lhs->inspectedAt = node;
@@ -563,7 +577,7 @@ void SemanticAnalyzer::CheckStarErrors(TreeNode* node)
         return;
     }
 
-    TreeNode* lhs = IsOperator(node->leftChild) ? ResolveOperand(node->leftChild) : LookupNode(node->leftChild);
+    TreeNode* lhs = ResolveOperand(node->leftChild);
     if(lhs == nullptr)
         return;
 
@@ -572,7 +586,7 @@ void SemanticAnalyzer::CheckStarErrors(TreeNode* node)
         return;
     }
 
-    if(lhs != nullptr && !(lhs->isArray))
+    if(!(lhs->isArray) && GetTypeOf(lhs) != TreeNode::VarType::UNDEFINED)
         ErrorHandler::AddOnlyArrOpError(node);
 }
 

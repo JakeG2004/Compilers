@@ -1,5 +1,3 @@
-====================================
-FILE: strange.c-
 ERROR(2): Symbol 'main' is already declared at line 1.
 WARNING(2): Expecting to return type int but function 'main' has no return statement.
 ERROR(3): Symbol 'main' is already declared at line 1.

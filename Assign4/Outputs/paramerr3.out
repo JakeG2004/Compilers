@@ -1,5 +1,3 @@
-====================================
-FILE: paramerr3.c-
 ERROR(5): Too many parameters passed for function 'DArtagnan' declared on line 2.
 ERROR(6): Too many parameters passed for function 'DArtagnan' declared on line 2.
 ERROR(6): '+' requires operands of type int but lhs is of type bool.

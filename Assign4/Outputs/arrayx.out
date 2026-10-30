@@ -1,5 +1,3 @@
-====================================
-FILE: arrayx.c-
 ERROR(6): Initializer for variable 'bb' requires both operands be arrays or not but variable is an array and rhs is not an array.
 ERROR(7): Initializer for variable 'cc' requires both operands be arrays or not but variable is an array and rhs is not an array.
 ERROR(8): Initializer for variable 'ii' requires both operands be arrays or not but variable is an array and rhs is not an array.
