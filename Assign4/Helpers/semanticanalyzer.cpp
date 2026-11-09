@@ -200,6 +200,8 @@ void SemanticAnalyzer::CheckForSymbolErrors(TreeNode* node)
         switch(node->subType.exp) {
             case TreeNode::ExpType::IDTYPE:
                 CheckUninitIDErrors(node);
+                if(node->isStmtExp && IsFunction(LookupNode(node, false)))
+                    ErrorHandler::AddFunVarError(node);
                 break;
 
             case TreeNode::ExpType::CALLTYPE:
@@ -403,10 +405,13 @@ void SemanticAnalyzer::CheckLBracketErrors(TreeNode* node)
 
     node->varType = GetTypeOf(baseArr);
 
-    if(IsFuncUse(node->leftChild, baseArr))
+    if(IsFuncUse(node->leftChild, baseArr)) {
         ErrorHandler::AddFunVarError(node->leftChild);
-    if(IsFuncUse(node->middleChild, idx))
+    }
+    if(IsFuncUse(node->middleChild, idx)) {
         ErrorHandler::AddFunVarError(node->middleChild);
+        return;
+    }
 
     if(!IsArray(baseArr))
         ErrorHandler::AddIdxNonArrError(node->leftChild);

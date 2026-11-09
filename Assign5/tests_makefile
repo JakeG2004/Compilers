@@ -1,0 +1,12 @@
+CXX = g++
+CXXFLAGS = -I. -Ibuild -std=c++14
+
+all: c-
+build: c-
+
+c-:
+	tar -czvf tests.tar *.c-
+	base64 tests.tar > tests.txt
+	echo "=== TESTS IN B64 ==="
+	cat tests.txt
+	echo "=== DONE ==="

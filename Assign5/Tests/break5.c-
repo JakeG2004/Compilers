@@ -1,0 +1,4 @@
+main()
+{
+    for i=1 to 100 do if i==42 then break i*i; else break -i*i;
+}

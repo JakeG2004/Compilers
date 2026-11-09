@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 10 "Parser/parser.y"
+#line 9 "Parser/parser.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,10 +83,11 @@ void yyerror(const char*);
 
 extern FILE* yyin;
 extern int yydebug;
+extern int yylineno;
 
 TreeNode* ASTRoot = nullptr;
 
-#line 90 "build/parser.tab.c"
+#line 91 "build/parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -420,6 +421,30 @@ typedef int yy_state_fast_t;
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
+# ifdef YYSTACK_USE_ALLOCA
+#  if YYSTACK_USE_ALLOCA
+#   ifdef __GNUC__
+#    define YYSTACK_ALLOC __builtin_alloca
+#   elif defined __BUILTIN_VA_ARG_INCR
+#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
+#   elif defined _AIX
+#    define YYSTACK_ALLOC __alloca
+#   elif defined _MSC_VER
+#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
+#    define alloca _alloca
+#   else
+#    define YYSTACK_ALLOC alloca
+#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
+#     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
+      /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
+#     ifndef EXIT_SUCCESS
+#      define EXIT_SUCCESS 0
+#     endif
+#    endif
+#   endif
+#  endif
+# endif
+
 # ifdef YYSTACK_ALLOC
    /* Pacify GCC's 'empty if-body' warning.  */
 #  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
@@ -457,7 +482,6 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 # endif
-# define YYCOPY_NEEDED 1
 #endif /* 1 */
 
 #if (! defined yyoverflow \
@@ -863,7 +887,6 @@ enum { YYENOMEM = -2 };
         yylval = (Value);                                         \
         YYPOPSTACK (yylen);                                       \
         yystate = *yyssp;                                         \
-        YY_LAC_DISCARD ("YYBACKUP");                              \
         goto yybackup;                                            \
       }                                                           \
     else                                                          \
@@ -1022,256 +1045,10 @@ int yydebug;
 #endif
 
 
-/* Given a state stack such that *YYBOTTOM is its bottom, such that
-   *YYTOP is either its top or is YYTOP_EMPTY to indicate an empty
-   stack, and such that *YYCAPACITY is the maximum number of elements it
-   can hold without a reallocation, make sure there is enough room to
-   store YYADD more elements.  If not, allocate a new stack using
-   YYSTACK_ALLOC, copy the existing elements, and adjust *YYBOTTOM,
-   *YYTOP, and *YYCAPACITY to reflect the new capacity and memory
-   location.  If *YYBOTTOM != YYBOTTOM_NO_FREE, then free the old stack
-   using YYSTACK_FREE.  Return 0 if successful or if no reallocation is
-   required.  Return YYENOMEM if memory is exhausted.  */
-static int
-yy_lac_stack_realloc (YYPTRDIFF_T *yycapacity, YYPTRDIFF_T yyadd,
-#if YYDEBUG
-                      char const *yydebug_prefix,
-                      char const *yydebug_suffix,
-#endif
-                      yy_state_t **yybottom,
-                      yy_state_t *yybottom_no_free,
-                      yy_state_t **yytop, yy_state_t *yytop_empty)
-{
-  YYPTRDIFF_T yysize_old =
-    *yytop == yytop_empty ? 0 : *yytop - *yybottom + 1;
-  YYPTRDIFF_T yysize_new = yysize_old + yyadd;
-  if (*yycapacity < yysize_new)
-    {
-      YYPTRDIFF_T yyalloc = 2 * yysize_new;
-      yy_state_t *yybottom_new;
-      /* Use YYMAXDEPTH for maximum stack size given that the stack
-         should never need to grow larger than the main state stack
-         needs to grow without LAC.  */
-      if (YYMAXDEPTH < yysize_new)
-        {
-          YYDPRINTF ((stderr, "%smax size exceeded%s", yydebug_prefix,
-                      yydebug_suffix));
-          return YYENOMEM;
-        }
-      if (YYMAXDEPTH < yyalloc)
-        yyalloc = YYMAXDEPTH;
-      yybottom_new =
-        YY_CAST (yy_state_t *,
-                 YYSTACK_ALLOC (YY_CAST (YYSIZE_T,
-                                         yyalloc * YYSIZEOF (*yybottom_new))));
-      if (!yybottom_new)
-        {
-          YYDPRINTF ((stderr, "%srealloc failed%s", yydebug_prefix,
-                      yydebug_suffix));
-          return YYENOMEM;
-        }
-      if (*yytop != yytop_empty)
-        {
-          YYCOPY (yybottom_new, *yybottom, yysize_old);
-          *yytop = yybottom_new + (yysize_old - 1);
-        }
-      if (*yybottom != yybottom_no_free)
-        YYSTACK_FREE (*yybottom);
-      *yybottom = yybottom_new;
-      *yycapacity = yyalloc;
-    }
-  return 0;
-}
-
-/* Establish the initial context for the current lookahead if no initial
-   context is currently established.
-
-   We define a context as a snapshot of the parser stacks.  We define
-   the initial context for a lookahead as the context in which the
-   parser initially examines that lookahead in order to select a
-   syntactic action.  Thus, if the lookahead eventually proves
-   syntactically unacceptable (possibly in a later context reached via a
-   series of reductions), the initial context can be used to determine
-   the exact set of tokens that would be syntactically acceptable in the
-   lookahead's place.  Moreover, it is the context after which any
-   further semantic actions would be erroneous because they would be
-   determined by a syntactically unacceptable token.
-
-   YY_LAC_ESTABLISH should be invoked when a reduction is about to be
-   performed in an inconsistent state (which, for the purposes of LAC,
-   includes consistent states that don't know they're consistent because
-   their default reductions have been disabled).  Iff there is a
-   lookahead token, it should also be invoked before reporting a syntax
-   error.  This latter case is for the sake of the debugging output.
-
-   For parse.lac=full, the implementation of YY_LAC_ESTABLISH is as
-   follows.  If no initial context is currently established for the
-   current lookahead, then check if that lookahead can eventually be
-   shifted if syntactic actions continue from the current context.
-   Report a syntax error if it cannot.  */
-#define YY_LAC_ESTABLISH                                                \
-do {                                                                    \
-  if (!yy_lac_established)                                              \
-    {                                                                   \
-      YYDPRINTF ((stderr,                                               \
-                  "LAC: initial context established for %s\n",          \
-                  yysymbol_name (yytoken)));                            \
-      yy_lac_established = 1;                                           \
-      switch (yy_lac (yyesa, &yyes, &yyes_capacity, yyssp, yytoken))    \
-        {                                                               \
-        case YYENOMEM:                                                  \
-          YYNOMEM;                                                      \
-        case 1:                                                         \
-          goto yyerrlab;                                                \
-        }                                                               \
-    }                                                                   \
-} while (0)
-
-/* Discard any previous initial lookahead context because of Event,
-   which may be a lookahead change or an invalidation of the currently
-   established initial context for the current lookahead.
-
-   The most common example of a lookahead change is a shift.  An example
-   of both cases is syntax error recovery.  That is, a syntax error
-   occurs when the lookahead is syntactically erroneous for the
-   currently established initial context, so error recovery manipulates
-   the parser stacks to try to find a new initial context in which the
-   current lookahead is syntactically acceptable.  If it fails to find
-   such a context, it discards the lookahead.  */
-#if YYDEBUG
-# define YY_LAC_DISCARD(Event)                                           \
-do {                                                                     \
-  if (yy_lac_established)                                                \
-    {                                                                    \
-      YYDPRINTF ((stderr, "LAC: initial context discarded due to "       \
-                  Event "\n"));                                          \
-      yy_lac_established = 0;                                            \
-    }                                                                    \
-} while (0)
-#else
-# define YY_LAC_DISCARD(Event) yy_lac_established = 0
-#endif
-
-/* Given the stack whose top is *YYSSP, return 0 iff YYTOKEN can
-   eventually (after perhaps some reductions) be shifted, return 1 if
-   not, or return YYENOMEM if memory is exhausted.  As preconditions and
-   postconditions: *YYES_CAPACITY is the allocated size of the array to
-   which *YYES points, and either *YYES = YYESA or *YYES points to an
-   array allocated with YYSTACK_ALLOC.  yy_lac may overwrite the
-   contents of either array, alter *YYES and *YYES_CAPACITY, and free
-   any old *YYES other than YYESA.  */
-static int
-yy_lac (yy_state_t *yyesa, yy_state_t **yyes,
-        YYPTRDIFF_T *yyes_capacity, yy_state_t *yyssp, yysymbol_kind_t yytoken)
-{
-  yy_state_t *yyes_prev = yyssp;
-  yy_state_t *yyesp = yyes_prev;
-  /* Reduce until we encounter a shift and thereby accept the token.  */
-  YYDPRINTF ((stderr, "LAC: checking lookahead %s:", yysymbol_name (yytoken)));
-  if (yytoken == YYSYMBOL_YYUNDEF)
-    {
-      YYDPRINTF ((stderr, " Always Err\n"));
-      return 1;
-    }
-  while (1)
-    {
-      int yyrule = yypact[+*yyesp];
-      if (yypact_value_is_default (yyrule)
-          || (yyrule += yytoken) < 0 || YYLAST < yyrule
-          || yycheck[yyrule] != yytoken)
-        {
-          /* Use the default action.  */
-          yyrule = yydefact[+*yyesp];
-          if (yyrule == 0)
-            {
-              YYDPRINTF ((stderr, " Err\n"));
-              return 1;
-            }
-        }
-      else
-        {
-          /* Use the action from yytable.  */
-          yyrule = yytable[yyrule];
-          if (yytable_value_is_error (yyrule))
-            {
-              YYDPRINTF ((stderr, " Err\n"));
-              return 1;
-            }
-          if (0 < yyrule)
-            {
-              YYDPRINTF ((stderr, " S%d\n", yyrule));
-              return 0;
-            }
-          yyrule = -yyrule;
-        }
-      /* By now we know we have to simulate a reduce.  */
-      YYDPRINTF ((stderr, " R%d", yyrule - 1));
-      {
-        /* Pop the corresponding number of values from the stack.  */
-        YYPTRDIFF_T yylen = yyr2[yyrule];
-        /* First pop from the LAC stack as many tokens as possible.  */
-        if (yyesp != yyes_prev)
-          {
-            YYPTRDIFF_T yysize = yyesp - *yyes + 1;
-            if (yylen < yysize)
-              {
-                yyesp -= yylen;
-                yylen = 0;
-              }
-            else
-              {
-                yyesp = yyes_prev;
-                yylen -= yysize;
-              }
-          }
-        /* Only afterwards look at the main stack.  */
-        if (yylen)
-          yyesp = yyes_prev -= yylen;
-      }
-      /* Push the resulting state of the reduction.  */
-      {
-        yy_state_fast_t yystate;
-        {
-          const int yylhs = yyr1[yyrule] - YYNTOKENS;
-          const int yyi = yypgoto[yylhs] + *yyesp;
-          yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyesp
-                     ? yytable[yyi]
-                     : yydefgoto[yylhs]);
-        }
-        if (yyesp == yyes_prev)
-          {
-            yyesp = *yyes;
-            YY_IGNORE_USELESS_CAST_BEGIN
-            *yyesp = YY_CAST (yy_state_t, yystate);
-            YY_IGNORE_USELESS_CAST_END
-          }
-        else
-          {
-            if (yy_lac_stack_realloc (yyes_capacity, 1,
-#if YYDEBUG
-                                      " (", ")",
-#endif
-                                      yyes, yyesa, &yyesp, yyes_prev))
-              {
-                YYDPRINTF ((stderr, "\n"));
-                return YYENOMEM;
-              }
-            YY_IGNORE_USELESS_CAST_BEGIN
-            *++yyesp = YY_CAST (yy_state_t, yystate);
-            YY_IGNORE_USELESS_CAST_END
-          }
-        YYDPRINTF ((stderr, " G%d", yystate));
-      }
-    }
-}
-
 /* Context of a parse error.  */
 typedef struct
 {
   yy_state_t *yyssp;
-  yy_state_t *yyesa;
-  yy_state_t **yyes;
-  YYPTRDIFF_T *yyes_capacity;
   yysymbol_kind_t yytoken;
 } yypcontext_t;
 
@@ -1287,25 +1064,27 @@ yypcontext_expected_tokens (const yypcontext_t *yyctx,
 {
   /* Actual size of YYARG. */
   int yycount = 0;
-
-  int yyx;
-  for (yyx = 0; yyx < YYNTOKENS; ++yyx)
+  int yyn = yypact[+*yyctx->yyssp];
+  if (!yypact_value_is_default (yyn))
     {
-      yysymbol_kind_t yysym = YY_CAST (yysymbol_kind_t, yyx);
-      if (yysym != YYSYMBOL_YYerror && yysym != YYSYMBOL_YYUNDEF)
-        switch (yy_lac (yyctx->yyesa, yyctx->yyes, yyctx->yyes_capacity, yyctx->yyssp, yysym))
+      /* Start YYX at -YYN if negative to avoid negative indexes in
+         YYCHECK.  In other words, skip the first -YYN actions for
+         this state because they are default actions.  */
+      int yyxbegin = yyn < 0 ? -yyn : 0;
+      /* Stay within bounds of both yycheck and yytname.  */
+      int yychecklim = YYLAST - yyn + 1;
+      int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
+      int yyx;
+      for (yyx = yyxbegin; yyx < yyxend; ++yyx)
+        if (yycheck[yyx + yyn] == yyx && yyx != YYSYMBOL_YYerror
+            && !yytable_value_is_error (yytable[yyx + yyn]))
           {
-          case YYENOMEM:
-            return YYENOMEM;
-          case 1:
-            continue;
-          default:
             if (!yyarg)
               ++yycount;
             else if (yycount == yyargn)
               return 0;
             else
-              yyarg[yycount++] = yysym;
+              yyarg[yycount++] = YY_CAST (yysymbol_kind_t, yyx);
           }
     }
   if (yyarg && yycount == 0 && 0 < yyargn)
@@ -1423,16 +1202,18 @@ yy_syntax_error_arguments (const yypcontext_t *yyctx,
        consistent state with a default action.  There might have been a
        previous inconsistent state, consistent state with a non-default
        action, or user semantic action that manipulated yychar.
-       In the first two cases, it might appear that the current syntax
-       error should have been detected in the previous state when yy_lac
-       was invoked.  However, at that time, there might have been a
-       different syntax error that discarded a different initial context
-       during error recovery, leaving behind the current lookahead.
+     - Of course, the expected token list depends on states to have
+       correct lookahead information, and it depends on the parser not
+       to perform extra reductions after fetching a lookahead from the
+       scanner and before detecting a syntax error.  Thus, state merging
+       (from LALR or IELR) and default reductions corrupt the expected
+       token list.  However, the list is correct for canonical LR with
+       one exception: it will still contain any token that will not be
+       accepted due to an error action in a later state.
   */
   if (yyctx->yytoken != YYSYMBOL_YYEMPTY)
     {
       int yyn;
-      YYDPRINTF ((stderr, "Constructing syntax error message\n"));
       if (yyarg)
         yyarg[yycount] = yyctx->yytoken;
       ++yycount;
@@ -1440,8 +1221,6 @@ yy_syntax_error_arguments (const yypcontext_t *yyctx,
                                         yyarg ? yyarg + 1 : yyarg, yyargn - 1);
       if (yyn == YYENOMEM)
         return YYENOMEM;
-      else if (yyn == 0)
-        YYDPRINTF ((stderr, "No expected tokens.\n"));
       else
         yycount += yyn;
     }
@@ -1450,14 +1229,12 @@ yy_syntax_error_arguments (const yypcontext_t *yyctx,
 
 /* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
    about the unexpected token YYTOKEN for the state stack whose top is
-   YYSSP.  In order to see if a particular token T is a
-   valid looakhead, invoke yy_lac (YYESA, YYES, YYES_CAPACITY, YYSSP, T).
+   YYSSP.
 
    Return 0 if *YYMSG was successfully written.  Return -1 if *YYMSG is
    not large enough to hold the message.  In that case, also set
    *YYMSG_ALLOC to the required number of bytes.  Return YYENOMEM if the
-   required number of bytes is too large to store or if
-   yy_lac returned YYENOMEM.  */
+   required number of bytes is too large to store.  */
 static int
 yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
                 const yypcontext_t *yyctx)
@@ -1596,12 +1373,6 @@ yyparse (void)
     YYSTYPE *yyvs = yyvsa;
     YYSTYPE *yyvsp = yyvs;
 
-    yy_state_t yyesa[20];
-    yy_state_t *yyes = yyesa;
-    YYPTRDIFF_T yyes_capacity = 20 < YYMAXDEPTH ? 20 : YYMAXDEPTH;
-
-  /* Whether LAC context is established.  A Boolean.  */
-  int yy_lac_established = 0;
   int yyn;
   /* The return value of yyparse.  */
   int yyresult;
@@ -1766,17 +1537,13 @@ yybackup:
      detect an error, take that action.  */
   yyn += yytoken;
   if (yyn < 0 || YYLAST < yyn || yycheck[yyn] != yytoken)
-    {
-      YY_LAC_ESTABLISH;
-      goto yydefault;
-    }
+    goto yydefault;
   yyn = yytable[yyn];
   if (yyn <= 0)
     {
       if (yytable_value_is_error (yyn))
         goto yyerrlab;
       yyn = -yyn;
-      YY_LAC_ESTABLISH;
       goto yyreduce;
     }
 
@@ -1794,7 +1561,6 @@ yybackup:
 
   /* Discard the shifted token.  */
   yychar = YYEMPTY;
-  YY_LAC_DISCARD ("shift");
   goto yynewstate;
 
 
@@ -1827,696 +1593,691 @@ yyreduce:
 
 
   YY_REDUCE_PRINT (yyn);
-  {
-    int yychar_backup = yychar;
-    switch (yyn)
-      {
+  switch (yyn)
+    {
   case 2: /* program: declList  */
 #line 42 "Parser/parser.y"
                 {ASTRoot = (yyvsp[0].node);}
-#line 1838 "build/parser.tab.c"
+#line 1602 "build/parser.tab.c"
     break;
 
   case 3: /* declList: declList decl  */
 #line 46 "Parser/parser.y"
                     {(yyval.node) = TreeNode::NodeList((yyvsp[-1].node), (yyvsp[0].node));}
-#line 1844 "build/parser.tab.c"
+#line 1608 "build/parser.tab.c"
     break;
 
   case 4: /* declList: decl  */
 #line 47 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 1850 "build/parser.tab.c"
+#line 1614 "build/parser.tab.c"
     break;
 
   case 5: /* decl: varDecl  */
 #line 51 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 1856 "build/parser.tab.c"
+#line 1620 "build/parser.tab.c"
     break;
 
   case 6: /* decl: funDecl  */
 #line 52 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 1862 "build/parser.tab.c"
+#line 1626 "build/parser.tab.c"
     break;
 
   case 7: /* varDecl: typeSpec varDeclList SEMICOLON  */
 #line 56 "Parser/parser.y"
                                     {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
-#line 1868 "build/parser.tab.c"
+#line 1632 "build/parser.tab.c"
     break;
 
   case 8: /* scopedVarDecl: STATIC typeSpec varDeclList SEMICOLON  */
 #line 60 "Parser/parser.y"
                                             {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); for(TreeNode* v = (yyval.node); v != nullptr; v = v->sibling) v->isStatic = true; TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
-#line 1874 "build/parser.tab.c"
+#line 1638 "build/parser.tab.c"
     break;
 
   case 9: /* scopedVarDecl: typeSpec varDeclList SEMICOLON  */
 #line 61 "Parser/parser.y"
                                             {(yyval.node) = TreeNode::PullUpTypeNode((yyvsp[-1].node), (yyvsp[-2].varType)); TreeNode::SetNodeListTypes((yyvsp[-2].varType), (yyvsp[-1].node));}
-#line 1880 "build/parser.tab.c"
+#line 1644 "build/parser.tab.c"
     break;
 
   case 10: /* varDeclList: varDeclList COMMA varDeclInit  */
 #line 65 "Parser/parser.y"
                                     {(yyval.node) = TreeNode::NodeList((yyvsp[-2].node), (yyvsp[0].node));}
-#line 1886 "build/parser.tab.c"
+#line 1650 "build/parser.tab.c"
     break;
 
   case 11: /* varDeclList: varDeclInit  */
 #line 66 "Parser/parser.y"
                                     {(yyval.node) = (yyvsp[0].node);}
-#line 1892 "build/parser.tab.c"
+#line 1656 "build/parser.tab.c"
     break;
 
   case 12: /* varDeclInit: varDeclId  */
 #line 70 "Parser/parser.y"
                                 {(yyval.node) = (yyvsp[0].node);}
-#line 1898 "build/parser.tab.c"
+#line 1662 "build/parser.tab.c"
     break;
 
   case 13: /* varDeclInit: varDeclId COLON simpleExp  */
 #line 71 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::PullUpNode((yyvsp[-2].node), (yyvsp[0].node), nullptr, nullptr);}
-#line 1904 "build/parser.tab.c"
+#line 1668 "build/parser.tab.c"
     break;
 
   case 14: /* varDeclId: ID  */
 #line 75 "Parser/parser.y"
                                     {(yyval.node) = TreeNode::CreateVarDecl(nullptr, (yyvsp[0].tokenData));}
-#line 1910 "build/parser.tab.c"
+#line 1674 "build/parser.tab.c"
     break;
 
   case 15: /* varDeclId: ID LBRACKET NUMCONST RBRACKET  */
 #line 76 "Parser/parser.y"
                                     {(yyval.node) = TreeNode::CreateVarDecl((yyvsp[-1].tokenData), (yyvsp[-3].tokenData)); (yyval.node)->isArray = true;}
-#line 1916 "build/parser.tab.c"
+#line 1680 "build/parser.tab.c"
     break;
 
   case 16: /* typeSpec: INT  */
 #line 80 "Parser/parser.y"
             {(yyval.varType) = TreeNode::VarType::INTEGER;}
-#line 1922 "build/parser.tab.c"
+#line 1686 "build/parser.tab.c"
     break;
 
   case 17: /* typeSpec: BOOL  */
 #line 81 "Parser/parser.y"
             {(yyval.varType) = TreeNode::VarType::BOOLEAN;}
-#line 1928 "build/parser.tab.c"
+#line 1692 "build/parser.tab.c"
     break;
 
   case 18: /* typeSpec: CHAR  */
 #line 82 "Parser/parser.y"
             {(yyval.varType) = TreeNode::VarType::CHARACTER;}
-#line 1934 "build/parser.tab.c"
+#line 1698 "build/parser.tab.c"
     break;
 
   case 19: /* funDecl: typeSpec ID LPAREN parms RPAREN stmt  */
 #line 86 "Parser/parser.y"
                                             {(yyval.node) = TreeNode::CreateFuncDecl((yyvsp[-5].varType), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData));}
-#line 1940 "build/parser.tab.c"
+#line 1704 "build/parser.tab.c"
     break;
 
   case 20: /* funDecl: ID LPAREN parms RPAREN stmt  */
 #line 87 "Parser/parser.y"
                                             {(yyval.node) = TreeNode::CreateFuncDecl(TreeNode::VarType::VOID, (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData));}
-#line 1946 "build/parser.tab.c"
+#line 1710 "build/parser.tab.c"
     break;
 
   case 21: /* parms: parmList  */
 #line 91 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 1952 "build/parser.tab.c"
+#line 1716 "build/parser.tab.c"
     break;
 
   case 22: /* parms: %empty  */
 #line 92 "Parser/parser.y"
                 {(yyval.node) = nullptr;}
-#line 1958 "build/parser.tab.c"
+#line 1722 "build/parser.tab.c"
     break;
 
   case 23: /* parmList: parmList SEMICOLON parmTypeList  */
 #line 96 "Parser/parser.y"
                                     {(yyval.node) = TreeNode::NodeList((yyvsp[-2].node), (yyvsp[0].node));}
-#line 1964 "build/parser.tab.c"
+#line 1728 "build/parser.tab.c"
     break;
 
   case 24: /* parmList: parmTypeList  */
 #line 97 "Parser/parser.y"
                                     {(yyval.node) = (yyvsp[0].node);}
-#line 1970 "build/parser.tab.c"
+#line 1734 "build/parser.tab.c"
     break;
 
   case 25: /* parmTypeList: typeSpec parmIdList  */
 #line 101 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node); TreeNode::SetNodeListTypes((yyvsp[-1].varType), (yyvsp[0].node));}
-#line 1976 "build/parser.tab.c"
+#line 1740 "build/parser.tab.c"
     break;
 
   case 26: /* parmIdList: parmIdList COMMA parmId  */
 #line 105 "Parser/parser.y"
                             {(yyval.node) = TreeNode::NodeList((yyvsp[-2].node), (yyvsp[0].node));}
-#line 1982 "build/parser.tab.c"
+#line 1746 "build/parser.tab.c"
     break;
 
   case 27: /* parmIdList: parmId  */
 #line 106 "Parser/parser.y"
                             {(yyval.node) = (yyvsp[0].node);}
-#line 1988 "build/parser.tab.c"
+#line 1752 "build/parser.tab.c"
     break;
 
   case 28: /* parmId: ID  */
 #line 110 "Parser/parser.y"
                         {(yyval.node) = TreeNode::CreateParmDecl((yyvsp[0].tokenData));}
-#line 1994 "build/parser.tab.c"
+#line 1758 "build/parser.tab.c"
     break;
 
   case 29: /* parmId: ID LBRACKET RBRACKET  */
 #line 111 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateParmDecl((yyvsp[-2].tokenData)); (yyval.node)->isArray = true;}
-#line 2000 "build/parser.tab.c"
+#line 1764 "build/parser.tab.c"
     break;
 
   case 30: /* stmt: selectStmt  */
 #line 115 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 2006 "build/parser.tab.c"
+#line 1770 "build/parser.tab.c"
     break;
 
   case 31: /* otherStmts: expStmt  */
 #line 119 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2012 "build/parser.tab.c"
+#line 1776 "build/parser.tab.c"
     break;
 
   case 32: /* otherStmts: compoundStmt  */
 #line 120 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2018 "build/parser.tab.c"
+#line 1782 "build/parser.tab.c"
     break;
 
   case 33: /* otherStmts: returnStmt  */
 #line 121 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2024 "build/parser.tab.c"
+#line 1788 "build/parser.tab.c"
     break;
 
   case 34: /* otherStmts: breakStmt  */
 #line 122 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2030 "build/parser.tab.c"
+#line 1794 "build/parser.tab.c"
     break;
 
   case 35: /* expStmt: exp SEMICOLON  */
 #line 126 "Parser/parser.y"
-                    {(yyval.node) = (yyvsp[-1].node);}
-#line 2036 "build/parser.tab.c"
+                    {(yyval.node) = (yyvsp[-1].node); (yyval.node)->isStmtExp = true;}
+#line 1800 "build/parser.tab.c"
     break;
 
   case 36: /* expStmt: SEMICOLON  */
 #line 127 "Parser/parser.y"
                     {(yyval.node) = nullptr;}
-#line 2042 "build/parser.tab.c"
+#line 1806 "build/parser.tab.c"
     break;
 
   case 37: /* compoundStmt: LBRACE localDecls stmtList RBRACE  */
 #line 131 "Parser/parser.y"
                                         {(yyval.node) = TreeNode::CreateCompoundStmt((yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[-3].tokenData));}
-#line 2048 "build/parser.tab.c"
+#line 1812 "build/parser.tab.c"
     break;
 
   case 38: /* localDecls: localDecls scopedVarDecl  */
 #line 135 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::NodeList((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2054 "build/parser.tab.c"
+#line 1818 "build/parser.tab.c"
     break;
 
   case 39: /* localDecls: %empty  */
 #line 136 "Parser/parser.y"
                                 {(yyval.node) = nullptr;}
-#line 2060 "build/parser.tab.c"
+#line 1824 "build/parser.tab.c"
     break;
 
   case 40: /* stmtList: stmtList stmt  */
 #line 140 "Parser/parser.y"
                     {(yyval.node) = TreeNode::NodeList((yyvsp[-1].node), (yyvsp[0].node));}
-#line 2066 "build/parser.tab.c"
+#line 1830 "build/parser.tab.c"
     break;
 
   case 41: /* stmtList: %empty  */
 #line 141 "Parser/parser.y"
                     {(yyval.node) = nullptr;}
-#line 2072 "build/parser.tab.c"
+#line 1836 "build/parser.tab.c"
     break;
 
   case 42: /* selectStmt: matchedStmt  */
 #line 145 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2078 "build/parser.tab.c"
+#line 1842 "build/parser.tab.c"
     break;
 
   case 43: /* selectStmt: unmatchedStmt  */
 #line 146 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2084 "build/parser.tab.c"
+#line 1848 "build/parser.tab.c"
     break;
 
   case 44: /* matchedStmt: IF simpleExp THEN matchedStmt ELSE matchedStmt  */
 #line 150 "Parser/parser.y"
                                                     {(yyval.node) = TreeNode::CreateIfStmt((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-5].tokenData));}
-#line 2090 "build/parser.tab.c"
+#line 1854 "build/parser.tab.c"
     break;
 
   case 45: /* matchedStmt: WHILE simpleExp DO matchedStmt  */
 #line 151 "Parser/parser.y"
                                                     {(yyval.node) = TreeNode::CreateWhileStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-3].tokenData));}
-#line 2096 "build/parser.tab.c"
+#line 1860 "build/parser.tab.c"
     break;
 
   case 46: /* matchedStmt: FOR ID ASSIGN iterRange DO matchedStmt  */
 #line 152 "Parser/parser.y"
                                                     {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData), (yyvsp[-5].tokenData));}
-#line 2102 "build/parser.tab.c"
+#line 1866 "build/parser.tab.c"
     break;
 
   case 47: /* matchedStmt: otherStmts  */
 #line 153 "Parser/parser.y"
                                                     {(yyval.node) = (yyvsp[0].node);}
-#line 2108 "build/parser.tab.c"
+#line 1872 "build/parser.tab.c"
     break;
 
   case 48: /* unmatchedStmt: IF simpleExp THEN selectStmt  */
 #line 157 "Parser/parser.y"
                                                             {(yyval.node) = TreeNode::CreateIfStmt((yyvsp[-2].node), (yyvsp[0].node), nullptr, (yyvsp[-3].tokenData));}
-#line 2114 "build/parser.tab.c"
+#line 1878 "build/parser.tab.c"
     break;
 
   case 49: /* unmatchedStmt: IF simpleExp THEN matchedStmt ELSE unmatchedStmt  */
 #line 158 "Parser/parser.y"
                                                             {(yyval.node) = TreeNode::CreateIfStmt((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-5].tokenData));}
-#line 2120 "build/parser.tab.c"
+#line 1884 "build/parser.tab.c"
     break;
 
   case 50: /* unmatchedStmt: WHILE simpleExp DO unmatchedStmt  */
 #line 159 "Parser/parser.y"
                                                             {(yyval.node) = TreeNode::CreateWhileStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-3].tokenData));}
-#line 2126 "build/parser.tab.c"
+#line 1890 "build/parser.tab.c"
     break;
 
   case 51: /* unmatchedStmt: FOR ID ASSIGN iterRange DO unmatchedStmt  */
 #line 160 "Parser/parser.y"
                                                             {(yyval.node) = TreeNode::CreateForStmt((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-4].tokenData), (yyvsp[-5].tokenData));}
-#line 2132 "build/parser.tab.c"
+#line 1896 "build/parser.tab.c"
     break;
 
   case 52: /* iterRange: simpleExp TO simpleExp  */
 #line 164 "Parser/parser.y"
                                           {(yyval.node) = TreeNode::CreateRangeStmt((yyvsp[-2].node), (yyvsp[0].node), nullptr, (yyvsp[-1].tokenData));}
-#line 2138 "build/parser.tab.c"
+#line 1902 "build/parser.tab.c"
     break;
 
   case 53: /* iterRange: simpleExp TO simpleExp BY simpleExp  */
 #line 165 "Parser/parser.y"
                                             {(yyval.node) = TreeNode::CreateRangeStmt((yyvsp[-4].node), (yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-3].tokenData));}
-#line 2144 "build/parser.tab.c"
+#line 1908 "build/parser.tab.c"
     break;
 
   case 54: /* returnStmt: RETURN SEMICOLON  */
 #line 169 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateReturnStmt(nullptr, (yyvsp[-1].tokenData));}
-#line 2150 "build/parser.tab.c"
+#line 1914 "build/parser.tab.c"
     break;
 
   case 55: /* returnStmt: RETURN exp SEMICOLON  */
 #line 170 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateReturnStmt((yyvsp[-1].node), (yyvsp[-2].tokenData));}
-#line 2156 "build/parser.tab.c"
+#line 1920 "build/parser.tab.c"
     break;
 
   case 56: /* breakStmt: BREAK SEMICOLON  */
 #line 174 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateBreakStmt(nullptr, (yyvsp[-1].tokenData));}
-#line 2162 "build/parser.tab.c"
+#line 1926 "build/parser.tab.c"
     break;
 
   case 57: /* breakStmt: BREAK exp SEMICOLON  */
 #line 175 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateBreakStmt((yyvsp[-1].node), (yyvsp[-2].tokenData));}
-#line 2168 "build/parser.tab.c"
+#line 1932 "build/parser.tab.c"
     break;
 
   case 58: /* exp: mutable ASSIGN exp  */
 #line 179 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = (yyvsp[0].node)->varType; }
-#line 2174 "build/parser.tab.c"
+#line 1938 "build/parser.tab.c"
     break;
 
   case 59: /* exp: mutable ADDASS exp  */
 #line 180 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2180 "build/parser.tab.c"
+#line 1944 "build/parser.tab.c"
     break;
 
   case 60: /* exp: mutable SUBASS exp  */
 #line 181 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2186 "build/parser.tab.c"
+#line 1950 "build/parser.tab.c"
     break;
 
   case 61: /* exp: mutable MULASS exp  */
 #line 182 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2192 "build/parser.tab.c"
+#line 1956 "build/parser.tab.c"
     break;
 
   case 62: /* exp: mutable DIVASS exp  */
 #line 183 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2198 "build/parser.tab.c"
+#line 1962 "build/parser.tab.c"
     break;
 
   case 63: /* exp: mutable INC  */
 #line 184 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2204 "build/parser.tab.c"
+#line 1968 "build/parser.tab.c"
     break;
 
   case 64: /* exp: mutable DEC  */
 #line 185 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateAssignExp((yyvsp[-1].node), nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2210 "build/parser.tab.c"
+#line 1974 "build/parser.tab.c"
     break;
 
   case 65: /* exp: simpleExp  */
 #line 186 "Parser/parser.y"
                             {(yyval.node) = (yyvsp[0].node);}
-#line 2216 "build/parser.tab.c"
+#line 1980 "build/parser.tab.c"
     break;
 
   case 66: /* simpleExp: simpleExp OR andExp  */
 #line 190 "Parser/parser.y"
                         {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
-#line 2222 "build/parser.tab.c"
+#line 1986 "build/parser.tab.c"
     break;
 
   case 67: /* simpleExp: andExp  */
 #line 191 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2228 "build/parser.tab.c"
+#line 1992 "build/parser.tab.c"
     break;
 
   case 68: /* andExp: andExp AND unaryRelExp  */
 #line 195 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateOpExp((yyvsp[-2].node), (yyvsp[0].node), (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
-#line 2234 "build/parser.tab.c"
+#line 1998 "build/parser.tab.c"
     break;
 
   case 69: /* andExp: unaryRelExp  */
 #line 196 "Parser/parser.y"
                             {(yyval.node) = (yyvsp[0].node);}
-#line 2240 "build/parser.tab.c"
+#line 2004 "build/parser.tab.c"
     break;
 
   case 70: /* unaryRelExp: NOT unaryRelExp  */
 #line 200 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateOpExp((yyvsp[0].node), nullptr, (yyvsp[-1].tokenData)); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
-#line 2246 "build/parser.tab.c"
+#line 2010 "build/parser.tab.c"
     break;
 
   case 71: /* unaryRelExp: relExp  */
 #line 201 "Parser/parser.y"
                     {(yyval.node) = (yyvsp[0].node);}
-#line 2252 "build/parser.tab.c"
+#line 2016 "build/parser.tab.c"
     break;
 
   case 72: /* relExp: minmaxExp relop minmaxExp  */
 #line 205 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::BOOLEAN; }
-#line 2258 "build/parser.tab.c"
+#line 2022 "build/parser.tab.c"
     break;
 
   case 73: /* relExp: minmaxExp  */
 #line 206 "Parser/parser.y"
                                 {(yyval.node) = (yyvsp[0].node);}
-#line 2264 "build/parser.tab.c"
+#line 2028 "build/parser.tab.c"
     break;
 
   case 74: /* relop: LEQ  */
 #line 210 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2270 "build/parser.tab.c"
+#line 2034 "build/parser.tab.c"
     break;
 
   case 75: /* relop: LT  */
 #line 211 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2276 "build/parser.tab.c"
+#line 2040 "build/parser.tab.c"
     break;
 
   case 76: /* relop: GT  */
 #line 212 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2282 "build/parser.tab.c"
+#line 2046 "build/parser.tab.c"
     break;
 
   case 77: /* relop: GEQ  */
 #line 213 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2288 "build/parser.tab.c"
+#line 2052 "build/parser.tab.c"
     break;
 
   case 78: /* relop: EQ  */
 #line 214 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2294 "build/parser.tab.c"
+#line 2058 "build/parser.tab.c"
     break;
 
   case 79: /* relop: NEQ  */
 #line 215 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2300 "build/parser.tab.c"
+#line 2064 "build/parser.tab.c"
     break;
 
   case 80: /* minmaxExp: minmaxExp minmaxop sumExp  */
 #line 219 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2306 "build/parser.tab.c"
+#line 2070 "build/parser.tab.c"
     break;
 
   case 81: /* minmaxExp: sumExp  */
 #line 220 "Parser/parser.y"
                                 {(yyval.node) = (yyvsp[0].node);}
-#line 2312 "build/parser.tab.c"
+#line 2076 "build/parser.tab.c"
     break;
 
   case 82: /* minmaxop: MIN  */
 #line 224 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2318 "build/parser.tab.c"
+#line 2082 "build/parser.tab.c"
     break;
 
   case 83: /* minmaxop: MAX  */
 #line 225 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData)); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2324 "build/parser.tab.c"
+#line 2088 "build/parser.tab.c"
     break;
 
   case 84: /* sumExp: sumExp sumop mulExp  */
 #line 229 "Parser/parser.y"
                         {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2330 "build/parser.tab.c"
+#line 2094 "build/parser.tab.c"
     break;
 
   case 85: /* sumExp: mulExp  */
 #line 230 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2336 "build/parser.tab.c"
+#line 2100 "build/parser.tab.c"
     break;
 
   case 86: /* sumop: PLUS  */
 #line 234 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2342 "build/parser.tab.c"
+#line 2106 "build/parser.tab.c"
     break;
 
   case 87: /* sumop: MINUS  */
 #line 235 "Parser/parser.y"
             {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2348 "build/parser.tab.c"
+#line 2112 "build/parser.tab.c"
     break;
 
   case 88: /* mulExp: mulExp mulop unaryExp  */
 #line 239 "Parser/parser.y"
                             {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[-2].node), (yyvsp[0].node), nullptr); (yyval.node)->varType = TreeNode::VarType::INTEGER; }
-#line 2354 "build/parser.tab.c"
+#line 2118 "build/parser.tab.c"
     break;
 
   case 89: /* mulExp: unaryExp  */
 #line 240 "Parser/parser.y"
                             {(yyval.node) = (yyvsp[0].node);}
-#line 2360 "build/parser.tab.c"
+#line 2124 "build/parser.tab.c"
     break;
 
   case 90: /* mulop: STAR  */
 #line 244 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2366 "build/parser.tab.c"
+#line 2130 "build/parser.tab.c"
     break;
 
   case 91: /* mulop: DIVIDE  */
 #line 245 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2372 "build/parser.tab.c"
+#line 2136 "build/parser.tab.c"
     break;
 
   case 92: /* mulop: MOD  */
 #line 246 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateOpExp(nullptr, nullptr, (yyvsp[0].tokenData));}
-#line 2378 "build/parser.tab.c"
+#line 2142 "build/parser.tab.c"
     break;
 
   case 93: /* unaryExp: unaryop unaryExp  */
 #line 250 "Parser/parser.y"
                         {(yyval.node) = TreeNode::PullUpNode((yyvsp[-1].node), (yyvsp[0].node), nullptr, nullptr);}
-#line 2384 "build/parser.tab.c"
+#line 2148 "build/parser.tab.c"
     break;
 
   case 94: /* unaryExp: factor  */
 #line 251 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2390 "build/parser.tab.c"
+#line 2154 "build/parser.tab.c"
     break;
 
   case 95: /* unaryop: MINUS  */
 #line 255 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
-#line 2396 "build/parser.tab.c"
+#line 2160 "build/parser.tab.c"
     break;
 
   case 96: /* unaryop: STAR  */
 #line 256 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
-#line 2402 "build/parser.tab.c"
+#line 2166 "build/parser.tab.c"
     break;
 
   case 97: /* unaryop: QUESTION  */
 #line 257 "Parser/parser.y"
                 {(yyval.node) = TreeNode::CreateUnaryOpExp((yyvsp[0].tokenData));}
-#line 2408 "build/parser.tab.c"
+#line 2172 "build/parser.tab.c"
     break;
 
   case 98: /* factor: immutable  */
 #line 261 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 2414 "build/parser.tab.c"
+#line 2178 "build/parser.tab.c"
     break;
 
   case 99: /* factor: mutable  */
 #line 262 "Parser/parser.y"
                 {(yyval.node) = (yyvsp[0].node);}
-#line 2420 "build/parser.tab.c"
+#line 2184 "build/parser.tab.c"
     break;
 
   case 100: /* mutable: ID  */
 #line 266 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::CreateIdExp((yyvsp[0].tokenData));}
-#line 2426 "build/parser.tab.c"
+#line 2190 "build/parser.tab.c"
     break;
 
   case 101: /* mutable: ID LBRACKET exp RBRACKET  */
 #line 267 "Parser/parser.y"
                                 {(yyval.node) = TreeNode::CreateIdxExp((yyvsp[-1].node), (yyvsp[-3].tokenData), (yyvsp[-2].tokenData)); (yyval.node)->varType = (yyvsp[-1].node)->varType; }
-#line 2432 "build/parser.tab.c"
+#line 2196 "build/parser.tab.c"
     break;
 
   case 102: /* immutable: LPAREN exp RPAREN  */
 #line 271 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[-1].node);}
-#line 2438 "build/parser.tab.c"
+#line 2202 "build/parser.tab.c"
     break;
 
   case 103: /* immutable: call  */
 #line 272 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2444 "build/parser.tab.c"
+#line 2208 "build/parser.tab.c"
     break;
 
   case 104: /* immutable: constant  */
 #line 273 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2450 "build/parser.tab.c"
+#line 2214 "build/parser.tab.c"
     break;
 
   case 105: /* call: ID LPAREN args RPAREN  */
 #line 277 "Parser/parser.y"
                             {(yyval.node) = TreeNode::CreateCallExp((yyvsp[-1].node), (yyvsp[-3].tokenData));}
-#line 2456 "build/parser.tab.c"
+#line 2220 "build/parser.tab.c"
     break;
 
   case 106: /* args: argList  */
 #line 281 "Parser/parser.y"
             {(yyval.node) = (yyvsp[0].node);}
-#line 2462 "build/parser.tab.c"
+#line 2226 "build/parser.tab.c"
     break;
 
   case 107: /* args: %empty  */
 #line 282 "Parser/parser.y"
             {(yyval.node) = nullptr;}
-#line 2468 "build/parser.tab.c"
+#line 2232 "build/parser.tab.c"
     break;
 
   case 108: /* argList: argList COMMA exp  */
 #line 286 "Parser/parser.y"
                         {(yyval.node) = TreeNode::NodeList((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2474 "build/parser.tab.c"
+#line 2238 "build/parser.tab.c"
     break;
 
   case 109: /* argList: exp  */
 #line 287 "Parser/parser.y"
                         {(yyval.node) = (yyvsp[0].node);}
-#line 2480 "build/parser.tab.c"
+#line 2244 "build/parser.tab.c"
     break;
 
   case 110: /* constant: NUMCONST  */
 #line 291 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::INTEGER, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
-#line 2486 "build/parser.tab.c"
+#line 2250 "build/parser.tab.c"
     break;
 
   case 111: /* constant: CHARCONST  */
 #line 292 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData));(yyval.node)->isConst = true; }
-#line 2492 "build/parser.tab.c"
+#line 2256 "build/parser.tab.c"
     break;
 
   case 112: /* constant: STRINGCONST  */
 #line 293 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::CHARACTER, (yyvsp[0].tokenData)); (yyval.node)->isArray = true; (yyval.node)->isConst = true; }
-#line 2498 "build/parser.tab.c"
+#line 2262 "build/parser.tab.c"
     break;
 
   case 113: /* constant: TRUE  */
 #line 294 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
-#line 2504 "build/parser.tab.c"
+#line 2268 "build/parser.tab.c"
     break;
 
   case 114: /* constant: FALSE  */
 #line 295 "Parser/parser.y"
                     {(yyval.node) = TreeNode::CreateConstExp(TreeNode::VarType::BOOLEAN, (yyvsp[0].tokenData)); (yyval.node)->isConst = true; }
-#line 2510 "build/parser.tab.c"
+#line 2274 "build/parser.tab.c"
     break;
 
 
-#line 2514 "build/parser.tab.c"
+#line 2278 "build/parser.tab.c"
 
-        default: break;
-      }
-    if (yychar_backup != yychar)
-      YY_LAC_DISCARD ("yychar change");
-  }
+      default: break;
+    }
   /* User semantic actions sometimes alter yychar, and that requires
      that yytoken be updated with the new translation.  We take the
      approach of translating immediately before every use of yytoken.
@@ -2562,11 +2323,9 @@ yyerrlab:
       ++yynerrs;
       {
         yypcontext_t yyctx
-          = {yyssp, yyesa, &yyes, &yyes_capacity, yytoken};
+          = {yyssp, yytoken};
         char const *yymsgp = YY_("syntax error");
         int yysyntax_error_status;
-        if (yychar != YYEMPTY)
-          YY_LAC_ESTABLISH;
         yysyntax_error_status = yysyntax_error (&yymsg_alloc, &yymsg, &yyctx);
         if (yysyntax_error_status == 0)
           yymsgp = yymsg;
@@ -2671,10 +2430,6 @@ yyerrlab1:
       YY_STACK_PRINT (yyss, yyssp);
     }
 
-  /* If the stack popping above didn't lose the initial context for the
-     current lookahead token, the shift below will for sure.  */
-  YY_LAC_DISCARD ("error recovery");
-
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
@@ -2738,8 +2493,6 @@ yyreturnlab:
   if (yyss != yyssa)
     YYSTACK_FREE (yyss);
 #endif
-  if (yyes != yyesa)
-    YYSTACK_FREE (yyes);
   if (yymsg != yymsgbuf)
     YYSTACK_FREE (yymsg);
   return yyresult;
@@ -2748,9 +2501,44 @@ yyreturnlab:
 #line 298 "Parser/parser.y"
 
 
+static const struct { const char* name; const char* spelling; } tokenSpellings[] = {
+    {"SEMICOLON", "';'"}, {"COLON", "':'"}, {"COMMA", "','"},
+    {"LBRACKET", "'['"}, {"RBRACKET", "']'"}, {"LPAREN", "'('"}, {"RPAREN", "')'"}, {"LBRACE", "'{'"}, {"RBRACE", "'}'"},
+    {"ASSIGN", "'='"}, {"ADDASS", "'+='"}, {"SUBASS", "'-='"}, {"MULASS", "'*='"}, {"DIVASS", "'/='"},
+    {"INC", "'++'"}, {"DEC", "'--'"}, {"LEQ", "'<='"}, {"LT", "'<'"}, {"GT", "'>'"}, {"GEQ", "'>='"},
+    {"EQ", "'=='"}, {"NEQ", "'!='"}, {"MIN", "'<<'"}, {"MAX", "'>>'"},
+    {"PLUS", "'+'"}, {"MINUS", "'-'"}, {"STAR", "'*'"}, {"DIVIDE", "'/'"}, {"MOD", "'%'"}, {"QUESTION", "'?'"},
+    {"STATIC", "'static'"}, {"INT", "'int'"}, {"BOOL", "'bool'"}, {"CHAR", "'char'"},
+    {"IF", "'if'"}, {"THEN", "'then'"}, {"ELSE", "'else'"}, {"WHILE", "'while'"}, {"DO", "'do'"}, {"FOR", "'for'"},
+    {"RETURN", "'return'"}, {"TO", "'to'"}, {"BY", "'by'"}, {"BREAK", "'break'"},
+    {"OR", "'or'"}, {"AND", "'and'"}, {"NOT", "'not'"}, {"TRUE", "'true'"}, {"FALSE", "'false'"},
+};
+
 void yyerror(const char* s)
 {
-    printf("Error: %s\n", s);
+    std::string in(s), out;
+
+    for(size_t i = 0; i < in.size();) {
+        size_t j = i;
+        while(j < in.size() && ((in[j] >= 'A' && in[j] <= 'Z') || in[j] == '_'))
+            j++;
+
+        if(j == i) {
+            out += in[i++];
+            continue;
+        }
+
+        std::string word = in.substr(i, j - i);
+        for(const auto& t : tokenSpellings)
+            if(word == t.name) {
+                word = t.spelling;
+                break;
+            }
+        out += word;
+        i = j;
+    }
+
+    ErrorHandler::AddSyntaxError(out, yylineno);
 }
 
 bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
@@ -2817,6 +2605,12 @@ int main(int argc, char* argv[])
         return 2;
 
     int result = yyparse();
+
+    if(ErrorHandler::GetNumErrors() != 0) {
+        std::cout << "Number of warnings: " << ErrorHandler::GetNumWarnings() << std::endl;
+        std::cout << "Number of errors: " << ErrorHandler::GetNumErrors() << std::endl;
+        return 3;
+    }
 
     SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
     analyzer->StartAnalysis(ASTRoot);

@@ -98,7 +98,6 @@ ERROR(120): The operation 'sizeof' only works with arrays.
 ERROR(121): 'and' requires operands of type bool but lhs is of type int.
 ERROR(121): 'and' requires operands of type bool but rhs is of type int.
 ERROR(127): Cannot use function 'cat' as a variable.
-ERROR(127): Array 'aa' should be indexed by type int but got type char.
 ERROR(129): Array 'aa' should be indexed by type int but got type char.
 ERROR(129): Array index is the unindexed array 'aa'.
 ERROR(130): Symbol 'AA' is not declared.
@@ -129,6 +128,7 @@ ERROR(151): Expecting type char in parameter 1 of call to 'ibex' declared on lin
 ERROR(152): Cannot use function 'ibex' as a variable.
 ERROR(152): Cannot index nonarray 'ibex'.
 ERROR(154): Cannot use function 'ibex' as a variable.
+ERROR(155): Cannot use function 'ibex' as a variable.
 ERROR(157): Array 'aa' should be indexed by type int but got type char.
 ERROR(158): Array 'aa' should be indexed by type int but got type char.
 ERROR(158): Array index is the unindexed array 'zz'.
@@ -137,7 +137,6 @@ ERROR(159): Array 'aa' should be indexed by type int but got type void.
 ERROR(160): Array 'aa' should be indexed by type int but got type char.
 ERROR(161): Array 'aa' should be indexed by type int but got type bool.
 ERROR(162): Cannot use function 'ox' as a variable.
-ERROR(162): Array 'aa' should be indexed by type int but got type void.
 ERROR(163): Cannot use function 'ibex' as a variable.
 ERROR(165): Expecting type char in parameter 1 of call to 'ox' declared on line 48 but got type int.
 ERROR(165): '=' requires operands of the same type but lhs is type char and rhs is type void.
@@ -182,4 +181,4 @@ WARNING(57): The function 'mane' seems not to be used.
 WARNING(40): The global variable 'unusedGlobal' seems not to be used.
 ERROR(LINKER): A function named 'main()' must be defined.
 Number of warnings: 31
-Number of errors: 152
+Number of errors: 151

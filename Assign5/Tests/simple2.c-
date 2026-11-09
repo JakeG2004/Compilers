@@ -1,0 +1,12 @@
+int capella(int a) return 2*a;
+
+int main()
+{
+        int w, x:74, y:994, z:1703;
+
+        w = x + y;
+        capella(w);
+        y*z;
+        z++;
+        y+=4;
+}

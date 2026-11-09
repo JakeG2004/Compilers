@@ -63,6 +63,10 @@ class ErrorHandler
         static void AddNonConstInitError(TreeNode* node);
         static void AddInitTypeError(TreeNode* node, std::string expectedType, std::string actualType);
         static void AddInitArrError(TreeNode* node, std::string lhsIsArr, std::string rhsIsArr);
+
+        // ASSIGN 5
+
+        static void AddSyntaxError(std::string content, int lineNum);
     
     public: // Warnings
         static void AddUnusedVarWarn(TreeNode* node, bool isGlobal);

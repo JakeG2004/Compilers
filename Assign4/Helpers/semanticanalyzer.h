@@ -62,6 +62,7 @@ class SemanticAnalyzer
         std::string GetTypeStringOf(TreeNode* node);
         std::string GetTypeStringOf(TreeNode::VarType type);
         void MarkRangeIdUses(TreeNode* node);
+        void MarkStatementExps(TreeNode* node);
 
     public: // Scope Management
         bool EnterScopeIfReqd(TreeNode* node, bool isScopeBody);

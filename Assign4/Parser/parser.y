@@ -3,7 +3,6 @@
 #include "tokenclass.h"
 }
 
-%define parse.lac full
 %define parse.error verbose
 %debug
 
@@ -22,6 +21,7 @@ void yyerror(const char*);
 
 extern FILE* yyin;
 extern int yydebug;
+extern int yylineno;
 
 TreeNode* ASTRoot = nullptr;
 %}
@@ -123,7 +123,7 @@ otherStmts:
     ;
 
 expStmt:
-    exp SEMICOLON   {$$ = $1;}
+    exp SEMICOLON   {$$ = $1; $$->isStmtExp = true;}
     | SEMICOLON     {$$ = nullptr;}
     ;
 
@@ -297,9 +297,44 @@ constant:
 
 %%
 
+static const struct { const char* name; const char* spelling; } tokenSpellings[] = {
+    {"SEMICOLON", "';'"}, {"COLON", "':'"}, {"COMMA", "','"},
+    {"LBRACKET", "'['"}, {"RBRACKET", "']'"}, {"LPAREN", "'('"}, {"RPAREN", "')'"}, {"LBRACE", "'{'"}, {"RBRACE", "'}'"},
+    {"ASSIGN", "'='"}, {"ADDASS", "'+='"}, {"SUBASS", "'-='"}, {"MULASS", "'*='"}, {"DIVASS", "'/='"},
+    {"INC", "'++'"}, {"DEC", "'--'"}, {"LEQ", "'<='"}, {"LT", "'<'"}, {"GT", "'>'"}, {"GEQ", "'>='"},
+    {"EQ", "'=='"}, {"NEQ", "'!='"}, {"MIN", "'<<'"}, {"MAX", "'>>'"},
+    {"PLUS", "'+'"}, {"MINUS", "'-'"}, {"STAR", "'*'"}, {"DIVIDE", "'/'"}, {"MOD", "'%'"}, {"QUESTION", "'?'"},
+    {"STATIC", "'static'"}, {"INT", "'int'"}, {"BOOL", "'bool'"}, {"CHAR", "'char'"},
+    {"IF", "'if'"}, {"THEN", "'then'"}, {"ELSE", "'else'"}, {"WHILE", "'while'"}, {"DO", "'do'"}, {"FOR", "'for'"},
+    {"RETURN", "'return'"}, {"TO", "'to'"}, {"BY", "'by'"}, {"BREAK", "'break'"},
+    {"OR", "'or'"}, {"AND", "'and'"}, {"NOT", "'not'"}, {"TRUE", "'true'"}, {"FALSE", "'false'"},
+};
+
 void yyerror(const char* s)
 {
-    printf("Error: %s\n", s);
+    std::string in(s), out;
+
+    for(size_t i = 0; i < in.size();) {
+        size_t j = i;
+        while(j < in.size() && ((in[j] >= 'A' && in[j] <= 'Z') || in[j] == '_'))
+            j++;
+
+        if(j == i) {
+            out += in[i++];
+            continue;
+        }
+
+        std::string word = in.substr(i, j - i);
+        for(const auto& t : tokenSpellings)
+            if(word == t.name) {
+                word = t.spelling;
+                break;
+            }
+        out += word;
+        i = j;
+    }
+
+    ErrorHandler::AddSyntaxError(out, yylineno);
 }
 
 bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
@@ -366,6 +401,12 @@ int main(int argc, char* argv[])
         return 2;
 
     int result = yyparse();
+
+    if(ErrorHandler::GetNumErrors() != 0) {
+        std::cout << "Number of warnings: " << ErrorHandler::GetNumWarnings() << std::endl;
+        std::cout << "Number of errors: " << ErrorHandler::GetNumErrors() << std::endl;
+        return 3;
+    }
 
     SemanticAnalyzer* analyzer = new SemanticAnalyzer(stDebugFlag);
     analyzer->StartAnalysis(ASTRoot);

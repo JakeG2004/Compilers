@@ -1,0 +1,28 @@
+// So it seems there are several things that can go wrong in writing say
+// in C or similar language.
+//
+// 1) nouse: You can declare a variable but never use it.
+// 2) nodecl: You can use it but not declare it.
+// 3) noside: The expression result not used.  (side effect: assign, inc/dec, func call)
+// 4) uninit: You can use a declared variable in an expression but
+// never initialize the variable by giving it a value before you use it.
+// The last one is really more of a warning because it is hard to prove.
+
+yolanda(int x) x++;  // use x and don't generate a warning. Param is not affected
+
+int main()
+{
+    int w, x, y;   // w is nouse
+
+    yolanda(x);  // x is uninit
+    x++;         // x is uninit
+
+    y=x; // x is uninit
+    y=x;
+
+    x;  // x is uninit, expression noside
+    x;
+
+    z;  // z is undecl,	expression noside
+    z;
+}

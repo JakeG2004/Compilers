@@ -259,6 +259,11 @@ void ErrorHandler::AddInitArrError(TreeNode* node, std::string lhsIsArr, std::st
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
+void ErrorHandler::AddSyntaxError(std::string content, int lineNum)
+{
+    AddError(content, lineNum);
+}
+
 // ================
 // === WARNINGS ===
 // ================

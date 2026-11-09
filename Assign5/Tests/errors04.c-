@@ -1,0 +1,41 @@
+int zog;
+int zelda;
+
+fred(int fire, ice) { bool zelda;
+return 666;}
+
+int blondie(char a[]; bool b; char c; int d)
+return;
+
+char tracy(bool hawaii)
+return 50;
+
+int stairways();
+
+main()
+{
+        int ia[8];
+        int a : 'a';
+        bool b : true;
+        bool b : b;
+        int ja[4] : 7;        
+        int ja[4] : ja;        
+        char k[7] : "dog";
+        static int zelda;
+        
+        if ia then break;
+
+        for i=ia to ia do i;
+        for i='a' to 'z' do break;
+        while 33 do ;
+        if 34 then break;
+
+        blondie();
+        blondie(23);
+        blondie("dog", true, 'x', zog);
+        blondie("dog", "true", 117, 'q');
+        blondie("dog", true, 'x', zog, zelda);
+        fred(false, true);
+        fred(false, true, "hot");
+}
+        
