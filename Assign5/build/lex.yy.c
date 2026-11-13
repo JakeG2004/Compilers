@@ -411,7 +411,7 @@ static const YY_CHAR yy_ec[256] =
        19,   20,   21,    1,   22,   22,   22,   22,   22,   22,
        22,   22,   22,   22,   22,   22,   22,   22,   22,   22,
        22,   22,   22,   22,   22,   22,   22,   22,   22,   22,
-       23,   24,   25,    1,   22,    1,   26,   27,   28,   29,
+       23,   24,   25,    1,    1,    1,   26,   27,   28,   29,
 
        30,   31,   22,   32,   33,   22,   34,   35,   22,   36,
        37,   22,   22,   38,   39,   40,   41,   22,   42,   22,
@@ -553,9 +553,10 @@ char *yytext;
 #define TOKEN(t) { return AddToken(t); }
 
 int AddToken(int tokenClass);
+int lastLineNo = -1;
 
-#line 557 "build/lex.yy.c"
 #line 558 "build/lex.yy.c"
+#line 559 "build/lex.yy.c"
 
 #define INITIAL 0
 
@@ -772,9 +773,9 @@ YY_DECL
 		}
 
 	{
-#line 24 "Lexer/lexer.l"
+#line 25 "Lexer/lexer.l"
 
-#line 777 "build/lex.yy.c"
+#line 778 "build/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -843,296 +844,296 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "Lexer/lexer.l"
+#line 26 "Lexer/lexer.l"
 TOKEN(THEN)
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "Lexer/lexer.l"
+#line 27 "Lexer/lexer.l"
 TOKEN(DO)
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "Lexer/lexer.l"
+#line 28 "Lexer/lexer.l"
 TOKEN(TO)
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 28 "Lexer/lexer.l"
+#line 29 "Lexer/lexer.l"
 TOKEN(BY)
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 29 "Lexer/lexer.l"
+#line 30 "Lexer/lexer.l"
 TOKEN(OR)
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "Lexer/lexer.l"
+#line 31 "Lexer/lexer.l"
 TOKEN(AND)
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 31 "Lexer/lexer.l"
+#line 32 "Lexer/lexer.l"
 TOKEN(NOT)
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "Lexer/lexer.l"
+#line 33 "Lexer/lexer.l"
 TOKEN(INT)
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "Lexer/lexer.l"
+#line 34 "Lexer/lexer.l"
 TOKEN(BOOL)
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "Lexer/lexer.l"
+#line 35 "Lexer/lexer.l"
 TOKEN(CHAR)
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 35 "Lexer/lexer.l"
+#line 36 "Lexer/lexer.l"
 TOKEN(IF)
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 36 "Lexer/lexer.l"
+#line 37 "Lexer/lexer.l"
 TOKEN(ELSE)
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 37 "Lexer/lexer.l"
+#line 38 "Lexer/lexer.l"
 TOKEN(WHILE)
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 38 "Lexer/lexer.l"
+#line 39 "Lexer/lexer.l"
 TOKEN(FOR)
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 39 "Lexer/lexer.l"
+#line 40 "Lexer/lexer.l"
 TOKEN(RETURN)
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "Lexer/lexer.l"
+#line 41 "Lexer/lexer.l"
 TOKEN(BREAK)
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 41 "Lexer/lexer.l"
+#line 42 "Lexer/lexer.l"
 TOKEN(TRUE)
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "Lexer/lexer.l"
+#line 43 "Lexer/lexer.l"
 TOKEN(FALSE)
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 43 "Lexer/lexer.l"
+#line 44 "Lexer/lexer.l"
 TOKEN(STATIC)
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "Lexer/lexer.l"
+#line 46 "Lexer/lexer.l"
 TOKEN(SEMICOLON)
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "Lexer/lexer.l"
+#line 47 "Lexer/lexer.l"
 TOKEN(COLON)
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "Lexer/lexer.l"
+#line 48 "Lexer/lexer.l"
 TOKEN(COMMA)
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "Lexer/lexer.l"
+#line 49 "Lexer/lexer.l"
 TOKEN(LBRACKET)
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "Lexer/lexer.l"
+#line 50 "Lexer/lexer.l"
 TOKEN(RBRACKET)
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "Lexer/lexer.l"
+#line 51 "Lexer/lexer.l"
 TOKEN(LPAREN)
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "Lexer/lexer.l"
+#line 52 "Lexer/lexer.l"
 TOKEN(RPAREN)
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "Lexer/lexer.l"
+#line 53 "Lexer/lexer.l"
 TOKEN(LBRACE)
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 53 "Lexer/lexer.l"
+#line 54 "Lexer/lexer.l"
 TOKEN(RBRACE)
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 54 "Lexer/lexer.l"
+#line 55 "Lexer/lexer.l"
 TOKEN(ASSIGN)
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 55 "Lexer/lexer.l"
+#line 56 "Lexer/lexer.l"
 TOKEN(ADDASS)
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 56 "Lexer/lexer.l"
+#line 57 "Lexer/lexer.l"
 TOKEN(SUBASS)
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 57 "Lexer/lexer.l"
+#line 58 "Lexer/lexer.l"
 TOKEN(MULASS)
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 58 "Lexer/lexer.l"
+#line 59 "Lexer/lexer.l"
 TOKEN(DIVASS)
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 59 "Lexer/lexer.l"
+#line 60 "Lexer/lexer.l"
 TOKEN(INC)
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 60 "Lexer/lexer.l"
+#line 61 "Lexer/lexer.l"
 TOKEN(DEC)
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 61 "Lexer/lexer.l"
+#line 62 "Lexer/lexer.l"
 TOKEN(LEQ)
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 62 "Lexer/lexer.l"
+#line 63 "Lexer/lexer.l"
 TOKEN(LT)
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 63 "Lexer/lexer.l"
+#line 64 "Lexer/lexer.l"
 TOKEN(GT)
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 64 "Lexer/lexer.l"
+#line 65 "Lexer/lexer.l"
 TOKEN(GEQ)
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 65 "Lexer/lexer.l"
+#line 66 "Lexer/lexer.l"
 TOKEN(EQ)
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 66 "Lexer/lexer.l"
+#line 67 "Lexer/lexer.l"
 TOKEN(NEQ)
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 67 "Lexer/lexer.l"
+#line 68 "Lexer/lexer.l"
 TOKEN(MIN)
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 68 "Lexer/lexer.l"
+#line 69 "Lexer/lexer.l"
 TOKEN(MAX)
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 69 "Lexer/lexer.l"
+#line 70 "Lexer/lexer.l"
 TOKEN(PLUS)
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 70 "Lexer/lexer.l"
+#line 71 "Lexer/lexer.l"
 TOKEN(MINUS)
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 71 "Lexer/lexer.l"
+#line 72 "Lexer/lexer.l"
 TOKEN(STAR)
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 72 "Lexer/lexer.l"
+#line 73 "Lexer/lexer.l"
 TOKEN(DIVIDE)
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 73 "Lexer/lexer.l"
+#line 74 "Lexer/lexer.l"
 TOKEN(MOD)
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 74 "Lexer/lexer.l"
+#line 75 "Lexer/lexer.l"
 TOKEN(QUESTION)
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 76 "Lexer/lexer.l"
+#line 77 "Lexer/lexer.l"
 { ErrorHandler::AddEmptyCharError(std::string(yytext), yylineno); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 78 "Lexer/lexer.l"
+#line 79 "Lexer/lexer.l"
 TOKEN(ID)
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 79 "Lexer/lexer.l"
+#line 80 "Lexer/lexer.l"
 TOKEN(NUMCONST)
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 80 "Lexer/lexer.l"
+#line 81 "Lexer/lexer.l"
 TOKEN(CHARCONST)
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 81 "Lexer/lexer.l"
+#line 82 "Lexer/lexer.l"
 TOKEN(STRINGCONST)
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 83 "Lexer/lexer.l"
+#line 84 "Lexer/lexer.l"
 ;
 	YY_BREAK
 case 56:
 /* rule 56 can match eol */
 YY_RULE_SETUP
-#line 84 "Lexer/lexer.l"
+#line 85 "Lexer/lexer.l"
 ;
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 85 "Lexer/lexer.l"
+#line 86 "Lexer/lexer.l"
 { ErrorHandler::AddInvalidCharError(std::string(yytext), yylineno); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 86 "Lexer/lexer.l"
+#line 87 "Lexer/lexer.l"
 ECHO;
 	YY_BREAK
-#line 1135 "build/lex.yy.c"
+#line 1136 "build/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2149,7 +2150,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "Lexer/lexer.l"
+#line 87 "Lexer/lexer.l"
 
 
 int AddToken(int tokenClass)
@@ -2194,6 +2195,7 @@ int AddToken(int tokenClass)
             break;
     };
 
+    lastLineNo = yylineno;
     yylval.tokenData = new TokenClass(tokenClass, yylineno, yytext, c, nVal);
     return tokenClass;
 }

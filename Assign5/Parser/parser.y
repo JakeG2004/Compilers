@@ -22,6 +22,8 @@ void yyerror(const char*);
 extern FILE* yyin;
 extern int yydebug;
 extern int yylineno;
+extern int lastLineNo;
+extern char* yytext;
 
 TreeNode* ASTRoot = nullptr;
 %}
@@ -61,6 +63,7 @@ scopedVarDecl:
     STATIC typeSpec varDeclList SEMICOLON   {$$ = TreeNode::PullUpTypeNode($3, $2); for(TreeNode* v = $$; v != nullptr; v = v->sibling) v->isStatic = true; TreeNode::SetNodeListTypes($2, $3);}
     | typeSpec varDeclList SEMICOLON        {$$ = TreeNode::PullUpTypeNode($2, $1); TreeNode::SetNodeListTypes($1, $2);}
     | error SEMICOLON                       {$$ = nullptr; yyerrok; }
+    | typeSpec error SEMICOLON              {$$ = nullptr; yyerrok; }
     ;
 
 varDeclList:
@@ -76,7 +79,6 @@ varDeclInit:
 varDeclId:
     ID                              {$$ = TreeNode::CreateVarDecl(nullptr, $1);}
     | ID LBRACKET NUMCONST RBRACKET {$$ = TreeNode::CreateVarDecl($3, $1); $$->isArray = true;}
-    | error RBRACKET                {$$ = nullptr; yyerrok; }
     ;
 
 typeSpec:
@@ -114,7 +116,6 @@ parmIdList:
 parmId:
     ID                      {$$ = TreeNode::CreateParmDecl($1);}
     | ID LBRACKET RBRACKET  {$$ = TreeNode::CreateParmDecl($1); $$->isArray = true;}
-    | error RBRACKET        {$$ = nullptr; yyerrok; }
     ;
 
 stmt:
@@ -129,13 +130,14 @@ otherStmts:
     ;
 
 expStmt:
-    exp SEMICOLON       {$$ = $1; $$->isStmtExp = true;}
+    exp SEMICOLON       {$$ = $1; if($$) $$->isStmtExp = true;}
     | SEMICOLON         {$$ = nullptr;}
     | error SEMICOLON   {$$ = nullptr; yyerrok; }
     ;
 
 compoundStmt:
     LBRACE localDecls stmtList RBRACE   {$$ = TreeNode::CreateCompoundStmt($2, $3, $1);}
+    | LBRACE error RBRACE               {$$ = nullptr; yyerrok; }
     ;
 
 localDecls:
@@ -171,7 +173,7 @@ unmatchedStmt:
     ;
 
 iterRange:
-    simpleExp TO simpleExp                {$$ = TreeNode::CreateRangeStmt($1, $3, nullptr, $2);}
+    simpleExp TO simpleExp                  {$$ = TreeNode::CreateRangeStmt($1, $3, nullptr, $2);}
     | simpleExp TO simpleExp BY simpleExp   {$$ = TreeNode::CreateRangeStmt($1, $3, $5, $2);}
     ;
 
@@ -186,7 +188,7 @@ breakStmt:
     ;
 
 exp:
-    mutable ASSIGN exp      {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = $3->varType; }
+    mutable ASSIGN exp      {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = $3 ? $3->varType : TreeNode::VarType::UNDEFINED; }
     | mutable ADDASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
     | mutable SUBASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
     | mutable MULASS exp    {$$ = TreeNode::CreateAssignExp($1, $3, $2); $$->varType = TreeNode::VarType::INTEGER; }
@@ -268,21 +270,21 @@ unaryop:
     ;
 
 factor:
-    immutable           {$$ = $1;}
-    | mutable           {$$ = $1;}
-    | error SEMICOLON   {$$ = nullptr; yyerrok; }
+    immutable   {$$ = $1;}
+    | mutable   {$$ = $1;}
     ;
 
 mutable:
     ID                          {$$ = TreeNode::CreateIdExp($1);}
     | ID LBRACKET exp RBRACKET  {$$ = TreeNode::CreateIdxExp($3, $1, $2); $$->varType = $3->varType; }
-    | error RBRACKET            {$$ = nullptr; yyerrok; }
     ;
 
 immutable:
     LPAREN exp RPAREN   {$$ = $2;}
     | call              {$$ = $1;}
     | constant          {$$ = $1;}
+    | error RPAREN      {$$ = nullptr; yyerrok;}
+    | error RBRACKET    {$$ = nullptr; yyerrok;}
     ;
 
 call:
@@ -310,21 +312,95 @@ constant:
 %%
 
 static const struct { const char* name; const char* spelling; } tokenSpellings[] = {
-    {"SEMICOLON", "';'"}, {"COLON", "':'"}, {"COMMA", "','"},
-    {"LBRACKET", "'['"}, {"RBRACKET", "']'"}, {"LPAREN", "'('"}, {"RPAREN", "')'"}, {"LBRACE", "'{'"}, {"RBRACE", "'}'"},
-    {"ASSIGN", "'='"}, {"ADDASS", "'+='"}, {"SUBASS", "'-='"}, {"MULASS", "'*='"}, {"DIVASS", "'/='"},
-    {"INC", "'++'"}, {"DEC", "'--'"}, {"LEQ", "'<='"}, {"LT", "'<'"}, {"GT", "'>'"}, {"GEQ", "'>='"},
-    {"EQ", "'=='"}, {"NEQ", "'!='"}, {"MIN", "'<<'"}, {"MAX", "'>>'"},
-    {"PLUS", "'+'"}, {"MINUS", "'-'"}, {"STAR", "'*'"}, {"DIVIDE", "'/'"}, {"MOD", "'%'"}, {"QUESTION", "'?'"},
-    {"STATIC", "'static'"}, {"INT", "'int'"}, {"BOOL", "'bool'"}, {"CHAR", "'char'"},
-    {"IF", "'if'"}, {"THEN", "'then'"}, {"ELSE", "'else'"}, {"WHILE", "'while'"}, {"DO", "'do'"}, {"FOR", "'for'"},
-    {"RETURN", "'return'"}, {"TO", "'to'"}, {"BY", "'by'"}, {"BREAK", "'break'"},
-    {"OR", "'or'"}, {"AND", "'and'"}, {"NOT", "'not'"}, {"TRUE", "'true'"}, {"FALSE", "'false'"},
+    // A
+    {"AND", "\"and\""}, 
+    {"ASSIGN", "'='"}, 
+    {"ADDASS", "\"+=\""},
+    // B
+    {"BOOL", "\"bool\""},
+    {"BY", "\"by\""}, 
+    {"BREAK", "\"break\""}, 
+    {"BOOLCONST", "Boolean constant"},
+    // C
+    {"COLON", "':'"}, 
+    {"COMMA", "','"},
+    {"CHAR", "\"char\""},
+    {"CHARCONST", "character constant"},
+    // D
+    {"DIVASS", "\"/=\""},
+    {"DIVIDE", "'/'"}, 
+    {"DO", "\"do\""}, 
+    {"DEC", "\"--\""},
+    // E
+    {"EQ", "\"==\""}, 
+    {"ELSE", "\"else\""}, 
+    {"$end", "end of input"},
+    // F
+    {"FOR", "\"for\""},
+    {"FALSE", "Boolean constant"},
+    // G
+    {"GT", "'>'"}, 
+    {"GEQ", "\">=\""},
+    // H
+    // I
+    {"INC", "\"++\""}, 
+    {"INT", "\"int\""}, 
+    {"IF", "\"if\""}, 
+    {"ID", "identifier"},
+    // J
+    // K
+    // L
+    {"LBRACKET", "'['"}, 
+    {"LPAREN", "'('"}, 
+    {"LBRACE", "'{'"}, 
+    {"LEQ", "\"<=\""}, 
+    {"LT", "'<'"}, 
+    // M
+    {"MULASS", "\"*=\""}, 
+    {"MIN", "\"<<\""}, 
+    {"MAX", "\">>\""},
+    {"MINUS", "'-'"}, 
+    {"MOD", "'%'"}, 
+    // N
+    {"NEQ", "\"!=\""}, 
+    {"NOT", "\"not\""}, 
+    {"NUMCONST", "numeric constant"},
+    // O
+    {"OR", "\"or\""}, 
+    // P
+    {"PLUS", "'+'"}, 
+    // Q
+    {"QUESTION", "'?'"},
+    // R
+    {"RBRACKET", "']'"}, 
+    {"RETURN", "\"return\""}, 
+    {"RPAREN", "')'"}, 
+    {"RBRACE", "'}'"},
+    // S 
+    {"SEMICOLON", "';'"}, 
+    {"SUBASS", "\"-=\""},  
+    {"STAR", "'*'"}, 
+    {"STATIC", "\"static\""}, 
+    {"STRINGCONST", "string constant"},
+    // T
+    {"THEN", "\"then\""}, 
+    {"TO", "\"to\""}, 
+    {"TRUE", "Boolean constant"}, 
+    // U
+    // V
+    // W
+    {"WHILE", "\"while\""}, 
+    // X
+    // Y
+    // Z
 };
 
 void yyerror(const char* s)
 {
     std::string in(s), out;
+
+    for(size_t k; (k = in.find("end of file")) != std::string::npos;)
+        in.replace(k, 11, "end_of_input");
 
     for(size_t i = 0; i < in.size();) {
         size_t j = i;
@@ -346,7 +422,7 @@ void yyerror(const char* s)
         i = j;
     }
 
-    ErrorHandler::AddSyntaxError(out, yylineno);
+    ErrorHandler::AddSyntaxError(out, yytext, lastLineNo);
 }
 
 bool ProcessFlags(bool* stDebugFlag, bool* printFlag, bool* typePrintFlag)
@@ -413,6 +489,8 @@ int main(int argc, char* argv[])
         return 2;
 
     int result = yyparse();
+
+    //printf("Done parsing\n");
 
     if(ErrorHandler::GetNumErrors() != 0) {
         std::cout << "Number of warnings: " << ErrorHandler::GetNumWarnings() << std::endl;

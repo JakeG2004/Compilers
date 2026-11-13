@@ -1,0 +1,12 @@
+ERROR(1): Syntax error, unexpected ';', expecting "bool" or "char" or "int" or identifier.
+ERROR(3): Syntax error, unexpected ',', expecting ';'.
+ERROR(4): Syntax error, unexpected "int".
+ERROR(5): Syntax error, unexpected "int".
+ERROR(6): Syntax error, unexpected "int".
+ERROR(7): Syntax error, unexpected "int".
+ERROR(7): Syntax error, unexpected ';'.
+ERROR(9): Syntax error, unexpected ']'.
+ERROR(9): Syntax error, unexpected ';', expecting "do" or "or".
+ERROR(26): Syntax error, unexpected "do".
+Number of warnings: 0
+Number of errors: 10

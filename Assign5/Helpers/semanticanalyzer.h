@@ -6,6 +6,7 @@
 #include "parser.tab.h"
 
 #include <stack>
+#include <map>
 
 class SemanticAnalyzer
 {
@@ -40,6 +41,12 @@ class SemanticAnalyzer
     public: // Symbol Checks
         void CheckUninitIDErrors(TreeNode* node);
         void CheckCallErrors(TreeNode* node);
+        void CheckCallArgErrors(TreeNode* node);
+        void CheckReturnTypeErrors(TreeNode* node);
+        void CheckSingleCallArg(TreeNode* arg);
+        struct CallArgInfo { TreeNode* call; TreeNode* func; int idx; };
+        std::map<TreeNode*, CallArgInfo> callArgs;
+        bool loopBodyAllowancePending = false;
         void CheckCallParmErrors(TreeNode* node, TreeNode* funcNode);
 
     public: // ST Node Management

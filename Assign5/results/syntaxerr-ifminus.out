@@ -1,0 +1,34 @@
+ERROR(10): Syntax error, unexpected "else".
+ERROR(12): Syntax error, unexpected "else".
+ERROR(16): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(46): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(48): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(50): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(52): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(54): Syntax error, unexpected numeric constant "222", expecting "or" or "then".
+ERROR(56): Syntax error, unexpected ';', expecting "or" or "then".
+ERROR(68): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(70): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(72): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(74): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(76): Syntax error, unexpected numeric constant "222", expecting "or" or "then".
+ERROR(78): Syntax error, unexpected ';', expecting "or" or "then".
+ERROR(86): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(88): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(90): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(92): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(102): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(104): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(106): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(108): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(118): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(120): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(122): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(124): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(134): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(136): Syntax error, unexpected numeric constant "111", expecting "or" or "then".
+ERROR(138): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(140): Syntax error, unexpected "else", expecting "or" or "then".
+ERROR(142): Syntax error, unexpected end of input.
+Number of warnings: 0
+Number of errors: 32

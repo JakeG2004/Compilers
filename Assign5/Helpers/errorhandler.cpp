@@ -1,6 +1,8 @@
 #include "errorhandler.h"
 
 #include <sstream>
+#include <algorithm>
+#include <vector>
 
 ErrorHandler::ErrorHandler() {}
 
@@ -16,7 +18,7 @@ void ErrorHandler::AddWarning(std::string content, int lineNum)
 
 void ErrorHandler::InstAddErrorOrWarning(Error::ErrorType errorType, std::string content, int lineNum)
 {
-    if(lineNum == -1)
+    if(lineNum == -1 && errorType == Error::ErrorType::WARNING)
         return;
 
     Error* newError = new Error(errorType, content, lineNum);
@@ -259,9 +261,60 @@ void ErrorHandler::AddInitArrError(TreeNode* node, std::string lhsIsArr, std::st
     AddError(ss.str(), node->tokenData->lineNum);
 }
 
-void ErrorHandler::AddSyntaxError(std::string content, int lineNum)
+void ErrorHandler::AddSyntaxError(std::string content, char* yytext, int lineNum)
 {
-    AddError(content, lineNum);
+    const std::string unexpPrefix = "syntax error, unexpected ";
+    const std::string expectSep = ", expecting ";
+
+    std::string unexpected = content;
+    std::string expectedPart;
+    bool hasExpected = false;
+
+    if(unexpected.compare(0, unexpPrefix.size(), unexpPrefix) == 0)
+        unexpected = unexpected.substr(unexpPrefix.size());
+
+    size_t pos = unexpected.find(expectSep);
+    if(pos != std::string::npos) {
+        expectedPart = unexpected.substr(pos + expectSep.size());
+        unexpected = unexpected.substr(0, pos);
+        hasExpected = true;
+    }
+
+    std::vector<std::string> expected;
+    if(hasExpected) {
+        const std::string orSep = " or ";
+        size_t start = 0, f;
+        while((f = expectedPart.find(orSep, start)) != std::string::npos) {
+            expected.push_back(expectedPart.substr(start, f - start));
+            start = f + orSep.size();
+        }
+        expected.push_back(expectedPart.substr(start));
+        std::sort(expected.begin(), expected.end());
+    }
+
+    std::string errorStr = "Syntax error, unexpected ";
+    if(unexpected == "end_of_input" || unexpected == "$end")
+        errorStr += "end of input";
+    else
+        errorStr += unexpected;
+
+    if(unexpected.find("constant") != std::string::npos || unexpected.find("identifier") != std::string::npos) {
+        while(!errorStr.empty() && errorStr.back() == ' ')
+            errorStr.pop_back();
+        if(yytext[0] == '\'' || yytext[0] == '"')
+            errorStr += std::string(" ") + yytext;
+        else
+            errorStr += std::string(" \"") + yytext + "\"";
+    }
+
+    for(size_t i = 0; i < expected.size(); i++) {
+        errorStr += (i == 0) ? ", expecting " : " or ";
+        errorStr += expected[i];
+    }
+
+    errorStr += ".";
+
+    AddError(errorStr, lineNum);
 }
 
 void ErrorHandler::AddEmptyCharError(std::string content, int lineNum) 
@@ -279,8 +332,15 @@ void ErrorHandler::AddInvalidCharError(std::string content, int lineNum)
 void ErrorHandler::AddLongCharError(std::string content, int lineNum)
 {
     std::stringstream ss;
-    ss << "character is " << content.length() - 2 << " characters long and not a single character: '" << content << "'.  The first char will be used.";
-    AddError(ss.str(), lineNum);
+    // The reference output shows runs of whitespace inside the constant collapsed to a single space.
+    std::string shown;
+    for(char ch : content) {
+        if((ch == ' ' || ch == '\t') && !shown.empty() && shown.back() == ' ')
+            continue;
+        shown += ch;
+    }
+    ss << "character is " << content.length() - 2 << " characters long and not a single character: " << shown << ". The first char will be used.";
+    AddWarning(ss.str(), lineNum);
 }
 
 // ================

@@ -1,0 +1,12 @@
+// C-S21
+}
+{
+main() {
+    { int x; }
+    { int; 666; }
+    { 666; int y;}
+    { int x; ++ }
+    if true then { int x; if then }
+    if true then { if then break return }
+    if true then { 666; int z; }
+}

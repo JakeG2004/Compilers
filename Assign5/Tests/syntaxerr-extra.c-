@@ -1,0 +1,39 @@
+;main()
+{
+        * a, b;
+        int x : +;
+ int x : while ;
+ int x : while true for ;
+ int fred(int y) +;
+ x[*];
+ while ] ;
+ if while then 666;
+ if while then 666 else 777;
+ if * x then 666;
+ if * x then 666 else 777;
+ if bool then 666;
+ if * x else 666;
+ if bool else 666;
+ if then 666;
+ if then 666; else if true then 222;
+ for = do 666;
+ true  and  ;
+ true  or  ;
+ not for  ;
+ { * } ;
+// } ;  // be sure to catch this
+
+ while 3+ do 777;
+ while do 88;
+ while;
+ while then;
+ while and or not for;
+ if while and or not for;
+ return int ;
+ break 5;
+ 20 + 30;
+ break break;
+ 22 + 33;
+ while true do break *;
+}
+

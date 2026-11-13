@@ -1,0 +1,97 @@
+ERROR(1): Syntax error, unexpected '>', expecting "bool" or "char" or "int" or identifier.
+ERROR(11): Syntax error, unexpected '('.
+ERROR(18): Syntax error, unexpected ';'.
+ERROR(19): Syntax error, unexpected ','.
+ERROR(21): Syntax error, unexpected "and".
+ERROR(40): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(41): Syntax error, unexpected identifier "run", expecting '('.
+ERROR(47): Syntax error, unexpected '('.
+ERROR(56): Syntax error, unexpected '}'.
+ERROR(63): Syntax error, unexpected ','.
+ERROR(66): Syntax error, unexpected ','.
+ERROR(76): Syntax error, unexpected '+'.
+ERROR(81): Syntax error, unexpected ')', expecting ',' or ';'.
+ERROR(89): Syntax error, unexpected '('.
+ERROR(98): Syntax error, unexpected identifier "x", expecting '('.
+ERROR(108): Syntax error, unexpected numeric constant "3".
+ERROR(110): Syntax error, unexpected ']'.
+ERROR(117): Syntax error, unexpected '('.
+ERROR(120): Syntax error, unexpected "!=".
+ERROR(125): Syntax error, unexpected character constant '\t'.
+ERROR(136): Syntax error, unexpected ']'.
+ERROR(141): Syntax error, unexpected numeric constant "11", expecting ';'.
+ERROR(144): Syntax error, unexpected numeric constant "666".
+ERROR(155): Syntax error, unexpected ',', expecting '('.
+ERROR(162): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(165): Syntax error, unexpected numeric constant "3".
+ERROR(172): Syntax error, unexpected identifier "shave", expecting '('.
+ERROR(188): Syntax error, unexpected ']'.
+ERROR(191): Syntax error, unexpected numeric constant "10".
+ERROR(194): Syntax error, unexpected numeric constant "2".
+ERROR(196): Syntax error, unexpected "static".
+ERROR(215): Syntax error, unexpected numeric constant "0", expecting ')'.
+ERROR(226): Syntax error, unexpected identifier "C", expecting ')'.
+ERROR(230): Syntax error, unexpected ';', expecting ')'.
+ERROR(239): Syntax error, unexpected "bool", expecting ')'.
+ERROR(244): Syntax error, unexpected identifier "wallace", expecting ';'.
+ERROR(254): Syntax error, unexpected "static", expecting '('.
+ERROR(257): Syntax error, unexpected identifier "close", expecting '('.
+ERROR(259): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(259): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(259): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(272): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(277): Syntax error, unexpected "or".
+ERROR(278): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(294): Syntax error, unexpected ',', expecting ';'.
+ERROR(302): Syntax error, unexpected numeric constant "4".
+ERROR(304): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(308): Syntax error, unexpected ')'.
+ERROR(323): Syntax error, unexpected '['.
+ERROR(330): Syntax error, unexpected ']'.
+ERROR(331): Syntax error, unexpected '[', expecting ';'.
+ERROR(343): Syntax error, unexpected '-', expecting identifier.
+ERROR(353): Syntax error, unexpected ')'.
+ERROR(355): Syntax error, unexpected '='.
+ERROR(358): Syntax error, unexpected '{'.
+ERROR(364): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(364): Syntax error, unexpected identifier "t", expecting ')'.
+ERROR(368): Syntax error, unexpected ',', expecting ')'.
+ERROR(371): Syntax error, unexpected '[', expecting ')'.
+ERROR(388): Syntax error, unexpected identifier "preston", expecting ')'.
+ERROR(418): Syntax error, unexpected identifier "a", expecting ')'.
+ERROR(422): Syntax error, unexpected identifier "x", expecting ')'.
+ERROR(435): Syntax error, unexpected "if", expecting ')'.
+ERROR(447): Syntax error, unexpected identifier "McGraw", expecting ')'.
+ERROR(480): Syntax error, unexpected ';', expecting ')'.
+ERROR(486): Syntax error, unexpected ';', expecting ')'.
+ERROR(488): Syntax error, unexpected numeric constant "42", expecting ')'.
+ERROR(528): Syntax error, unexpected identifier "rabbit", expecting ')'.
+ERROR(531): Syntax error, unexpected string constant "indispensible", expecting ')'.
+ERROR(538): Syntax error, unexpected '{', expecting ')'.
+ERROR(548): Syntax error, unexpected identifier "tottington", expecting ')'.
+ERROR(565): Syntax error, unexpected '[', expecting ')'.
+ERROR(569): Syntax error, unexpected '(', expecting ')'.
+ERROR(571): Syntax error, unexpected "else", expecting ')'.
+ERROR(583): Syntax error, unexpected identifier "wrong", expecting ')'.
+ERROR(585): Syntax error, unexpected ':', expecting ')'.
+ERROR(585): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(610): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(622): Syntax error, unexpected "int", expecting ')'.
+ERROR(623): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(636): Syntax error, unexpected '=', expecting ')'.
+ERROR(674): Syntax error, unexpected "int", expecting ')'.
+ERROR(685): Syntax error, unexpected "int", expecting ';'.
+ERROR(687): Syntax error, unexpected ')'.
+ERROR(689): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(689): Invalid or misplaced input character: '\'. Character Ignored.
+ERROR(689): Invalid or misplaced input character: '"'. Character Ignored.
+ERROR(691): Syntax error, unexpected '-', expecting '('.
+ERROR(695): Syntax error, unexpected ')'.
+ERROR(699): Syntax error, unexpected identifier "gromit", expecting ';'.
+ERROR(701): Syntax error, unexpected identifier "gromit", expecting ';'.
+ERROR(714): Syntax error, unexpected identifier "run", expecting ';'.
+ERROR(718): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(720): Syntax error, unexpected '}'.
+ERROR(752): Syntax error, unexpected "++".
+Number of warnings: 0
+Number of errors: 95

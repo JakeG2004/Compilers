@@ -1,0 +1,4 @@
+ERROR(9): Syntax error, unexpected identifier "x", expecting '='.
+ERROR(16): Syntax error, unexpected ':', expecting "do".
+Number of warnings: 0
+Number of errors: 2

@@ -1,2 +1,0 @@
-allops -P
-array -P

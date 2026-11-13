@@ -1,0 +1,9 @@
+ERROR(24): Syntax error, unexpected ':', expecting "do".
+ERROR(25): Syntax error, unexpected '=', expecting "or" or "to".
+ERROR(26): Syntax error, unexpected '=', expecting "or" or "to".
+ERROR(27): Syntax error, unexpected '=', expecting "or" or "to".
+ERROR(33): Syntax error, unexpected ')', expecting "or" or "to".
+ERROR(33): Syntax error, unexpected ';', expecting "or" or "to".
+ERROR(37): Syntax error, unexpected "if", expecting "or" or "to".
+Number of warnings: 0
+Number of errors: 7

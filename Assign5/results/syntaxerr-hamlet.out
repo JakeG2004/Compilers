@@ -1,0 +1,24 @@
+ERROR(2): Syntax error, unexpected identifier "be", expecting '('.
+ERROR(3): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(7): Syntax error, unexpected identifier "more", expecting '('.
+ERROR(7): Syntax error, unexpected "and".
+ERROR(9): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(10): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(10): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(11): Syntax error, unexpected identifier "sleep", expecting '('.
+ERROR(11): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(12): Syntax error, unexpected identifier "in", expecting '('.
+ERROR(14): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(16): Syntax error, unexpected identifier "who", expecting '('.
+WARNING(17): character is 22 characters long and not a single character: 's wrong, the proud man'. The first char will be used.
+ERROR(18): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(25): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(30): Syntax error, unexpected identifier "thus", expecting '('.
+ERROR(31): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(34): Invalid or misplaced input character: '.'. Character Ignored.
+ERROR(34): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(35): Invalid or misplaced input character: '!'. Character Ignored.
+ERROR(36): Invalid or misplaced input character: '''. Character Ignored.
+ERROR(36): Invalid or misplaced input character: '.'. Character Ignored.
+Number of warnings: 1
+Number of errors: 21

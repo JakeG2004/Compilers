@@ -79,6 +79,7 @@ gettests:
 unpacktests: tests.b64
 	base64 -d tests.b64 > Tests.tar
 	mkdir -p Tests
+	touch Tests/00_test_flags.txt
 	tar -xvf Tests.tar -C Tests
 	rm Tests.tar
 	rm tests.b64

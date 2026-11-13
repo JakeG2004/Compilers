@@ -164,8 +164,12 @@ void TreeNode::PrintExp(bool printType)
             std::cout << "Const" << GetArrText() << " ";
             if(varType == VarType::INTEGER)
                 std::cout << tokenData->numVal;
-            else
-                std::cout << tokenData->stringVal;
+            else {
+                // the expected output drops NUL bytes and shows a tab as a plain space
+                for(char ch : tokenData->stringVal) {
+                    std::cout << (ch == '\t' ? ' ' : ch);
+                }
+            }
             std::cout << " of " << GetTypeString();
             break;
 

@@ -66,7 +66,7 @@ class ErrorHandler
 
         // ASSIGN 5
 
-        static void AddSyntaxError(std::string content, int lineNum);
+        static void AddSyntaxError(std::string content, char* yytext, int lineNum);
         static void AddEmptyCharError(std::string content, int lineNum);
         static void AddInvalidCharError(std::string content, int lineNum);
         static void AddLongCharError(std::string content, int lineNum);
@@ -75,7 +75,6 @@ class ErrorHandler
     public: // Warnings
         static void AddUnusedVarWarn(TreeNode* node, bool isGlobal);
         static void AddUninitVarWarn(TreeNode* node);
-
         static void AddMissingRetWarn(TreeNode* node, std::string funcName, std::string expectedType);
 
     public: // Weird things like linker

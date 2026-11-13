@@ -1,0 +1,7 @@
+ERROR(12): Syntax error, unexpected '+', expecting ';'.
+ERROR(13): Syntax error, unexpected '=', expecting ';'.
+ERROR(15): Syntax error, unexpected '=', expecting ';'.
+ERROR(20): Syntax error, unexpected "++", expecting "or" or "then".
+ERROR(22): Syntax error, unexpected '=', expecting "or" or "then".
+Number of warnings: 0
+Number of errors: 5

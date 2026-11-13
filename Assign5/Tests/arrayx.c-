@@ -6,6 +6,8 @@ main() {
    bool bb[10]:true;
    char cc[10]:'x';
    int ii[10]:666;
+   char str:"tracy runs the race";
+   char string[3]:"tracy runs the race";
    
    b = true;
    c = 'x';

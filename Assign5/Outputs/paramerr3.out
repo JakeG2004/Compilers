@@ -13,8 +13,8 @@ WARNING(22): Variable 'b' may be uninitialized when used here.
 WARNING(22): Variable 'c' may be uninitialized when used here.
 ERROR(24): Too few parameters passed for function 'Athos' declared on line 4.
 ERROR(25): Too many parameters passed for function 'Athos' declared on line 4.
-ERROR(26): Symbol 'thx1138' is not declared.
 ERROR(26): Expecting type int in parameter 1 of call to 'Athos' declared on line 4 but got type void.
+ERROR(26): Symbol 'thx1138' is not declared.
 ERROR(26): Expecting type char in parameter 3 of call to 'Athos' declared on line 4 but got type int.
 WARNING(17): The parameter 'aa' seems not to be used.
 WARNING(17): The parameter 'bb' seems not to be used.

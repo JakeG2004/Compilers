@@ -8,6 +8,7 @@
 #define TOKEN(t) { return AddToken(t); }
 
 int AddToken(int tokenClass);
+int lastLineNo = -1;
 
 %}
 
@@ -15,7 +16,7 @@ int AddToken(int tokenClass);
 %option yylineno
 
 digit               [0-9]
-letter              [a-zA-Z_]
+letter              [a-zA-Z]
 letdig              {digit}|{letter}
 char                "'"([^'\\\n]|\\.)*"'"
 string              "\""([^"\\\n]|\\.)*"\""
@@ -127,6 +128,7 @@ int AddToken(int tokenClass)
             break;
     };
 
+    lastLineNo = yylineno;
     yylval.tokenData = new TokenClass(tokenClass, yylineno, yytext, c, nVal);
     return tokenClass;
 }

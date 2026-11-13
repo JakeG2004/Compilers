@@ -1,0 +1,13 @@
+ERROR(6): Initializer for variable 'bb' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(7): Initializer for variable 'cc' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(8): Initializer for variable 'ii' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(9): Initializer for variable 'str' requires both operands be arrays or not but variable is not an array and rhs is an array.
+ERROR(12): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(13): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+ERROR(14): '=' requires both operands be arrays or not but lhs is an array and rhs is not an array.
+WARNING(21): Variable 'd' may be uninitialized when used here.
+WARNING(2): The local variable 'e' seems not to be used.
+WARNING(9): The local variable 'str' seems not to be used.
+WARNING(10): The local variable 'string' seems not to be used.
+Number of warnings: 4
+Number of errors: 7

@@ -1,10 +1,10 @@
-ERROR(2): Initializer for variable 'a' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(2): Initializer for variable 'a' requires both operands be arrays or not but variable is an array and rh
 ERROR(4): Initializer for variable 'c' is not a constant expression.
 ERROR(6): Initializer for variable 'x' of type int is of type char
 ERROR(7): Initializer for variable 'y' of type int is of type char
-ERROR(7): Initializer for variable 'y' requires both operands be arrays or not but variable is not an array and rhs is an array.
-ERROR(8): Initializer for variable 'z' of type int is of type void
+ERROR(7): Initializer for variable 'y' requires both operands be arrays or not but variable is not an array an
 ERROR(8): Initializer for variable 'z' is not a constant expression.
+ERROR(8): Initializer for variable 'z' of type int is of type void
 ERROR(10): '=' requires operands of the same type but lhs is type int and rhs is type char.
 ERROR(11): '=' requires operands of the same type but lhs is type int and rhs is type char.
 ERROR(11): '=' requires both operands be arrays or not but lhs is not an array and rhs is an array.

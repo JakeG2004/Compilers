@@ -1,0 +1,4 @@
+ERROR(4): Syntax error, unexpected '=', expecting identifier.
+ERROR(16): Syntax error, unexpected end of input.
+Number of warnings: 0
+Number of errors: 2

@@ -16,11 +16,11 @@ ERROR(45): Symbol 'p' is not declared.
 ERROR(46): Symbol 'q' is not declared.
 ERROR(46): Symbol 'r' is not declared.
 ERROR(47): Symbol 's' is not declared.
-ERROR(47): Symbol 't' is not declared.
 ERROR(47): Too many parameters passed for function 'ant' declared on line 3.
+ERROR(47): Symbol 't' is not declared.
 ERROR(48): Symbol 'u' is not declared.
-ERROR(48): Symbol 'v' is not declared.
 ERROR(48): Symbol 'cow' is not declared.
+ERROR(48): Symbol 'v' is not declared.
 ERROR(49): Symbol 'abraxsis' is not declared.
 ERROR(50): Symbol 'a' is not declared.
 WARNING(37): Expecting to return type int but function 'bat' has no return statement.

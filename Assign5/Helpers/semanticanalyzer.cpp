@@ -19,6 +19,14 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
     if(node == nullptr)
         return;
 
+    auto argIt = callArgs.find(node);
+    if(argIt != callArgs.end()) {
+        int nParm = 0;
+        for(TreeNode* a = argIt->second.func->leftChild; a != nullptr; a = a->sibling) nParm++;
+        if(argIt->second.idx == nParm)
+            ErrorHandler::AddTooManyParmsInCallError(argIt->second.call, argIt->second.func->tokenData->tokenStr, argIt->second.func->tokenData->lineNum);
+    }
+
     bool deferInsert = node->nodeType == TreeNode::NodeType::DECLNODE
                     && node->subType.decl == TreeNode::DeclType::VARTYPE
                     && node->leftChild != nullptr;
@@ -45,14 +53,16 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 
     CheckForSymbolErrors(node);
     CheckForBreakErrors(node);
-    CheckTestConditionErrors(node);
 
     // identifiers in a for-range are never resolved: no undeclared errors, no uninit warnings, and they don't count as uses
     bool isRange = node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RANGETYPE;
 
     if(!isRange) {
         Analyze(node->leftChild);
+        CheckTestConditionErrors(node);
         Analyze(node->middleChild, IsFunction(node));
+        if(IsLoop(node) && node->rightChild == nullptr)
+            loopBodyAllowancePending = true;
         Analyze(node->rightChild, IsLoop(node));
     }
 
@@ -62,6 +72,9 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
         if(target != nullptr)
             target->initializedAt = node;
     }
+
+    if(node->nodeType == TreeNode::NodeType::EXPNODE && node->subType.exp == TreeNode::ExpType::CALLTYPE)
+        CheckCallArgErrors(node);
 
     // operator checks run after the operands so errors come out operands first
     CheckForOperatorErrors(node);
@@ -78,6 +91,9 @@ void SemanticAnalyzer::Analyze(TreeNode* node, bool isScopeBody)
 
     if(IsLoop(node) && !loopStack.empty())
         loopStack.pop();
+
+    if(callArgs.find(node) != callArgs.end())
+        CheckSingleCallArg(node);
 
     Analyze(node->sibling);
 }
@@ -223,10 +239,17 @@ void SemanticAnalyzer::CheckForReturnErrors(TreeNode* node)
     if(!(node->nodeType == TreeNode::NodeType::STMTNODE && node->subType.stmt == TreeNode::StmtType::RETURNTYPE))
         return;
 
-    if(node->leftChild != nullptr)
-        if(IsArray(ResolveOperand(node->leftChild)))
-            ErrorHandler::AddRetArrError(node);
+    // the array error is reported after any return type error, so remember it for now
+    bool returnsArray = node->leftChild != nullptr && IsArray(ResolveOperand(node->leftChild));
 
+    CheckReturnTypeErrors(node);
+
+    if(returnsArray)
+        ErrorHandler::AddRetArrError(node);
+}
+
+void SemanticAnalyzer::CheckReturnTypeErrors(TreeNode* node)
+{
     if(currentFunc == nullptr)
         return;
 
@@ -295,7 +318,6 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
 
     TreeNode* children[3] = {node->leftChild, node->middleChild, node->rightChild};
 
-    // type check
     for(int i = 0; i < 3; i++) {
         TreeNode* curChild = children[i];
         if(i == 2 && curChild == nullptr)
@@ -312,18 +334,6 @@ void SemanticAnalyzer::CheckForRangeErrors(TreeNode* node)
         if(GetTypeOf(curChild) != TreeNode::VarType::INTEGER) {
             ErrorHandler::AddWrongTypeInRangeError(node, GetTypeStringOf(TreeNode::VarType::INTEGER), GetTypeStringOf(curChild), i);
         }
-    }
-
-    // arr check
-    for(int i = 0; i < 3; i++) {
-        TreeNode* curChild = children[i];
-        if(i == 2 && curChild == nullptr)
-            break;
-        TreeNode* lookedUp = ResolveOperand(children[i]);
-        if(IsFuncUse(children[i], lookedUp))
-            continue;
-        if(lookedUp != nullptr)
-            curChild = lookedUp;
         if(IsArray(curChild)) {
             ErrorHandler::AddArrInRangeError(node, i);
         }
@@ -350,12 +360,12 @@ void SemanticAnalyzer::CheckTestConditionErrors(TreeNode* node)
     if(lhs == nullptr)
         return;
 
-    if(IsArray(lhs)) {
-        ErrorHandler::AddArrAsTestConditionError(node, stmtType);
-    }
-
     if(GetTypeOf(lhs) != TreeNode::VarType::BOOLEAN) {
         ErrorHandler::AddNonBoolTestConditionError(node, stmtType, GetTypeStringOf(lhs));
+    }
+
+    if(IsArray(lhs)) {
+        ErrorHandler::AddArrAsTestConditionError(node, stmtType);
     }
 }
 
@@ -489,16 +499,16 @@ void SemanticAnalyzer::CheckInitErrors(TreeNode* node)
         return;
     }
 
+    if(!IsConst(rhs)) {
+        ErrorHandler::AddNonConstInitError(node);
+    }
+
     if(GetTypeOf(node) != GetTypeOf(rhs)) {
         ErrorHandler::AddInitTypeError(node, GetTypeStringOf(node), GetTypeStringOf(rhs));
     }
 
     if(IsArray(node) != IsArray(rhs)) {
         ErrorHandler::AddInitArrError(node, IsArray(node) ? " " : " not ", IsArray(rhs) ? " " : " not ");
-    }
-
-    if(!IsConst(rhs)) {
-        ErrorHandler::AddNonConstInitError(node);
     }
 }
 
@@ -632,21 +642,76 @@ void SemanticAnalyzer::CheckUninitIDErrors(TreeNode* node)
 
 void SemanticAnalyzer::CheckCallErrors(TreeNode* node)
 {
+    // pre-order part: only the problems with the callee itself
+    TreeNode* result = LookupNode(node, false);
+
+    if(result && result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE)
+        ErrorHandler::AddVarCallError(node);
+    else if(result) {
+        // remember which call and parameter slot each argument belongs to so it can be checked as soon as it is analyzed
+        int idx = 0;
+        for(TreeNode* arg = node->leftChild; arg != nullptr; arg = arg->sibling, idx++)
+            callArgs[arg] = CallArgInfo{node, result, idx};
+    }
+}
+
+void SemanticAnalyzer::CheckCallArgErrors(TreeNode* node)
+{
+    // post-order part: runs after the arguments have been analyzed
+    TreeNode* result = LookupNode(node, false);
+
+    if(result && !(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE)) {
+        int nCall = 0, nParm = 0;
+        for(TreeNode* a = node->leftChild; a != nullptr; a = a->sibling) nCall++;
+        for(TreeNode* a = result->leftChild; a != nullptr; a = a->sibling) nParm++;
+        if(nCall < nParm)
+            ErrorHandler::AddTooFewParmsInCallError(node, result->tokenData->tokenStr, result->tokenData->lineNum);
+    }
+
+    // function names passed as arguments are reported after the call's own parameter errors
     for(TreeNode* arg = node->leftChild; arg != nullptr; arg = arg->sibling) {
         if(arg->nodeType == TreeNode::NodeType::EXPNODE && arg->subType.exp == TreeNode::ExpType::IDTYPE && IsFunction(LookupNode(arg, false)))
             ErrorHandler::AddFunVarError(arg);
     }
+}
 
-    TreeNode* result = LookupNode(node, false);
-    if(!result)
+void SemanticAnalyzer::CheckSingleCallArg(TreeNode* callParm)
+{
+    CallArgInfo info = callArgs[callParm];
+    TreeNode* node = info.call;
+    TreeNode* funcNode = info.func;
+
+    TreeNode* funcParm = funcNode->leftChild;
+    for(int i = 0; i < info.idx && funcParm != nullptr; i++)
+        funcParm = funcParm->sibling;
+
+    if(funcParm == nullptr)
         return;
 
-    if(result->nodeType == TreeNode::NodeType::DECLNODE && result->subType.decl != TreeNode::DeclType::FUNCTYPE) {
-        ErrorHandler::AddVarCallError(node);
+    TreeNode* curCallParm = callParm;
+    if(!IsConst(curCallParm))
+        if(IsOperator(curCallParm))
+            curCallParm = ResolveOperand(curCallParm);
+        else
+            curCallParm = LookupNode(curCallParm);
+    if(curCallParm == nullptr)
         return;
+
+    if(GetTypeOf(curCallParm) == TreeNode::VarType::UNDEFINED)
+        return;
+
+    TreeNode::VarType callType = GetTypeOf(curCallParm);
+    TreeNode::VarType parmType = GetTypeOf(funcParm);
+
+    if(callType != parmType) {
+        ErrorHandler::AddWrongTypeInCallError(node, GetTypeStringOf(parmType), GetTypeStringOf(callType), funcNode->tokenData->tokenStr, info.idx, funcNode->tokenData->lineNum);
     }
 
-    CheckCallParmErrors(node, result);
+    if(IsArray(curCallParm) && !IsArray(funcParm)) {
+        ErrorHandler::AddNotExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, info.idx);
+    } else if(!IsArray(curCallParm) && IsArray(funcParm)) {
+        ErrorHandler::AddExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, info.idx);
+    }
 }
 
 void SemanticAnalyzer::CheckCallParmErrors(TreeNode* node, TreeNode* funcNode)
@@ -677,17 +742,17 @@ void SemanticAnalyzer::CheckCallParmErrors(TreeNode* node, TreeNode* funcNode)
             continue;
         }
 
-        if(IsArray(curCallParm) && !IsArray(funcParm)) {
-            ErrorHandler::AddNotExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
-        } else if(!IsArray(curCallParm) && IsArray(funcParm)) {
-            ErrorHandler::AddExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
-        }
-
         TreeNode::VarType callType = GetTypeOf(curCallParm);
         TreeNode::VarType parmType = GetTypeOf(funcParm);
 
         if(callType != parmType) {
             ErrorHandler::AddWrongTypeInCallError(node, GetTypeStringOf(parmType), GetTypeStringOf(callType), funcNode->tokenData->tokenStr, callIdx, funcNode->tokenData->lineNum);
+        }
+
+        if(IsArray(curCallParm) && !IsArray(funcParm)) {
+            ErrorHandler::AddNotExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
+        } else if(!IsArray(curCallParm) && IsArray(funcParm)) {
+            ErrorHandler::AddExpectArrInCallError(node, funcNode->tokenData->tokenStr, funcNode->tokenData->lineNum, callIdx);
         }
 
         callParm = callParm->sibling;
@@ -999,6 +1064,13 @@ std::string SemanticAnalyzer::GetTypeStringOf(TreeNode::VarType type)
 bool SemanticAnalyzer::EnterScopeIfReqd(TreeNode* node, bool isScopeBody)
 {
     bool addScope = IsFunction(node) || IsLoop(node) || (IsCompound(node) && !isScopeBody);
+
+    // a loop with an empty body leaves its "this is the scope body" allowance unused,
+    // and the next compound statement picks it up and does not open a scope of its own
+    if(IsCompound(node) && loopBodyAllowancePending) {
+        loopBodyAllowancePending = false;
+        addScope = false;
+    }
     if(addScope) symbolTable->enter(node->tokenData->tokenStr);
     return addScope;
 }

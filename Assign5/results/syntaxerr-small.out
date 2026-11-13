@@ -1,0 +1,10 @@
+ERROR(5): Invalid or misplaced input character: '^'. Character Ignored.
+ERROR(5): Syntax error, unexpected identifier "k", expecting ']'.
+ERROR(7): Syntax error, unexpected '='.
+ERROR(14): Invalid or misplaced input character: '@'. Character Ignored.
+ERROR(14): Invalid or misplaced input character: '#'. Character Ignored.
+ERROR(14): Syntax error, unexpected ';', expecting "or" or "then".
+ERROR(16): Syntax error, unexpected ';', expecting "or" or "then".
+ERROR(19): Syntax error, unexpected "int".
+Number of warnings: 0
+Number of errors: 8

@@ -13,12 +13,12 @@ WARNING(13): Expecting to return type int but function 'stairways' has no return
 ERROR(18): Initializer for variable 'a' of type int is of type char
 ERROR(20): Initializer for variable 'b' is not a constant expression.
 ERROR(20): Symbol 'b' is already declared at line 19.
-ERROR(21): Initializer for variable 'ja' requires both operands be arrays or not but variable is an array and rhs is not an array.
+ERROR(21): Initializer for variable 'ja' requires both operands be arrays or not but variable is an array and
 ERROR(22): Initializer for variable 'ja' is not a constant expression.
 ERROR(22): Symbol 'ja' is already declared at line 21.
 WARNING(26): Variable 'ia' may be uninitialized when used here.
-ERROR(26): Cannot use array as test condition in if statement.
 ERROR(26): Expecting Boolean test condition in if statement but got type int.
+ERROR(26): Cannot use array as test condition in if statement.
 ERROR(26): Cannot have a break statement outside of loop.
 ERROR(28): Cannot use array in position 1 in range of for statement.
 ERROR(28): Cannot use array in position 2 in range of for statement.
@@ -29,11 +29,11 @@ ERROR(30): Expecting Boolean test condition in while statement but got type int.
 ERROR(31): Expecting Boolean test condition in if statement but got type int.
 ERROR(31): Cannot have a break statement outside of loop.
 ERROR(33): Too few parameters passed for function 'blondie' declared on line 7.
-ERROR(34): Expecting array in parameter 1 of call to 'blondie' declared on line 7.
 ERROR(34): Expecting type char in parameter 1 of call to 'blondie' declared on line 7 but got type int.
+ERROR(34): Expecting array in parameter 1 of call to 'blondie' declared on line 7.
 ERROR(34): Too few parameters passed for function 'blondie' declared on line 7.
-ERROR(36): Not expecting array in parameter 2 of call to 'blondie' declared on line 7.
 ERROR(36): Expecting type bool in parameter 2 of call to 'blondie' declared on line 7 but got type char.
+ERROR(36): Not expecting array in parameter 2 of call to 'blondie' declared on line 7.
 ERROR(36): Expecting type char in parameter 3 of call to 'blondie' declared on line 7 but got type int.
 ERROR(36): Expecting type int in parameter 4 of call to 'blondie' declared on line 7 but got type char.
 ERROR(37): Too many parameters passed for function 'blondie' declared on line 7.
