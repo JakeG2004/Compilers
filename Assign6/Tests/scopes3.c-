@@ -1,0 +1,10 @@
+int g;
+
+main()
+{
+     char c[10]:"peanut butter";
+     static int zymurgy;
+
+     c = "crackers";
+     g = 888;
+}

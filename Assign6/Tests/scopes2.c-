@@ -1,0 +1,32 @@
+int g;
+
+tracy(int a)
+{
+    int b;
+}
+
+main()
+{
+    int a, b;
+    char c;
+
+    a = 111*222;
+    {
+         char a, c;
+    }
+
+    {
+         bool a, d;
+    }
+
+    {
+         int e[3], f;
+    }
+
+    {
+        static int h, i;
+        i = a % g;
+    }
+    b = 444;
+    c = '@';
+}

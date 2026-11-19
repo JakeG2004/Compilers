@@ -1,0 +1,13 @@
+main()   // 0 fp, -1 rtn addr of call
+{
+    int a, b;  // -2 a, -3 b
+
+    {
+         char c, d;  // -4 c, -5 d
+    }
+
+    {
+         bool e, f;  // -4 e, -5 f
+         f = true;
+    }
+}

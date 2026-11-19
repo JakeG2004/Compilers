@@ -1,0 +1,53 @@
+====================================
+FILE: scopes2.c-
+WARNING(3): The parameter 'a' seems not to be used.
+WARNING(5): The local variable 'b' seems not to be used.
+WARNING(15): The local variable 'a' seems not to be used.
+WARNING(15): The local variable 'c' seems not to be used.
+WARNING(19): The local variable 'a' seems not to be used.
+WARNING(19): The local variable 'd' seems not to be used.
+WARNING(23): The local variable 'e' seems not to be used.
+WARNING(23): The local variable 'f' seems not to be used.
+WARNING(27): The local variable 'h' seems not to be used.
+WARNING(3): The function 'tracy' seems not to be used.
+Var: g of type int [mem: Global loc: 0 size: 1] [line: 1]
+Sibling: 1  Func: tracy returns type void [mem: Global loc: 0 size: -3] [line: 3]
+.   Child: 0  Parm: a of type int [mem: Parameter loc: -2 size: 1] [line: 3]
+.   Child: 1  Compound [mem: None loc: 0 size: -4] [line: 4]
+.   .   Child: 0  Var: b of type int [mem: Local loc: -3 size: 1] [line: 5]
+Sibling: 2  Func: main returns type void [mem: Global loc: 0 size: -2] [line: 8]
+.   Child: 1  Compound [mem: None loc: 0 size: -5] [line: 9]
+.   .   Child: 0  Var: a of type int [mem: Local loc: -2 size: 1] [line: 10]
+.   .   Sibling: 1  Var: b of type int [mem: Local loc: -3 size: 1] [line: 10]
+.   .   Sibling: 2  Var: c of type char [mem: Local loc: -4 size: 1] [line: 11]
+.   .   Child: 1  Assign: = of type int [line: 13]
+.   .   .   Child: 0  Id: a of type int [mem: Local loc: -2 size: 1] [line: 13]
+.   .   .   Child: 1  Op: * of type int [line: 13]
+.   .   .   .   Child: 0  Const 111 of type int [line: 13]
+.   .   .   .   Child: 1  Const 222 of type int [line: 13]
+.   .   Sibling: 1  Compound [mem: None loc: 0 size: -7] [line: 14]
+.   .   .   Child: 0  Var: a of type char [mem: Local loc: -5 size: 1] [line: 15]
+.   .   .   Sibling: 1  Var: c of type char [mem: Local loc: -6 size: 1] [line: 15]
+.   .   Sibling: 2  Compound [mem: None loc: 0 size: -7] [line: 18]
+.   .   .   Child: 0  Var: a of type bool [mem: Local loc: -5 size: 1] [line: 19]
+.   .   .   Sibling: 1  Var: d of type bool [mem: Local loc: -6 size: 1] [line: 19]
+.   .   Sibling: 3  Compound [mem: None loc: 0 size: -10] [line: 22]
+.   .   .   Child: 0  Var: e of array of type int [mem: Local loc: -6 size: 4] [line: 23]
+.   .   .   Sibling: 1  Var: f of type int [mem: Local loc: -9 size: 1] [line: 23]
+.   .   Sibling: 4  Compound [mem: None loc: 0 size: -5] [line: 26]
+.   .   .   Child: 0  Var: h of static type int [mem: LocalStatic loc: -1 size: 1] [line: 27]
+.   .   .   Sibling: 1  Var: i of static type int [mem: LocalStatic loc: -2 size: 1] [line: 27]
+.   .   .   Child: 1  Assign: = of type int [line: 28]
+.   .   .   .   Child: 0  Id: i of static type int [mem: LocalStatic loc: -2 size: 1] [line: 28]
+.   .   .   .   Child: 1  Op: % of type int [line: 28]
+.   .   .   .   .   Child: 0  Id: a of type int [mem: Local loc: -2 size: 1] [line: 28]
+.   .   .   .   .   Child: 1  Id: g of type int [mem: Global loc: 0 size: 1] [line: 28]
+.   .   Sibling: 5  Assign: = of type int [line: 30]
+.   .   .   Child: 0  Id: b of type int [mem: Local loc: -3 size: 1] [line: 30]
+.   .   .   Child: 1  Const 444 of type int [line: 30]
+.   .   Sibling: 6  Assign: = of type char [line: 31]
+.   .   .   Child: 0  Id: c of type char [mem: Local loc: -4 size: 1] [line: 31]
+.   .   .   Child: 1  Const '@' of type char [line: 31]
+Offset for end of global space: -3
+Number of warnings: 10
+Number of errors: 0

@@ -1,0 +1,19 @@
+main()
+{ // size -3  vars: a
+  int a; // -2
+  {  // size -4   vars: a, b
+     int b; // -3
+     {  // size -5   vars: a, b, c
+        int c; // -4
+     }
+     {  // size -4  vars: a, b
+     }
+     {  // size -5  vars: a, b, d
+        int d; // -4
+     }
+  }
+  {  // size -4  vars: a, e
+     int e; // -3
+  }
+  a;
+}

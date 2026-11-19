@@ -1,0 +1,35 @@
+int g;
+char h[10]:"dogs";
+
+beachDay(int p, q[])
+{
+    int a:17;
+    bool b[10];
+    static int s;
+    static int t[10];
+    static char u[10]:"corgi";
+    int z;
+    a;
+    b;
+    s;
+    t;
+    u;
+    666;
+    'x';
+    "purple";
+    true;
+}
+
+main() {
+   int a;
+   {
+   int b, c, d;
+   }
+   {
+   int e, f;
+   }
+   for a = 1 to 10 do a;
+
+}
+
+
